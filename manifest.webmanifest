@@ -1,0 +1,16 @@
+{
+  "name": "L'Atlas des 6 Royaumes",
+  "short_name": "Atlas Maths",
+  "description": "Maths ludiques pour l'entrée en 6e : 72 énigmes dans 6 royaumes.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#EEE9FF",
+  "theme_color": "#6C5CE7",
+  "lang": "fr",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

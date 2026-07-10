@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Atlas Maths">
+<meta name="theme-color" content="#6C5CE7">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<title>Atlas des 6 Royaumes — Maths 6e</title>
+<style>
+:root{
+  --violet:#6C5CE7; --violet-d:#5546c8; --rose:#FD79A8; --peche:#FFB88C;
+  --menthe:#55EFC4; --menthe-d:#00b894; --ciel:#74B9FF; --ciel-d:#0984e3;
+  --jaune:#FFEAA7; --or:#FDCB6E; --corail:#FF7675; --lavande:#A29BFE;
+  --encre:#2D3436; --gris:#636E72; --brume:#F4F1FB; --carte:#FFFFFF;
+  --ombre:0 8px 24px rgba(45,52,54,.10);
+  --ombre-h:0 12px 32px rgba(45,52,54,.16);
+  --r:22px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:ui-rounded,-apple-system,"SF Pro Rounded","Comic Sans MS",BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:linear-gradient(160deg,#EEE9FF 0%,#FDF0F6 45%,#E8FBF4 100%);
+  color:var(--encre);
+  overflow:hidden;
+  touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;
+  -webkit-text-size-adjust:100%;
+}
+input,textarea{-webkit-user-select:text;user-select:text}
+#app{height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden}
+
+/* ===== décor de fond ===== */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.35;pointer-events:none;z-index:0}
+.blob1{width:44vw;height:44vw;background:var(--lavande);top:-12vw;left:-10vw}
+.blob2{width:38vw;height:38vw;background:var(--peche);bottom:-14vw;right:-8vw}
+.blob3{width:26vw;height:26vw;background:var(--menthe);top:40%;right:-12vw}
+
+/* ===== écrans ===== */
+.ecran{position:absolute;inset:0;display:none;flex-direction:column;z-index:1;overflow:hidden}
+.ecran.actif{display:flex;animation:fondu .35s ease}
+@keyframes fondu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.defile{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 18px calc(28px + var(--safe-bot));}
+
+/* ===== entête ===== */
+header{
+  display:flex;align-items:center;gap:10px;
+  padding:calc(10px + var(--safe-top)) 16px 10px;
+  z-index:5;
+}
+.h-titre{font-size:19px;font-weight:800;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pastille{
+  display:flex;align-items:center;gap:5px;background:var(--carte);
+  border-radius:999px;padding:7px 12px;font-weight:800;font-size:14px;
+  box-shadow:var(--ombre);
+}
+.btn-rond{
+  width:44px;height:44px;min-width:44px;border:none;border-radius:50%;
+  background:var(--carte);box-shadow:var(--ombre);font-size:19px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:transform .15s;color:var(--encre);
+}
+.btn-rond:active{transform:scale(.9)}
+
+/* ===== boutons ===== */
+.btn{
+  border:none;border-radius:18px;padding:15px 26px;font-size:17px;font-weight:800;
+  font-family:inherit;cursor:pointer;min-height:52px;
+  transition:transform .15s,box-shadow .15s;color:#fff;
+  background:linear-gradient(135deg,var(--violet),var(--lavande));
+  box-shadow:0 6px 18px rgba(108,92,231,.35);
+}
+.btn:active{transform:scale(.96)}
+.btn.vert{background:linear-gradient(135deg,var(--menthe-d),var(--menthe));box-shadow:0 6px 18px rgba(0,184,148,.3)}
+.btn.doux{background:var(--brume);color:var(--violet);box-shadow:none}
+.btn.large{width:100%}
+.btn:disabled{opacity:.45;transform:none}
+
+/* ===== cartes génériques ===== */
+.carte{background:var(--carte);border-radius:var(--r);padding:18px;box-shadow:var(--ombre)}
+
+/* ===== accueil / onboarding ===== */
+.centreur{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:18px;overflow-y:auto}
+.titre-jeu{font-size:clamp(30px,6vw,44px);font-weight:900;text-align:center;line-height:1.1;
+  background:linear-gradient(135deg,var(--violet),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sous-titre{font-size:16px;color:var(--gris);text-align:center;max-width:420px;line-height:1.5}
+.champ{
+  width:min(340px,86vw);border:3px solid var(--lavande);border-radius:18px;
+  padding:14px 18px;font-size:19px;font-family:inherit;font-weight:700;text-align:center;
+  background:var(--carte);color:var(--encre);outline:none;
+}
+.champ:focus{border-color:var(--violet)}
+.rang-choix{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.choix-pastille{
+  width:52px;height:52px;border-radius:50%;border:4px solid transparent;cursor:pointer;
+  transition:transform .15s;box-shadow:var(--ombre);
+}
+.choix-pastille.sel{border-color:var(--encre);transform:scale(1.12)}
+.bulle-plume{
+  display:flex;gap:12px;align-items:flex-start;background:var(--carte);
+  border-radius:var(--r);padding:14px 16px;box-shadow:var(--ombre);max-width:480px;
+}
+.bulle-plume p{font-size:15px;line-height:1.5}
+.plume-svg{flex-shrink:0}
+
+/* ===== carte du monde ===== */
+.bandeau-defi{
+  display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#FFF3D6,#FFE3EC);
+  border-radius:var(--r);padding:14px 16px;box-shadow:var(--ombre);margin-bottom:16px;cursor:pointer;
+  border:2px dashed var(--or);
+}
+.bandeau-defi.fait{opacity:.7;border-style:solid}
+.bandeau-defi .em{font-size:30px}
+.bandeau-defi b{font-size:15px;display:block}
+.bandeau-defi small{color:var(--gris);font-size:13px}
+.grille-mondes{display:grid;grid-template-columns:1fr;gap:14px;max-width:640px;margin:0 auto}
+@media(min-width:700px){.grille-mondes{grid-template-columns:1fr 1fr}}
+.carte-monde{
+  position:relative;border-radius:var(--r);padding:18px;cursor:pointer;overflow:hidden;
+  box-shadow:var(--ombre);transition:transform .15s;color:#fff;min-height:120px;
+  display:flex;flex-direction:column;justify-content:space-between;gap:8px;
+}
+.carte-monde:active{transform:scale(.97)}
+.carte-monde .em{font-size:34px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.15))}
+.carte-monde h3{font-size:18px;font-weight:900}
+.carte-monde .desc{font-size:13px;opacity:.92;line-height:1.35}
+.carte-monde .prog{font-size:13px;font-weight:800;background:rgba(255,255,255,.28);
+  border-radius:999px;padding:5px 12px;align-self:flex-start}
+.carte-monde.verrou{filter:grayscale(.85);opacity:.75;cursor:default}
+.cadenas{position:absolute;top:14px;right:14px;font-size:26px}
+.deco-monde{position:absolute;right:-20px;bottom:-24px;font-size:100px;opacity:.18;pointer-events:none}
+
+/* ===== écran monde (liste d'exercices) ===== */
+.intro-monde{margin-bottom:16px}
+.chemin{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:14px;max-width:640px;margin:0 auto}
+.noeud{
+  background:var(--carte);border-radius:20px;padding:12px 8px;text-align:center;cursor:pointer;
+  box-shadow:var(--ombre);transition:transform .15s;position:relative;
+}
+.noeud:active{transform:scale(.94)}
+.noeud .num{width:40px;height:40px;border-radius:50%;margin:0 auto 6px;color:#fff;font-weight:900;
+  display:flex;align-items:center;justify-content:center;font-size:17px}
+.noeud .mini-titre{font-size:11.5px;font-weight:700;color:var(--gris);line-height:1.25;
+  height:2.5em;overflow:hidden}
+.noeud .etoiles{font-size:13px;letter-spacing:1px;margin-top:4px}
+.noeud.vu .num{outline:3px solid var(--jaune);outline-offset:2px}
+
+/* ===== écran exercice ===== */
+.zone-exo{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:6px 18px calc(120px + var(--safe-bot));max-width:680px;margin:0 auto;width:100%}
+.histoire{
+  background:var(--carte);border-radius:var(--r);padding:16px 18px;box-shadow:var(--ombre);
+  font-size:16px;line-height:1.55;margin-bottom:14px;position:relative;
+}
+.histoire::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:5px;
+  border-radius:4px;background:linear-gradient(var(--rose),var(--violet))}
+.question{font-size:18px;font-weight:800;line-height:1.45;margin:16px 4px 14px}
+.illu-exo{display:flex;justify-content:center;margin:10px 0}
+.illu-exo svg{max-width:100%;height:auto}
+
+/* choix QCM */
+.choix-liste{display:flex;flex-direction:column;gap:10px}
+.choix-btn{
+  background:var(--carte);border:3px solid transparent;border-radius:18px;padding:14px 16px;
+  font-size:16px;font-weight:700;font-family:inherit;text-align:left;cursor:pointer;
+  box-shadow:var(--ombre);min-height:52px;transition:transform .12s,border-color .12s;color:var(--encre);
+  display:flex;align-items:center;gap:10px;
+}
+.choix-btn:active{transform:scale(.98)}
+.choix-btn.sel{border-color:var(--violet);background:#F3F0FF}
+.choix-btn.ok{border-color:var(--menthe-d);background:#E7FBF4;animation:pop .35s}
+.choix-btn.ko{border-color:var(--corail);background:#FFEDEC;animation:secousse .4s}
+.choix-btn .lettre{width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--brume);
+  color:var(--violet);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:14px}
+
+/* vrai / faux */
+.vf-rang{display:flex;gap:12px}
+.vf-rang .choix-btn{flex:1;justify-content:center;font-size:18px;text-align:center}
+
+/* saisie */
+.rang-saisie{display:flex;gap:10px;align-items:stretch}
+.rang-saisie .champ{flex:1;text-align:left;width:auto;min-width:0}
+.suffixe-unite{display:flex;align-items:center;font-size:18px;font-weight:800;color:var(--gris);padding-right:4px}
+
+/* remise en ordre */
+.consigne-ordre{font-size:13.5px;color:var(--gris);margin-bottom:10px;line-height:1.4}
+.zone-reponse{
+  min-height:64px;border:3px dashed var(--lavande);border-radius:18px;padding:10px;
+  display:flex;flex-direction:column;gap:8px;margin-bottom:14px;background:rgba(255,255,255,.55);
+}
+.zone-source{display:flex;flex-direction:column;gap:8px}
+.chip{
+  background:var(--carte);border-radius:14px;padding:12px 14px;font-size:15px;font-weight:700;
+  box-shadow:var(--ombre);cursor:pointer;display:flex;align-items:center;gap:10px;
+  transition:transform .15s;line-height:1.35;
+}
+.chip:active{transform:scale(.98)}
+.chip .poignee{color:var(--lavande);font-size:17px}
+.chip.dans-reponse{background:#F3F0FF;border:2px solid var(--lavande)}
+.chip.fantome{opacity:.35}
+.chip.drag{position:fixed;z-index:99;pointer-events:none;box-shadow:var(--ombre-h);transform:rotate(2deg) scale(1.03);width:var(--wchip)}
+
+/* barre d'action exercice */
+.barre-exo{
+  position:absolute;left:0;right:0;bottom:0;z-index:6;
+  padding:12px 18px calc(14px + var(--safe-bot));
+  background:linear-gradient(transparent,rgba(244,241,251,.92) 34%);
+  display:flex;gap:10px;max-width:680px;margin:0 auto;
+}
+.barre-exo .btn{flex:1}
+
+/* feedback */
+.retour{
+  border-radius:18px;padding:14px 16px;margin-top:14px;font-size:15px;line-height:1.5;
+  animation:fondu .3s ease;font-weight:600;
+}
+.retour.oups{background:#FFF0EF;border:2px solid #FFCFCB}
+.retour.indice{background:#FFF8E1;border:2px solid var(--jaune)}
+.retour.bravo{background:#E7FBF4;border:2px solid var(--menthe)}
+.solution{background:var(--carte);border-radius:var(--r);padding:18px;margin-top:14px;box-shadow:var(--ombre)}
+.solution h4{font-size:16px;margin-bottom:10px;color:var(--violet)}
+.etape-sol{
+  display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:15px;line-height:1.5;
+  animation:fondu .4s ease both;
+}
+.etape-sol .puce{width:26px;height:26px;min-width:26px;border-radius:50%;background:var(--brume);
+  color:var(--violet);font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+
+/* ===== modale réussite ===== */
+.voile{
+  position:fixed;inset:0;background:rgba(45,52,54,.45);z-index:50;
+  display:none;align-items:center;justify-content:center;padding:24px;
+}
+.voile.actif{display:flex;animation:fondu .25s}
+.modale{
+  background:var(--carte);border-radius:28px;padding:28px 24px;text-align:center;
+  max-width:380px;width:100%;box-shadow:var(--ombre-h);animation:pop .45s cubic-bezier(.34,1.56,.64,1);
+  max-height:86vh;overflow-y:auto;
+}
+.modale h2{font-size:24px;margin:8px 0 4px}
+.modale .msg{color:var(--gris);font-size:15px;line-height:1.5;margin-bottom:14px}
+.grosses-etoiles{font-size:44px;letter-spacing:6px;margin:10px 0}
+.grosses-etoiles span{display:inline-block;animation:pop .5s cubic-bezier(.34,1.56,.64,1) both}
+.grosses-etoiles span:nth-child(2){animation-delay:.15s}
+.grosses-etoiles span:nth-child(3){animation-delay:.3s}
+.gain-xp{display:inline-block;background:var(--brume);color:var(--violet);font-weight:900;
+  border-radius:999px;padding:7px 16px;font-size:15px;margin-bottom:16px}
+.nouveau-badge{background:#FFF8E1;border-radius:18px;padding:12px;margin-bottom:14px;font-size:14px;font-weight:700}
+.nouveau-badge .em{font-size:32px;display:block;margin-bottom:4px}
+
+/* ===== profil / badges ===== */
+.entete-profil{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+.entete-profil .infos{flex:1}
+.entete-profil h2{font-size:22px}
+.barre-niveau{height:14px;background:var(--brume);border-radius:999px;overflow:hidden;margin-top:8px}
+.barre-niveau div{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--violet),var(--rose));
+  transition:width .6s ease}
+.stat-rang{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}
+.stat-carte{flex:1;min-width:90px;background:var(--carte);border-radius:18px;padding:12px;text-align:center;box-shadow:var(--ombre)}
+.stat-carte b{font-size:22px;display:block}
+.stat-carte small{color:var(--gris);font-size:12px}
+.grille-badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px}
+.badge{
+  background:var(--carte);border-radius:18px;padding:14px 8px;text-align:center;box-shadow:var(--ombre);
+}
+.badge .em{font-size:32px;display:block;margin-bottom:6px}
+.badge b{font-size:12.5px;display:block;line-height:1.3}
+.badge small{font-size:11px;color:var(--gris);line-height:1.25;display:block;margin-top:3px}
+.badge.gris{opacity:.45;filter:grayscale(1)}
+.rang-accessoires{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.acc-btn{
+  border:3px solid transparent;background:var(--carte);border-radius:16px;padding:8px 12px;
+  font-size:22px;cursor:pointer;box-shadow:var(--ombre);min-width:52px;min-height:48px;
+}
+.acc-btn.sel{border-color:var(--violet)}
+.acc-btn.verrou{opacity:.4;filter:grayscale(1)}
+.acc-btn small{display:block;font-size:9.5px;color:var(--gris);font-weight:700}
+
+/* ===== confettis & anims ===== */
+#confettis{position:fixed;inset:0;pointer-events:none;z-index:80}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes secousse{0%,100%{transform:none}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes flotte{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.flotte{animation:flotte 3s ease-in-out infinite}
+
+@media(orientation:landscape) and (max-height:500px){
+  .titre-jeu{font-size:28px}
+  .centreur{gap:10px}
+}
+</style>
+</head>
+<body>
+<div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div>
+<div id="app"></div>
+<canvas id="confettis"></canvas>
+<div class="voile" id="voile"></div>
+<script>
+"use strict";
+/* ================== DONNÉES : MONDES ================== */
+const MONDES=[
+ {id:1,nom:"L'Archipel des Nombres",em:"🏝️",coul:"linear-gradient(135deg,#74B9FF,#0984e3)",cnum:"#0984e3",
+  desc:"Ordres de grandeur, calcul malin et nombres décimaux.",
+  intro:"Bienvenue sur l'Archipel des Nombres ! Ici, les habitants ne calculent jamais bêtement : ils rusent, ils arrondissent, ils décomposent. Montre-leur que toi aussi, tu sais faire travailler ta tête plutôt que tes doigts."},
+ {id:2,nom:"La Vallée des Partages",em:"🍰",coul:"linear-gradient(135deg,#FD79A8,#e84393)",cnum:"#e84393",
+  desc:"Fractions, parts de gâteau et partages équitables.",
+  intro:"Dans la Vallée des Partages, tout se divise : les tartes, les rubans, les sacs de billes. Les habitants détestent l'injustice — à toi de partager équitablement grâce aux fractions !"},
+ {id:3,nom:"Le Grand Marché",em:"🛒",coul:"linear-gradient(135deg,#FFB88C,#e17055)",cnum:"#e17055",
+  desc:"Prix, vitesses, recettes, pourcentages : la proportionnalité partout.",
+  intro:"Sur le Grand Marché, on négocie, on compare les prix, on double les recettes. Un bon marchand sait reconnaître quand les choses sont proportionnelles… et quand elles ne le sont pas du tout !"},
+ {id:4,nom:"Les Cités Géométriques",em:"🏛️",coul:"linear-gradient(135deg,#55EFC4,#00b894)",cnum:"#00b894",
+  desc:"Périmètres, aires, symétrie et vision dans l'espace.",
+  intro:"Les Cités Géométriques sont bâties au millimètre près : jardins rectangulaires, mosaïques symétriques, dés parfaits. Les architectes ont besoin de ton œil de géomètre !"},
+ {id:5,nom:"La Forêt des Énigmes",em:"🌲",coul:"linear-gradient(135deg,#A29BFE,#6C5CE7)",cnum:"#6C5CE7",
+  desc:"Suites, déductions, pièges classiques : la logique pure.",
+  intro:"On raconte que la Forêt des Énigmes rend plus malin quiconque la traverse. Ici, pas de grandes formules : il faut lire attentivement, réfléchir… et se méfier des pièges !"},
+ {id:6,nom:"Le Sommet des Champions",em:"🏔️",coul:"linear-gradient(135deg,#FDCB6E,#e17055)",cnum:"#d63031",
+  desc:"Grands problèmes à étapes, dignes d'un rallye maths.",
+  intro:"Te voilà au pied du Sommet des Champions. Chaque problème combine tout ce que tu as appris : plusieurs étapes, plusieurs idées. Prends ton temps, un brouillon, et grimpe !"}
+];
+
+/* ================== DONNÉES : EXERCICES ==================
+ Types : qcm (choices + a:index) · saisie (num OU acc:[textes], unit?) ·
+ vf (vfA:bool, justif?:[..], justifA:index) · ordre (ordre:[étapes dans le bon ordre])
+ Champs communs : id, w, titre, histoire, q, indice, etapes (correction pas à pas), svg? */
+const EXOS=[
+
+/* ---------- MONDE 1 · L'Archipel des Nombres ---------- */
+{id:"m1e1",w:1,titre:"Le cinéma en plein air",type:"qcm",
+ histoire:"Sur la plage de l'Archipel, on projette un film ce soir. Nora veut inviter toute sa bande : il faut 7 places à 8,90 € chacune. Elle n'a pas de calculatrice, juste sa tête !",
+ q:"Sans poser l'opération, quel est l'ordre de grandeur du prix total ?",
+ choices:["Environ 45 €","Environ 63 €","Environ 90 €","Environ 120 €"],a:1,
+ indice:"8,90 €, c'est presque 9 €. Combien font 7 places à 9 € ?",
+ etapes:["8,90 € est très proche de 9 €.","7 × 9 = 63, donc le prix total est proche de 63 €.","Le prix exact est 7 × 8,90 = 62,30 € : notre estimation de 63 € était excellente !"]},
+
+{id:"m1e2",w:1,titre:"Le collier de perles",type:"saisie",num:475,unit:"perles",
+ histoire:"L'artisane de l'île fabrique des colliers de 19 perles. Une boutique lui en commande 25 ! Elle veut connaître le nombre de perles nécessaires… sans poser la multiplication.",
+ q:"Calcule astucieusement : 25 × 19 = ?",
+ indice:"19, c'est 20 − 1. Calcule 25 × 20, puis retire ce qu'il y a en trop.",
+ etapes:["19 = 20 − 1, donc 25 × 19 = 25 × 20 − 25 × 1.","25 × 20 = 500.","500 − 25 = 475. Il lui faut 475 perles.","L'astuce : remplacer un nombre « pénible » par un nombre rond tout proche."]},
+
+{id:"m1e3",w:1,titre:"Le concours de saut",type:"qcm",
+ histoire:"Trois grenouilles de l'Archipel font un concours de saut en longueur. Zip a sauté 3,45 m, Zap a sauté 3,5 m et Zoup a sauté 3,405 m.",
+ q:"Qui a fait le plus grand saut ?",
+ choices:["Zip (3,45 m)","Zap (3,5 m)","Zoup (3,405 m)","Elles sont à égalité"],a:1,
+ indice:"Écris les trois nombres avec le même nombre de chiffres après la virgule : 3,450 · 3,500 · 3,405.",
+ etapes:["Pour comparer des décimaux, on peut leur donner le même nombre de chiffres après la virgule.","3,45 = 3,450 ; 3,5 = 3,500 ; 3,405 reste 3,405.","3,500 > 3,450 > 3,405 : c'est Zap qui gagne.","Piège déjoué : 3,5 n'est pas « plus petit parce qu'il est plus court à écrire » !"]},
+
+{id:"m1e4",w:1,titre:"La monnaie du glacier",type:"saisie",num:5.63,unit:"€",
+ histoire:"Au stand de glaces, ta coupe « Lagon bleu » coûte 4,37 €. Tu tends un billet de 10 € au glacier, qui te regarde d'un air malicieux : « Et si TU calculais la monnaie ? »",
+ q:"Combien le glacier doit-il te rendre, en euros ?",
+ indice:"Avance par étapes : de 4,37 pour aller à 5, puis de 5 pour aller à 10.",
+ etapes:["De 4,37 € à 5 €, il y a 0,63 €.","De 5 € à 10 €, il y a 5 €.","0,63 + 5 = 5,63 €. C'est la technique du « complément », celle des vrais commerçants !"]},
+
+{id:"m1e5",w:1,titre:"La recette du capitaine",type:"ordre",
+ histoire:"Le capitaine du port doit calculer 18 × 5 de tête pour payer ses matelots. Il t'explique sa méthode préférée… mais ses notes sont tombées et se sont mélangées !",
+ q:"Remets les étapes de son calcul malin dans le bon ordre :",
+ ordre:["Je remarque que 5, c'est la moitié de 10.","Je calcule d'abord 18 × 10 = 180.","Je prends la moitié : 180 ÷ 2 = 90.","Conclusion : 18 × 5 = 90."],
+ indice:"On part d'une remarque sur le nombre 5, puis on calcule avec 10, qui est bien plus simple.",
+ etapes:["Multiplier par 5, c'est multiplier par 10 puis diviser par 2.","18 × 10 = 180, puis 180 ÷ 2 = 90.","Cette astuce marche pour tous les × 5 : essaie avec 24 × 5 !"]},
+
+{id:"m1e6",w:1,titre:"La dispute des sirènes",type:"vf",vfA:false,
+ histoire:"Deux sirènes se disputent. Marina affirme : « 0,7 est plus petit que 0,12, c'est évident, puisque 7 est plus petit que 12 ! »",
+ q:"Marina a-t-elle raison ?",
+ justif:["Elle a raison : 7 < 12, donc 0,7 < 0,12.","Elle a tort : 0,7 = 0,70, et 70 centièmes, c'est plus que 12 centièmes."],justifA:1,
+ indice:"Écris les deux nombres en centièmes : 0,7 = 0,70. Compare 70 centièmes et 12 centièmes.",
+ etapes:["0,7 c'est 7 dixièmes, soit 70 centièmes (0,70).","0,12 c'est 12 centièmes.","70 centièmes > 12 centièmes, donc 0,7 > 0,12 : Marina a tort.","Avec les décimaux, on compare chiffre par chiffre en partant de la gauche, pas la « longueur » du nombre."]},
+
+{id:"m1e7",w:1,titre:"Le panier du marché flottant",type:"saisie",num:10.5,unit:"€",
+ histoire:"Sur le marché flottant, tu achètes un ananas à 2,95 €, un pain coco à 4,05 € et un jus de mangue à 3,50 €. Le vendeur te met au défi de trouver le total de tête avant lui.",
+ q:"Quel est le prix total du panier, en euros ?",
+ indice:"Regarde bien 2,95 et 4,05… Ces deux-là s'additionnent très facilement !",
+ etapes:["Astuce : 2,95 + 4,05 = 7 € tout rond (95 centimes + 5 centimes = 1 €).","7 + 3,50 = 10,50 €.","Chercher les paires qui « tombent rond » rend le calcul mental beaucoup plus rapide."]},
+
+{id:"m1e8",w:1,titre:"Le trésor du phare",type:"qcm",
+ histoire:"Le code du coffre du phare est caché dans le nombre 3,07. Le gardien te demande : « Pour ouvrir le coffre, dis-moi ce que vaut le chiffre 7 dans ce nombre. »",
+ q:"Dans 3,07, que représente le chiffre 7 ?",
+ choices:["7 unités","7 dixièmes","7 centièmes","7 dizaines"],a:2,
+ indice:"Après la virgule, le premier rang est celui des dixièmes, le deuxième celui des centièmes.",
+ etapes:["Dans 3,07 : 3 est le chiffre des unités.","Le 0 juste après la virgule est le chiffre des dixièmes.","Le 7 est au deuxième rang après la virgule : ce sont les centièmes.","3,07 = 3 + 7/100. Le coffre s'ouvre !"]},
+
+{id:"m1e9",w:1,titre:"Les aquariums du port",type:"saisie",num:104,unit:"poissons",
+ histoire:"Le port de l'Archipel possède 4 grands aquariums contenant chacun 26 poissons multicolores. La vétérinaire des mers doit tous les vacciner et veut le total de tête.",
+ q:"Combien de poissons en tout ? (Calcule astucieusement !)",
+ indice:"26 = 25 + 1, et 4 × 25, ça se calcule tout seul (pense aux pièces de 25 centimes… ou aux quarts d'heure !).",
+ etapes:["26 = 25 + 1, donc 4 × 26 = 4 × 25 + 4 × 1.","4 × 25 = 100 (comme 4 quarts d'heure = 1 heure).","100 + 4 = 104 poissons.","Décomposer un nombre rend le calcul mental limpide."]},
+
+{id:"m1e10",w:1,titre:"La bibliothèque de l'île",type:"saisie",num:89,unit:"livres",
+ histoire:"La petite bibliothèque de l'île vient d'être réorganisée : 3 étagères portent chacune 24 livres, et 17 nouveaux livres attendent encore dans un carton.",
+ q:"Combien de livres possède la bibliothèque en tout ?",
+ indice:"Ce problème a deux étapes : d'abord les livres sur les étagères, puis ceux du carton.",
+ etapes:["Étape 1 : livres sur les étagères → 3 × 24 = 72.","Étape 2 : on ajoute le carton → 72 + 17 = 89.","La bibliothèque compte 89 livres. Toujours repérer les étapes avant de calculer !"]},
+
+{id:"m1e11",w:1,titre:"L'excursion en bateau",type:"qcm",
+ histoire:"Les 43 élèves de l'école de l'Archipel partent visiter l'île aux tortues. Chaque bateau peut transporter au maximum 30 passagers. Le directeur réfléchit au nombre de bateaux à réserver…",
+ q:"Combien de bateaux faut-il réserver ?",
+ choices:["1 bateau","2 bateaux","1,43 bateau","43 bateaux"],a:1,
+ indice:"43 ÷ 30 ne tombe pas juste… Que fait-on des élèves qui ne rentrent pas dans le premier bateau ?",
+ etapes:["Un seul bateau ne suffit pas : 30 places pour 43 élèves.","Dans le premier bateau : 30 élèves. Il en reste 43 − 30 = 13.","Ces 13 élèves ont besoin d'un deuxième bateau, même s'il n'est pas plein.","Dans la vraie vie, on arrondit au-dessus : il faut 2 bateaux. (Un bateau « 1,43 », ça n'existe pas !)"]},
+
+{id:"m1e12",w:1,titre:"Le nombre mystère du volcan",type:"saisie",num:11,
+ histoire:"Au sommet du volcan endormi, une voix gronde : « Je pense à un nombre. Je le double, j'ajoute 8, et j'obtiens 30. Trouve mon nombre, et l'Archipel t'ouvrira la route de la Vallée ! »",
+ q:"Quel est le nombre mystère ?",
+ indice:"Pars du résultat et remonte à l'envers : avant d'ajouter 8, combien avait-on ? Et avant de doubler ?",
+ etapes:["On remonte le programme à l'envers, opération par opération.","Avant d'ajouter 8, il y avait 30 − 8 = 22.","Avant de doubler, il y avait 22 ÷ 2 = 11.","Vérification : 11 × 2 = 22, puis 22 + 8 = 30. ✓ Le nombre mystère est 11 !"]},
+
+/* ---------- MONDE 2 · La Vallée des Partages ---------- */
+{id:"m2e1",w:2,titre:"La pizza de bienvenue",type:"qcm",
+ histoire:"Pour fêter ton arrivée dans la Vallée, on coupe une grande pizza en 8 parts égales. À la fin du repas, 6 parts ont été dévorées.",
+ q:"Quelle fraction de la pizza reste-t-il ?",
+ choices:["1/4","1/2","3/4","1/8"],a:0,
+ indice:"Il reste 2 parts sur 8. Cette fraction peut s'écrire plus simplement…",
+ etapes:["Il reste 8 − 6 = 2 parts sur 8, soit 2/8 de la pizza.","2/8 se simplifie : on divise le haut et le bas par 2 → 1/4.","Il reste un quart de la pizza. (2/8 et 1/4, c'est exactement la même quantité !)"]},
+
+{id:"m2e2",w:2,titre:"Les pommes du verger",type:"saisie",num:9,unit:"pommes",
+ histoire:"Dans le verger de la Vallée, tu cueilles 18 pommes. La fermière te propose un marché : « La moitié pour toi, la moitié pour ma tarte ! »",
+ q:"Combien de pommes gardes-tu ? (C'est 1/2 de 18.)",
+ indice:"Prendre la moitié, c'est partager en 2 parts égales : 18 ÷ 2.",
+ etapes:["1/2 de 18, c'est 18 ÷ 2 = 9.","Tu gardes 9 pommes, la fermière en prend 9 : le partage est équitable.","« Prendre 1/2 de » = « diviser par 2 ». De même, 1/3 de = ÷ 3, 1/4 de = ÷ 4…"]},
+
+{id:"m2e3",w:2,titre:"Le duel des gourmands",type:"qcm",
+ histoire:"Deux frères se partagent des gâteaux identiques. Tim reçoit 1/3 d'un gâteau, Tom reçoit 1/4 de l'autre. Tom râle : « C'est injuste, 4 c'est plus que 3, il a moins que moi ! »",
+ q:"Qui a la plus grosse part ?",
+ choices:["Tim, avec 1/3","Tom, avec 1/4","Ils ont exactement pareil","Impossible à savoir"],a:0,
+ indice:"Imagine le même gâteau coupé en 3 parts, puis en 4 parts. Plus il y a de parts… plus chaque part est comment ?",
+ etapes:["Couper en 3 donne des parts plus grosses que couper en 4.","Donc 1/3 > 1/4 : c'est Tim qui a la plus grosse part.","Attention au piège : pour des fractions de même numérateur, plus le dénominateur est GRAND, plus la fraction est PETITE."]},
+
+{id:"m2e4",w:2,titre:"Les fleurs du marché",type:"saisie",num:15,unit:"fleurs",
+ histoire:"La fleuriste de la Vallée prépare un bouquet géant de 20 fleurs. Elle veut que les 3/4 du bouquet soient des tournesols, ses fleurs préférées.",
+ q:"Combien de tournesols doit-elle mettre ?",
+ indice:"Commence par calculer 1/4 de 20, puis prends 3 fois cette part.",
+ etapes:["1/4 de 20 = 20 ÷ 4 = 5.","3/4, c'est 3 fois plus : 3 × 5 = 15.","Elle met 15 tournesols. Méthode : « je divise par le bas, je multiplie par le haut »."]},
+
+{id:"m2e5",w:2,titre:"Le partage du ruban… en débat",type:"vf",vfA:true,
+ histoire:"Léna coupe un ruban et dit : « J'en ai pris 2/4. » Sa sœur répond : « Donc tu as pris la moitié. » Léna fronce les sourcils : est-ce vraiment pareil ?",
+ q:"2/4, est-ce la même chose que 1/2 ?",
+ justif:["Oui : en divisant le haut et le bas par 2, la fraction ne change pas de valeur.","Non : 2/4 contient des nombres plus grands, donc c'est une plus grande part."],justifA:0,
+ indice:"Prends une feuille : plie-la en 4 et colorie 2 cases. Quelle partie de la feuille est coloriée ?",
+ etapes:["2/4 : on divise numérateur et dénominateur par 2 → 1/2.","Prendre 2 parts sur 4, c'est bien prendre la moitié.","Une même quantité peut s'écrire avec plein de fractions différentes : 1/2 = 2/4 = 3/6 = 50/100 !"]},
+
+{id:"m2e6",w:2,titre:"La méthode de la boulangère",type:"ordre",
+ histoire:"La boulangère doit donner les 3/4 de ses 24 croissants à l'école de la Vallée. Elle t'explique sa méthode, mais ses fiches se sont envolées avec le vent !",
+ q:"Remets les étapes du calcul de 3/4 de 24 dans l'ordre :",
+ ordre:["Je partage 24 en 4 parts égales.","Je calcule 24 ÷ 4 = 6 : chaque part vaut 6 croissants.","Je prends 3 de ces parts : 3 × 6 = 18.","Les 3/4 de 24, c'est donc 18 croissants."],
+ indice:"D'abord on partage (grâce au nombre du bas), ensuite on prend plusieurs parts (le nombre du haut).",
+ etapes:["Le dénominateur (4) dit en combien de parts on partage : 24 ÷ 4 = 6.","Le numérateur (3) dit combien de parts on prend : 3 × 6 = 18.","3/4 de 24 = 18. La méthode marche pour toutes les fractions !"]},
+
+{id:"m2e7",w:2,titre:"Le ruban de la couturière",type:"saisie",num:0.6,unit:"m",
+ histoire:"La couturière de la Vallée a un ruban doré de 2,4 mètres. Elle doit le couper en 4 morceaux exactement identiques pour décorer 4 chapeaux.",
+ q:"Quelle sera la longueur de chaque morceau, en mètres ?",
+ indice:"2,4 m = 24 dixièmes de mètre. Partage 24 dixièmes en 4.",
+ etapes:["Il faut calculer 2,4 ÷ 4.","2,4 m = 24 dixièmes. 24 ÷ 4 = 6, donc 6 dixièmes.","Chaque morceau mesure 0,6 m (c'est-à-dire 60 cm).","Vérification : 0,6 × 4 = 2,4 ✓"]},
+
+{id:"m2e8",w:2,titre:"L'horloge de la place",type:"qcm",
+ histoire:"Le carillon de la Vallée sonne tous les 3/4 d'heure. Il vient juste de sonner, et tu te demandes combien de temps tu as pour explorer le village avant le prochain carillon.",
+ q:"3/4 d'heure, c'est combien de minutes ?",
+ choices:["30 minutes","34 minutes","45 minutes","75 minutes"],a:2,
+ indice:"Une heure = 60 minutes. Calcule d'abord 1/4 d'heure.",
+ etapes:["1 heure = 60 minutes.","1/4 d'heure = 60 ÷ 4 = 15 minutes.","3/4 d'heure = 3 × 15 = 45 minutes.","Les fractions d'heure sont partout : 1/4 d'heure = 15 min, 1/2 heure = 30 min."]},
+
+{id:"m2e9",w:2,titre:"L'enquête de la tarte",type:"saisie",acc:["3/8"],
+ histoire:"Mystère au château : la tarte aux myrtilles, coupée en 8 parts égales, a été entamée pendant la nuit ! Ce matin, il ne reste que 5 parts. Le cuisinier mène l'enquête.",
+ q:"Quelle fraction de la tarte a été mangée ? (Réponds sous la forme d'une fraction, par exemple 2/8.)",
+ indice:"La tarte entière = 8/8. Il en reste 5/8… Combien de huitièmes ont disparu ?",
+ etapes:["La tarte entière représente 8/8.","Parts mangées : 8 − 5 = 3 parts.","Le voleur a mangé 3/8 de la tarte.","Le reste + le mangé = le tout : 5/8 + 3/8 = 8/8 ✓"]},
+
+{id:"m2e10",w:2,titre:"Le sac de billes magiques",type:"saisie",num:10,unit:"billes",
+ histoire:"Yanis a gagné 24 billes magiques au tournoi de la Vallée. Généreux, il en donne 1/3 à Léa et 1/4 à Tom, et garde le reste pour lui.",
+ q:"Combien de billes Yanis garde-t-il ?",
+ indice:"Trois étapes : calcule la part de Léa, puis celle de Tom, puis retire les deux du total.",
+ etapes:["Part de Léa : 1/3 de 24 = 24 ÷ 3 = 8 billes.","Part de Tom : 1/4 de 24 = 24 ÷ 4 = 6 billes.","Yanis garde : 24 − 8 − 6 = 10 billes.","Un problème à étapes se résout calmement, une étape à la fois."]},
+
+{id:"m2e11",w:2,titre:"Le pari des jumelles",type:"vf",vfA:true,
+ histoire:"Les jumelles de la Vallée font un pari. Mia dit : « Je prends 1/2 de 10 bonbons. » Lia dit : « Et moi 1/5 de 25 bonbons — j'en aurai forcément plus, 25 c'est plus que 10 ! »",
+ q:"Vrai ou faux : les jumelles reçoivent exactement le même nombre de bonbons.",
+ justif:["Vrai : 1/2 de 10 = 5 et 1/5 de 25 = 5. Égalité parfaite !","Faux : Lia part de 25 bonbons, elle en aura forcément plus."],justifA:0,
+ indice:"Ne devine pas : calcule chaque part. 10 ÷ 2 = ? et 25 ÷ 5 = ?",
+ etapes:["Part de Mia : 1/2 de 10 = 10 ÷ 2 = 5 bonbons.","Part de Lia : 1/5 de 25 = 25 ÷ 5 = 5 bonbons.","5 = 5 : c'est une égalité parfaite, le pari est nul !","Une fraction ne se juge jamais « à l'œil » : tout dépend de la quantité de départ."]},
+
+{id:"m2e12",w:2,titre:"L'aquarium du grand sage",type:"saisie",num:36,unit:"L",
+ histoire:"Le grand sage de la Vallée remplit son aquarium au robinet. Il s'arrête et observe : « L'aquarium est rempli aux 2/3, et il contient déjà 24 litres. » Il te regarde : « Sauras-tu me dire sa contenance totale ? »",
+ q:"Quelle est la contenance totale de l'aquarium, en litres ?",
+ indice:"Si 2/3 valent 24 litres, combien vaut 1/3 ? Et donc 3/3 ?",
+ etapes:["2/3 de l'aquarium = 24 L, donc 1/3 = 24 ÷ 2 = 12 L.","L'aquarium entier, c'est 3/3 = 3 × 12 = 36 L.","Ici on remonte de la fraction vers le tout — c'est l'inverse de d'habitude, et c'est le raisonnement des champions !","Vérification : 2/3 de 36 = 24 ✓"]},
+
+/* ---------- MONDE 3 · Le Grand Marché ---------- */
+{id:"m3e1",w:3,titre:"Les croissants du matin",type:"saisie",num:6,unit:"€",
+ histoire:"Premier matin au Grand Marché ! Au stand de la boulangère : « 3 croissants pour 3,60 €. » Ta famille en veut 5, et la boulangère te teste : « Calcule toi-même le prix ! »",
+ q:"Combien coûtent 5 croissants ?",
+ indice:"Trouve d'abord le prix d'UN croissant : 3,60 ÷ 3.",
+ etapes:["Prix d'un croissant : 3,60 ÷ 3 = 1,20 €.","Prix de 5 croissants : 5 × 1,20 = 6 €.","C'est la « règle du passage par l'unité » : elle marche pour tous les prix du marché !"]},
+
+{id:"m3e2",w:3,titre:"La carte au trésor du Marché",type:"qcm",
+ histoire:"Un marchand te vend une vieille carte : « Le trésor est à 7 cm d'ici sur la carte. L'échelle indique : 1 cm sur la carte = 2 km dans la réalité. »",
+ q:"À quelle distance réelle se trouve le trésor ?",
+ choices:["7 km","9 km","14 km","72 km"],a:2,
+ indice:"Chaque centimètre de la carte vaut 2 km. Il y en a 7…",
+ etapes:["1 cm sur la carte représente 2 km en vrai.","7 cm représentent donc 7 × 2 = 14 km.","Les échelles de cartes sont des situations de proportionnalité : on multiplie tout par le même nombre."]},
+
+{id:"m3e3",w:3,titre:"La livreuse à vélo",type:"saisie",num:30,unit:"km",
+ histoire:"Sacha livre les commandes du Marché à vélo. Elle roule toujours à la même allure : 12 km en une heure. Aujourd'hui, sa tournée va durer 2 heures et demie.",
+ q:"Quelle distance va-t-elle parcourir en 2 h 30 ?",
+ indice:"Découpe le temps : 2 heures, puis une demi-heure. Combien de km pour chaque morceau ?",
+ etapes:["En 1 h : 12 km, donc en 2 h : 24 km.","En 1/2 h : la moitié de 12, soit 6 km.","Total : 24 + 6 = 30 km.","Découper le temps en morceaux simples, c'est LA technique des calculs de vitesse."]},
+
+{id:"m3e4",w:3,titre:"La grande soupe de fête",type:"saisie",num:450,unit:"g",
+ histoire:"Le cuisinier du Marché prépare sa fameuse soupe de potiron. Sa recette pour 6 personnes demande 300 g de potiron. Ce soir, 9 convives sont attendus !",
+ q:"Quelle masse de potiron lui faut-il, en grammes ?",
+ indice:"Passe par 3 personnes : c'est la moitié de 6, et 9 = 6 + 3.",
+ etapes:["Pour 6 personnes : 300 g. Donc pour 3 personnes (moitié) : 150 g.","9 personnes = 6 + 3 → 300 + 150 = 450 g.","Autre chemin : par personne, 300 ÷ 6 = 50 g, et 9 × 50 = 450 g. Deux routes, même sommet !"]},
+
+{id:"m3e5",w:3,titre:"La tirelire de mi-parcours",type:"qcm",
+ histoire:"Tu craques pour une lampe étoilée à 80 €. Le vendeur sourit : « Pour toi, moitié prix : je t'enlève 50 % ! »",
+ q:"Combien vas-tu payer la lampe ?",
+ choices:["30 €","40 €","50 €","75 €"],a:1,
+ indice:"50 %, c'est 50 sur 100… autrement dit la moitié.",
+ etapes:["50 % = 50/100 = 1/2.","50 % de 80 € = 80 ÷ 2 = 40 €.","La remise est de 40 €, et le prix à payer est 80 − 40 = 40 €.","Ici les deux valent pareil — uniquement parce que la remise est de 50 % !"]},
+
+{id:"m3e6",w:3,titre:"Les soldes du chapelier",type:"saisie",num:25,unit:"€",
+ histoire:"Le chapelier affiche : « GRANDE BRADERIE : −10 % sur tout ! » Le chapeau d'exploratrice que tu veux coûte 250 €. Tu veux connaître le montant de la réduction avant de négocier.",
+ q:"Combien vaut la réduction de 10 % sur 250 € ?",
+ indice:"10 % = 10/100 = un dixième. Prendre un dixième, c'est diviser par 10.",
+ etapes:["10 % d'un nombre, c'est ce nombre divisé par 10.","250 ÷ 10 = 25 : la réduction est de 25 €.","Astuce en or : à partir des 10 %, tu peux tout retrouver (20 % = le double, 5 % = la moitié…)."]},
+
+{id:"m3e7",w:3,titre:"Le raisonnement du papetier",type:"vf",vfA:true,
+ histoire:"Au stand de papeterie : 2 stylos plume coûtent 3 €. Ton ami déclare : « Alors 4 stylos coûteront 6 €. »",
+ q:"Ton ami a-t-il raison ?",
+ justif:["Oui : 2 fois plus de stylos, donc 2 fois plus cher. Le prix est proportionnel à la quantité.","Non : on ne peut jamais deviner un prix sans étiquette."],justifA:0,
+ indice:"4 stylos, c'est 2 fois 2 stylos. Et le prix suit-il le même chemin ?",
+ etapes:["4 stylos = 2 × (2 stylos).","Le prix suit : 2 × 3 € = 6 €.","Le prix est proportionnel à la quantité (sans promo « lot »), donc ton ami a raison.","Doubler la quantité double le prix : c'est le cœur de la proportionnalité."]},
+
+{id:"m3e8",w:3,titre:"Le piège de la potion de croissance",type:"vf",vfA:false,
+ histoire:"Une marchande de potions te baratine : « Regarde cette fillette : à 10 ans, elle mesure 140 cm. Grâce à ma potion, à 20 ans, elle mesurera le double : 280 cm ! C'est mathématique ! »",
+ q:"Son raisonnement est-il correct ?",
+ justif:["Oui : 2 fois plus d'années, donc 2 fois plus de centimètres.","Non : la taille n'est pas proportionnelle à l'âge — sinon les grands-parents seraient des géants !"],justifA:1,
+ indice:"Applique le même raisonnement à une mamie de 80 ans… Quelle serait sa taille ? Est-ce crédible ?",
+ etapes:["Si taille et âge étaient proportionnels, à 80 ans on mesurerait 8 × 140 = 11,20 m !","La croissance ralentit puis s'arrête : la taille n'est PAS proportionnelle à l'âge.","280 cm = 2,80 m, plus grand que le record du monde…","Réflexe de matheux : avant d'appliquer la proportionnalité, se demander si elle a du sens."]},
+
+{id:"m3e9",w:3,titre:"La balance du marchand de pommes",type:"ordre",
+ histoire:"« 5 kg de pommes : 8 € », annonce la pancarte. Une cliente n'en veut que 3 kg. Le marchand t'explique comment il calcule le prix, mais un coup de vent a mélangé ses étapes !",
+ q:"Remets le raisonnement dans le bon ordre :",
+ ordre:["Je cherche d'abord le prix d'1 kg de pommes.","Je calcule 8 ÷ 5 = 1,60 € le kilo.","Je multiplie par 3 : 1,60 × 3 = 4,80 €.","Les 3 kg de pommes coûtent 4,80 €."],
+ indice:"Sa méthode passe par le prix d'UN kilo (l'unité), avant de multiplier.",
+ etapes:["On ne peut pas passer facilement de 5 kg à 3 kg… mais on peut passer par 1 kg !","8 ÷ 5 = 1,60 € le kilo, puis 1,60 × 3 = 4,80 €.","C'est la « règle de trois » : descendre à l'unité, puis remonter."]},
+
+{id:"m3e10",w:3,titre:"Le manteau des quatre saisons",type:"saisie",num:45,unit:"€",
+ histoire:"Le manteau des quatre saisons coûte 60 €. Aujourd'hui, jour de fête, le tailleur offre une remise de 25 % : « Un quart du prix envolé, mademoiselle ! »",
+ q:"Combien vas-tu payer le manteau, en euros ?",
+ indice:"25 % = 1/4. Calcule d'abord la remise, puis retire-la du prix.",
+ etapes:["25 % de 60 € = 60 ÷ 4 = 15 € : c'est la remise.","Prix payé : 60 − 15 = 45 €.","Attention à bien lire la question : on demandait le prix PAYÉ, pas la remise. Les énoncés adorent ce petit piège !"]},
+
+{id:"m3e11",w:3,titre:"La guerre des fraises",type:"qcm",
+ histoire:"Deux stands de fraises se font concurrence. Stand A : « 1,5 kg pour 4,50 € ». Stand B : « 2 kg pour 5,60 € ». La foule hésite… à toi de trancher !",
+ q:"Quel stand vend ses fraises le moins cher ?",
+ choices:["Le stand A","Le stand B","Ils sont au même prix","On ne peut pas comparer"],a:1,
+ indice:"Compare ce qui est comparable : calcule le prix d'1 kg à chaque stand.",
+ etapes:["Stand A : 4,50 ÷ 1,5 = 3 € le kilo.","Stand B : 5,60 ÷ 2 = 2,80 € le kilo.","2,80 < 3 : le stand B est le moins cher.","Pour comparer des offres, on ramène toujours à la même unité (ici, le prix au kilo — comme au supermarché !)."]},
+
+{id:"m3e12",w:3,titre:"La fontaine du Grand Marché",type:"saisie",num:120,unit:"min",
+ histoire:"Dernier défi du Marché : la grande fontaine (600 litres) doit être remplie pour le spectacle du soir. Le fontainier ouvre son robinet et chronomètre : 15 litres coulent en 3 minutes.",
+ q:"Combien de temps faudra-t-il pour remplir la fontaine, en minutes ?",
+ indice:"Deux chemins possibles : litres par minute (15 ÷ 3), ou bien « 600, c'est combien de fois 15 ? »",
+ etapes:["Débit : 15 ÷ 3 = 5 litres par minute.","Temps : 600 ÷ 5 = 120 minutes.","120 minutes = 2 heures : le spectacle pourra commencer !","Autre chemin : 600 ÷ 15 = 40 « paquets » de 3 minutes → 40 × 3 = 120 min. Même réponse ✓"]},
+
+/* ---------- MONDE 4 · Les Cités Géométriques ---------- */
+{id:"m4e1",w:4,titre:"Le potager de l'architecte",type:"qcm",
+ histoire:"L'architecte en chef des Cités t'accueille dans son jardin : un potager rectangulaire de 5 m de long et 3 m de large. Elle veut l'entourer entièrement d'une petite barrière en bois.",
+ q:"Quelle longueur de barrière doit-elle acheter ?",
+ choices:["8 m","15 m","16 m","30 m"],a:2,
+ svg:'<svg viewBox="0 0 240 160" width="240"><rect x="40" y="35" width="160" height="96" rx="6" fill="#E7FBF4" stroke="#00b894" stroke-width="4" stroke-dasharray="10 6"/><text x="120" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#00b894">5 m</text><text x="24" y="88" text-anchor="middle" font-size="15" font-weight="bold" fill="#00b894">3 m</text><text x="120" y="90" text-anchor="middle" font-size="24">🥕🍅</text></svg>',
+ indice:"La barrière fait tout le tour : c'est le périmètre. Additionne les 4 côtés.",
+ etapes:["Le tour du rectangle (périmètre) = longueur + largeur + longueur + largeur.","P = 5 + 3 + 5 + 3 = 16 m. (Ou plus vite : (5 + 3) × 2.)","Attention : 5 × 3 = 15 donnerait l'AIRE (la surface), pas le tour !"]},
+
+{id:"m4e2",w:4,titre:"Le tapis du palais",type:"saisie",num:28,unit:"m²",
+ histoire:"Le palais des Cités commande un tapis rectangulaire pour la salle du trône : 7 m de long sur 4 m de large. Le tisserand facture selon la surface du tapis.",
+ q:"Quelle est l'aire du tapis, en m² ?",
+ indice:"L'aire d'un rectangle = longueur × largeur. Imagine le tapis quadrillé en carrés de 1 m.",
+ etapes:["Aire du rectangle = longueur × largeur.","7 × 4 = 28 m².","Imagine 4 rangées de 7 carrés de 1 m sur 1 m : on en compte bien 28.","Périmètre = le tour (en m) ; aire = la surface (en m²). Deux idées bien différentes !"]},
+
+{id:"m4e3",w:4,titre:"L'enseigne du miroitier",type:"qcm",
+ histoire:"Le miroitier des Cités fabrique des enseignes en lettres géantes. Il ne garde que les lettres qui ont un axe de symétrie vertical : pliées en deux le long d'un trait debout, les deux moitiés se superposent parfaitement.",
+ q:"Laquelle de ces lettres a un axe de symétrie vertical ?",
+ choices:["A","F","G","J"],a:0,
+ indice:"Imagine chaque lettre pliée en deux le long d'un trait vertical au milieu. Pour laquelle les deux moitiés coïncident-elles ?",
+ etapes:["Plie mentalement chaque lettre le long d'un trait vertical central.","Le A a deux moitiés identiques de part et d'autre : il a un axe de symétrie vertical.","F, G et J n'en ont pas : leurs moitiés gauche et droite sont différentes.","D'autres lettres symétriques verticalement : H, M, O, T, U, V, W, X, Y."]},
+
+{id:"m4e4",w:4,titre:"Le cadre du portrait royal",type:"saisie",num:9,unit:"cm",
+ histoire:"L'encadreur royal fabrique un cadre parfaitement carré pour le portrait de la reine. Il a utilisé exactement 36 cm de baguette dorée pour faire tout le tour.",
+ q:"Quelle est la longueur d'un côté du cadre, en cm ?",
+ indice:"Un carré a 4 côtés identiques. Le tour complet mesure 36 cm…",
+ etapes:["Le périmètre du carré = 4 × côté.","On cherche le côté : 36 ÷ 4 = 9 cm.","Vérification : 9 + 9 + 9 + 9 = 36 ✓","Ici on fait le chemin inverse du calcul de périmètre : c'est un problème « à rebours »."]},
+
+{id:"m4e5",w:4,titre:"Le dé du fabricant de jeux",type:"saisie",num:4,
+ histoire:"Le fabricant de jeux des Cités te confie un secret : « Sur un vrai dé, les faces opposées font TOUJOURS un total de 7. » Il pose un dé sur la table, face 3 visible sur le dessus.",
+ q:"Quel nombre est caché sur la face du dessous ?",
+ indice:"Dessus + dessous = 7. Le dessus montre 3…",
+ etapes:["Les faces opposées d'un dé totalisent 7 : 1↔6, 2↔5, 3↔4.","La face opposée au 3 est donc 7 − 3 = 4.","Vérifie sur un vrai dé à la maison : ça marche à tous les coups !"]},
+
+{id:"m4e6",w:4,titre:"Le robot livreur",type:"qcm",
+ histoire:"Dans les Cités, un petit robot livre les colis. Au départ, il est face au nord. Pour éviter une fontaine, il tourne 3 fois de suite d'un quart de tour vers la droite.",
+ q:"Vers quelle direction le robot regarde-t-il maintenant ?",
+ choices:["Le nord","Le sud","L'est","L'ouest"],a:3,
+ svg:'<svg viewBox="0 0 180 180" width="170"><circle cx="90" cy="90" r="70" fill="#F3F0FF" stroke="#A29BFE" stroke-width="3"/><text x="90" y="26" text-anchor="middle" font-size="14" font-weight="bold" fill="#6C5CE7">N</text><text x="90" y="170" text-anchor="middle" font-size="14" font-weight="bold" fill="#6C5CE7">S</text><text x="166" y="95" text-anchor="middle" font-size="14" font-weight="bold" fill="#6C5CE7">E</text><text x="14" y="95" text-anchor="middle" font-size="14" font-weight="bold" fill="#6C5CE7">O</text><text x="90" y="100" text-anchor="middle" font-size="30">🤖</text><path d="M90 62 L90 44 M84 50 L90 44 L96 50" stroke="#e17055" stroke-width="4" fill="none" stroke-linecap="round"/></svg>',
+ indice:"Suis les quarts de tour un par un : nord → est → sud → …",
+ etapes:["1er quart de tour à droite : nord → est.","2e quart de tour : est → sud.","3e quart de tour : sud → ouest.","Astuce : 3 quarts de tour à droite = 1 quart de tour à gauche. Nord → ouest, directement !"]},
+
+{id:"m4e7",w:4,titre:"Le procès des quadrilatères",type:"vf",vfA:true,
+ histoire:"Grand débat au tribunal des formes ! Le carré déclare fièrement : « Moi aussi, je suis un rectangle ! » Le rectangle proteste : « Impossible, tes côtés sont tous égaux ! » Le juge te demande de trancher.",
+ q:"Le carré a-t-il raison : un carré est-il aussi un rectangle ?",
+ justif:["Oui : il a 4 angles droits, c'est la définition d'un rectangle. Ses 4 côtés égaux sont un bonus !","Non : un rectangle doit avoir une longueur différente de sa largeur."],justifA:0,
+ indice:"Quelle est la définition exacte d'un rectangle ? Le carré la respecte-t-il ?",
+ etapes:["Définition : un rectangle est un quadrilatère qui a 4 angles droits.","Le carré a bien 4 angles droits : il respecte la définition, c'est donc un rectangle.","C'est un rectangle « particulier », avec en plus 4 côtés égaux.","De la même façon, le carré est aussi un losange particulier. Les familles de figures s'emboîtent !"]},
+
+{id:"m4e8",w:4,titre:"La mosaïque en L",type:"saisie",num:13,unit:"carreaux",
+ histoire:"La mosaïste des Cités crée un motif en forme de L : elle est partie d'un grand rectangle de 5 carreaux sur 3, puis elle a retiré un coin rectangulaire de 2 carreaux sur 1.",
+ q:"Combien de carreaux compte sa mosaïque en L ?",
+ svg:'<svg viewBox="0 0 220 140" width="210"><g stroke="#00b894" stroke-width="2" fill="#E7FBF4"><rect x="30" y="20" width="36" height="36"/><rect x="66" y="20" width="36" height="36"/><rect x="102" y="20" width="36" height="36"/><rect x="30" y="56" width="36" height="36"/><rect x="66" y="56" width="36" height="36"/><rect x="102" y="56" width="36" height="36"/><rect x="138" y="56" width="36" height="36"/><rect x="174" y="56" width="36" height="36"/><rect x="30" y="92" width="36" height="36"/><rect x="66" y="92" width="36" height="36"/><rect x="102" y="92" width="36" height="36"/><rect x="138" y="92" width="36" height="36"/><rect x="174" y="92" width="36" height="36"/></g><g stroke="#FF7675" stroke-width="2" fill="#FFEDEC" opacity="0.7"><rect x="138" y="20" width="36" height="36"/><rect x="174" y="20" width="36" height="36"/></g><text x="192" y="43" text-anchor="middle" font-size="13" fill="#d63031" font-weight="bold">✂️</text></svg>',
+ indice:"Calcule les carreaux du grand rectangle complet, puis retire ceux du coin découpé.",
+ etapes:["Rectangle complet : 5 × 3 = 15 carreaux.","Coin retiré : 2 × 1 = 2 carreaux.","Mosaïque en L : 15 − 2 = 13 carreaux.","Pour les figures compliquées, on passe par des rectangles simples qu'on ajoute ou qu'on retire."]},
+
+{id:"m4e9",w:4,titre:"L'horloge de la grande tour",type:"qcm",
+ histoire:"Sur la grande tour des Cités, l'horloge sonne 3 heures pile. La petite aiguille pointe le 3, la grande pointe le 12. L'horloger te demande de décrire l'angle entre les deux aiguilles.",
+ q:"Quel angle forment les aiguilles à 3 h 00 pile ?",
+ choices:["Un angle aigu (moins de 90°)","Un angle droit (exactement 90°)","Un angle obtus (plus de 90°)","Un angle plat (180°)"],a:1,
+ indice:"De 12 à 3, l'aiguille parcourt un quart du cadran. Quel angle correspond à un quart de tour ?",
+ etapes:["Un tour complet du cadran = 360°.","De 12 à 3, il y a un quart de tour : 360 ÷ 4 = 90°.","90°, c'est exactement un angle droit — comme le coin d'une feuille.","À 6 h 00, les aiguilles feraient un angle plat (180°). À toi de vérifier ce soir !"]},
+
+{id:"m4e10",w:4,titre:"La promenade des remparts",type:"saisie",num:26,unit:"m",
+ histoire:"Les remparts de la citadelle forment un L : c'est un rectangle de 8 m sur 5 m auquel on a découpé un coin rectangulaire. Le garde fait sa ronde en longeant tous les murs, y compris les deux murs du renfoncement.",
+ q:"Quelle distance parcourt-il pour un tour complet, en mètres ?",
+ svg:'<svg viewBox="0 0 260 190" width="240"><path d="M40 30 L200 30 L200 90 L140 90 L140 150 L40 150 Z" fill="#E7FBF4" stroke="#00b894" stroke-width="4" stroke-linejoin="round"/><text x="120" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#00b894">8 m</text><text x="24" y="95" text-anchor="middle" font-size="14" font-weight="bold" fill="#00b894">5 m</text><text x="95" y="120" text-anchor="middle" font-size="20">💂</text></svg>',
+ indice:"Fais glisser (par la pensée) les deux petits murs du renfoncement : le tour du L est le même que le tour du rectangle complet 8 m × 5 m !",
+ etapes:["Astuce magique : pousse le mur horizontal du renfoncement vers le haut et le mur vertical vers la droite.","La figure devient un rectangle complet de 8 m sur 5 m, sans changer la longueur du tour.","Périmètre = (8 + 5) × 2 = 26 m.","Découper un coin rectangulaire ne change PAS le périmètre… mais ça change l'aire ! Étonnant, non ?"]},
+
+{id:"m4e11",w:4,titre:"Le plan du bâtisseur",type:"ordre",
+ histoire:"Le bâtisseur des Cités doit tracer une place parfaitement carrée de 4 cm de côté sur son plan. Il connaît la méthode par cœur… mais ses instructions sont tombées de son carnet !",
+ q:"Remets les étapes de construction du carré ABCD dans l'ordre :",
+ ordre:["Je trace un segment AB de 4 cm avec ma règle.","Je trace la perpendiculaire à AB passant par A, et celle passant par B, avec mon équerre.","Sur chaque perpendiculaire, je place D et C à 4 cm de A et de B.","Je relie D à C : ABCD est un carré de 4 cm de côté."],
+ indice:"On commence toujours par un segment de base, puis viennent les angles droits, puis les mesures.",
+ etapes:["D'abord la base : le segment AB de 4 cm.","Ensuite les angles droits avec l'équerre : les perpendiculaires en A et en B.","Puis on reporte la mesure de 4 cm pour placer D et C.","On referme la figure. Règle + équerre = le duo gagnant du carré !"]},
+
+{id:"m4e12",w:4,titre:"Le dallage de la salle de bal",type:"saisie",num:96,unit:"dalles",
+ histoire:"Dernier chantier des Cités : daller la salle de bal, un rectangle de 6 m sur 4 m, avec des dalles carrées de 50 cm de côté. Le maître d'œuvre attend ton calcul pour passer commande.",
+ q:"Combien de dalles faut-il commander ?",
+ indice:"Combien de dalles de 50 cm tiennent sur une longueur de 6 m ? Et sur 4 m ? (Rappel : 1 m = 100 cm.)",
+ etapes:["50 cm = un demi-mètre : il faut 2 dalles pour faire 1 m.","Sur la longueur de 6 m : 12 dalles. Sur la largeur de 4 m : 8 dalles.","Total : 12 × 8 = 96 dalles.","Autre chemin : aire de la salle 24 m², aire d'une dalle 0,25 m², et 24 ÷ 0,25 = 96 ✓"]},
+
+/* ---------- MONDE 5 · La Forêt des Énigmes ---------- */
+{id:"m5e1",w:5,titre:"Les champignons doubleurs",type:"saisie",num:32,
+ histoire:"À l'entrée de la Forêt pousse une rangée de champignons enchantés portant les nombres 2, 4, 8, 16… Le suivant est encore sous terre, et le lutin jardinier a oublié son numéro !",
+ q:"Quel nombre porte le champignon suivant ?",
+ indice:"Observe comment on passe d'un champignon au suivant : 2 → 4 → 8 → 16…",
+ etapes:["De 2 à 4 : × 2. De 4 à 8 : × 2. De 8 à 16 : × 2.","Chaque champignon vaut le double du précédent.","Le suivant : 16 × 2 = 32.","Face à une suite, cherche toujours la « machine » qui fait passer d'un nombre au suivant."]},
+
+{id:"m5e2",w:5,titre:"L'escalier du vieux chêne",type:"saisie",num:13,
+ histoire:"Un escalier en colimaçon grimpe dans le vieux chêne. Ses marches portent les nombres 1, 1, 2, 3, 5, 8… La marche suivante est cachée par le feuillage. L'écureuil te souffle : « Le secret est dans les marches précédentes… »",
+ q:"Quel nombre porte la marche suivante ?",
+ indice:"Additionne les deux dernières marches : 1+1=2, 1+2=3, 2+3=5…",
+ etapes:["Chaque nombre est la somme des DEUX précédents.","1+1=2, 1+2=3, 2+3=5, 3+5=8… ✓","La marche suivante : 5 + 8 = 13.","Tu viens de découvrir la célèbre suite de Fibonacci — on la retrouve dans les pommes de pin et les tournesols !"]},
+
+{id:"m5e3",w:5,titre:"Les trois gardiennes",type:"qcm",
+ histoire:"Trois gardiennes de la Forêt — Zoé, Inès et Maya — ont chacune un animal : un chat, un chien ou un lapin. Tu apprends que : Inès est allergique aux chats. Maya promène son animal en laisse chaque soir : c'est le chien.",
+ q:"Qui a le chat ?",
+ choices:["Zoé","Inès","Maya","On ne peut pas savoir"],a:0,
+ indice:"Procède par élimination : qui ne peut PAS avoir le chat ?",
+ etapes:["Maya a le chien (elle le promène en laisse).","Inès est allergique aux chats : elle ne peut pas avoir le chat. Elle a donc le lapin.","Il ne reste que Zoé pour le chat.","C'est la déduction par élimination : on raye les impossibles jusqu'à ce qu'il ne reste qu'une solution."]},
+
+{id:"m5e4",w:5,titre:"Les moutons du berger étourdi",type:"saisie",num:9,unit:"moutons",
+ histoire:"Le berger de la clairière raconte sa mésaventure : « J'avais 17 moutons. Pendant l'orage, tous se sont enfuis, sauf 9. » Il te regarde, l'air catastrophé : « Combien m'en reste-t-il ? »",
+ q:"Combien de moutons reste-t-il au berger ?",
+ indice:"Relis très lentement : « tous SAUF 9 se sont enfuis ». Qui est resté, alors ?",
+ etapes:["Le piège : on a envie de calculer 17 − 9 = 8… mais relis bien !","« Tous sauf 9 se sont enfuis » signifie exactement : 9 moutons ne sont PAS partis.","Il lui reste donc 9 moutons. Aucun calcul n'était nécessaire !","Leçon de la Forêt : lire l'énoncé avec attention vaut mieux que calculer vite."]},
+
+{id:"m5e5",w:5,titre:"L'escargot du puits",type:"saisie",num:8,unit:"jours",
+ histoire:"Un escargot est tombé au fond d'un puits de 10 mètres. Chaque jour, il grimpe 3 mètres ; mais chaque nuit, il glisse et redescend de 2 mètres. L'escargot te lance : « Dans combien de jours sortirai-je ? »",
+ q:"Au bout de combien de jours l'escargot sort-il du puits ?",
+ indice:"Attention : le jour où il atteint le haut, il ne redescend plus ! Suis sa hauteur jour par jour.",
+ etapes:["Chaque journée complète (montée + nuit), il gagne 3 − 2 = 1 mètre.","Fin de la nuit 7 : il est à 7 mètres.","Le 8e jour, il grimpe de 3 m : 7 + 3 = 10 m → il est SORTI, plus de glissade la nuit !","Réponse : 8 jours (et pas 10). Le piège classique : oublier que la dernière montée suffit."]},
+
+{id:"m5e6",w:5,titre:"La fée qui parle au futur",type:"saisie",num:6,unit:"ans",
+ histoire:"Une petite fée t'arrête sur le sentier : « Devine mon âge ! Dans 6 ans, j'aurai exactement le double de mon âge d'aujourd'hui. »",
+ q:"Quel âge a la fée aujourd'hui ?",
+ indice:"Essaie des âges : si elle a 4 ans, dans 6 ans elle en aura 10… est-ce le double de 4 ? Continue à tester !",
+ etapes:["Testons : 5 ans → dans 6 ans : 11. Double de 5 = 10. Raté.","6 ans → dans 6 ans : 12. Double de 6 = 12. Gagné !","La fée a 6 ans. Passer de son âge à son double, c'est ajouter son âge : donc son âge = 6 ans.","Essayer des valeurs et ajuster, c'est une vraie méthode de mathématicien !"]},
+
+{id:"m5e7",w:5,titre:"La balance de la clairière",type:"qcm",
+ histoire:"Au cœur de la Forêt trône une vieille balance de pierre. Tu observes : 2 pommes pèsent exactement autant que 6 clémentines. Le hibou te questionne : « Alors, une seule pomme… »",
+ q:"Une pomme pèse autant que combien de clémentines ?",
+ choices:["2 clémentines","3 clémentines","4 clémentines","6 clémentines"],a:1,
+ indice:"Si 2 pommes = 6 clémentines, partage chaque plateau en deux…",
+ etapes:["2 pommes ⟺ 6 clémentines.","On divise chaque côté par 2 : 1 pomme ⟺ 3 clémentines.","Une balance reste équilibrée si on divise les deux plateaux pareil — c'est le début des équations !"]},
+
+{id:"m5e8",w:5,titre:"La fête des lutins",type:"saisie",num:6,unit:"poignées de main",
+ histoire:"Quatre lutins se retrouvent pour la fête de la Forêt. Très polis, ils se serrent tous la main : chaque lutin serre une fois la main de chacun des autres.",
+ q:"Combien de poignées de main sont échangées en tout ?",
+ indice:"Nomme-les A, B, C, D et liste les paires : A-B, A-C… Attention, la poignée A-B est la même que B-A !",
+ etapes:["Listons les paires : A-B, A-C, A-D, B-C, B-D, C-D.","Cela fait 6 poignées de main.","Pourquoi pas 4 × 3 = 12 ? Parce que chaque poignée serait comptée deux fois (A-B et B-A) : 12 ÷ 2 = 6.","Faire une liste ordonnée, c'est le meilleur moyen de ne rien oublier et ne rien compter deux fois."]},
+
+{id:"m5e9",w:5,titre:"Le collier de la druidesse",type:"qcm",
+ histoire:"La druidesse enfile des perles dans un ordre rituel très précis : ▲ ● ● ▲ ● ● ▲ … Elle s'interrompt et te tend le fil : « À toi ! Quelle perle vient maintenant ? »",
+ q:"Quelle est la perle suivante ?",
+ choices:["▲ un triangle","● un rond","Une nouvelle forme","Impossible à prévoir"],a:1,
+ indice:"Cherche le « paquet » qui se répète depuis le début du collier.",
+ etapes:["Le motif qui se répète est : ▲ ● ● (un paquet de 3 perles).","Le collier : ▲●● | ▲●● | ▲ … Le dernier paquet vient de commencer par ▲.","Il manque les deux ronds du paquet : la perle suivante est ● .","Repérer le motif répété permet même de prédire la 100e perle : 100 = 33 paquets + 1 → un ▲ !"]},
+
+{id:"m5e10",w:5,titre:"L'énigme de la famille hérisson",type:"saisie",num:7,unit:"enfants",
+ histoire:"Une jeune hérissonne te pose l'énigme de sa famille : « J'ai autant de frères que de sœurs. Mais mon frère Éric, lui, a deux fois plus de sœurs que de frères. »",
+ q:"Combien y a-t-il d'enfants dans la famille hérisson ?",
+ indice:"Teste ! Essaie 4 filles et 3 garçons : la hérissonne aurait 3 sœurs et 3 frères… et Éric ?",
+ etapes:["Testons 4 filles et 3 garçons.","La hérissonne (une des filles) : 3 sœurs et 3 frères → « autant de frères que de sœurs » ✓","Éric (un des garçons) : 4 sœurs et 2 frères → « deux fois plus de sœurs » ✓","4 + 3 = 7 enfants. Le secret : celui qui parle ne se compte jamais lui-même !"]},
+
+{id:"m5e11",w:5,titre:"Les Zorgs de la Forêt",type:"vf",vfA:false,
+ histoire:"Le hibou logicien t'énonce deux faits absolument certains : « Tous les Zorgs de la Forêt sont verts. Or, Bip est vert. » Puis il conclut fièrement : « Donc Bip est un Zorg ! »",
+ q:"La conclusion du hibou est-elle correcte ?",
+ justif:["Oui : Bip est vert et les Zorgs sont verts, tout concorde.","Non : d'autres créatures peuvent être vertes sans être des Zorgs — une grenouille par exemple !"],justifA:1,
+ indice:"Remplace « Zorg » par « grenouille » : tous les… hum, et si Bip était un cactus ?",
+ etapes:["« Tous les Zorgs sont verts » signifie : Zorg → forcément vert.","Mais cela n'interdit PAS à d'autres êtres d'être verts : grenouilles, cactus, dragons…","Bip est vert, d'accord, mais rien ne prouve que c'est un Zorg. La conclusion est fausse.","C'est un piège de logique très célèbre : la flèche « si… alors » ne se retourne pas !"]},
+
+{id:"m5e12",w:5,titre:"Les trois lanternes",type:"qcm",
+ histoire:"Au fond de la Forêt, une cabane. En bas, 3 interrupteurs ; en haut, dans le grenier, une seule lanterne — invisible d'en bas. Tu ne peux monter au grenier qu'UNE seule fois. La chouette te défie de trouver, à coup sûr, quel interrupteur allume la lanterne.",
+ q:"Quelle stratégie permet de trouver le bon interrupteur à coup sûr ?",
+ choices:["J'allume le 1er quelques minutes puis je l'éteins, j'allume le 2e, et je monte toucher l'ampoule.","J'allume les 3 en même temps et je monte voir.","J'en allume un au hasard : j'ai une chance sur trois.","C'est impossible avec une seule visite."],a:0,
+ indice:"Une ampoule qui vient de briller garde un indice… même éteinte. Lequel ? (Pense à la chaleur !)",
+ etapes:["Allume le 1er interrupteur 5 minutes, puis éteins-le. Allume le 2e. Monte.","Lanterne allumée → c'est le 2e interrupteur.","Lanterne éteinte mais CHAUDE → c'était le 1er.","Lanterne éteinte et froide → c'est le 3e. Trois cas possibles, trois réponses différentes : l'astuce est d'utiliser une deuxième information (la chaleur), pas seulement la lumière !"]},
+
+/* ---------- MONDE 6 · Le Sommet des Champions ---------- */
+{id:"m6e1",w:6,titre:"Le grand goûter de cordée",type:"saisie",num:29.4,unit:"€",
+ histoire:"Avant l'ascension, tu organises le goûter des 15 grimpeurs au refuge. Tu achètes : un grand gâteau à 18 €, un gobelet à 0,40 € pour chacun des 15 grimpeurs, et 3 bouteilles de jus à 1,80 € l'une.",
+ q:"Quel est le montant total du goûter, en euros ?",
+ indice:"Trois achats = trois calculs, puis une addition. Prends un brouillon !",
+ etapes:["Gâteau : 18 €.","Gobelets : 15 × 0,40 = 6 €.","Jus : 3 × 1,80 = 5,40 €.","Total : 18 + 6 + 5,40 = 29,40 €. Un problème à étapes bien découpé est déjà à moitié résolu !"]},
+
+{id:"m6e2",w:6,titre:"Le train du glacier",type:"saisie",acc:["16h22","16:22","16 h 22"],
+ histoire:"Le petit train rouge du glacier part de la gare du refuge à 14 h 37. Le voyage jusqu'au pied du Sommet dure exactement 1 h 45.",
+ q:"À quelle heure arrive-t-il ? (Écris ta réponse comme 15h30.)",
+ indice:"Ajoute d'abord 1 heure, puis les 45 minutes en deux morceaux : 23 minutes pour atteindre l'heure pile, puis le reste.",
+ etapes:["14 h 37 + 1 h = 15 h 37.","15 h 37 + 23 min = 16 h 00 (on complète jusqu'à l'heure ronde).","Il reste 45 − 23 = 22 min à ajouter : 16 h 00 + 22 min = 16 h 22.","Attention, les heures ne fonctionnent pas comme les nombres décimaux : 60 minutes = 1 heure, pas 100 !"]},
+
+{id:"m6e3",w:6,titre:"Le carnet du cartographe",type:"saisie",num:189,unit:"chiffres",
+ histoire:"Le cartographe du Sommet numérote à la main les 99 pages de son nouveau carnet d'exploration : 1, 2, 3, … jusqu'à 99. Il soupire : « Combien de chiffres vais-je devoir écrire en tout ? »",
+ q:"Combien de chiffres écrit-il pour numéroter les 99 pages ?",
+ indice:"Sépare les pages en deux groupes : celles à UN chiffre (1 à 9) et celles à DEUX chiffres (10 à 99).",
+ etapes:["Pages 1 à 9 : 9 pages × 1 chiffre = 9 chiffres.","Pages 10 à 99 : il y en a 99 − 10 + 1 = 90, à 2 chiffres chacune → 180 chiffres.","Total : 9 + 180 = 189 chiffres.","Le réflexe champion : découper le problème en groupes réguliers. (Et as-tu vu le piège ? De 10 à 99, il y a 90 nombres, pas 89 !)"]},
+
+{id:"m6e4",w:6,titre:"L'économie d'altitude",type:"saisie",num:8,unit:"semaines",
+ histoire:"Au camp de base, la boutique vend une paire de jumelles d'exploration à 50 €. Tu as déjà 18 € dans ta tirelire, et tu reçois 4 € d'argent de poche chaque semaine, que tu mets entièrement de côté.",
+ q:"Dans combien de semaines pourras-tu acheter les jumelles ?",
+ indice:"Combien te manque-t-il ? Puis : combien de semaines à 4 € pour rassembler cette somme ?",
+ etapes:["Somme manquante : 50 − 18 = 32 €.","Nombre de semaines : 32 ÷ 4 = 8.","Dans 8 semaines, les jumelles sont à toi !","Vérification : 18 + 8 × 4 = 18 + 32 = 50 ✓"]},
+
+{id:"m6e5",w:6,titre:"La classe des neiges",type:"saisie",num:24,unit:"élèves",
+ histoire:"Au refuge, le maître raconte : « Dans ma classe, la moitié des élèves fait de la luge, le quart fait du ski, et les 6 restants font un bonhomme de neige. » Il sourit : « Sauras-tu retrouver le nombre d'élèves de ma classe ? »",
+ q:"Combien y a-t-il d'élèves dans cette classe ?",
+ indice:"1/2 + 1/4, ça fait quelle fraction de la classe ? Et donc, que représentent les 6 restants ?",
+ etapes:["Luge + ski : 1/2 + 1/4 = 2/4 + 1/4 = 3/4 de la classe.","Le reste : 1 − 3/4 = 1/4 de la classe. Et ce quart, c'est 6 élèves.","Si 1/4 = 6, alors la classe entière = 4 × 6 = 24 élèves.","Vérification : 12 en luge + 6 au ski + 6 au bonhomme = 24 ✓"]},
+
+{id:"m6e6",w:6,titre:"L'étape du col venteux",type:"saisie",num:37.5,unit:"km",
+ histoire:"La cycliste du Sommet attaque le col venteux. Elle grimpe à une vitesse régulière de 15 km/h et pédale pendant 2 h 30 sans s'arrêter.",
+ q:"Quelle distance parcourt-elle, en kilomètres ?",
+ indice:"Découpe : 2 heures pleines, puis une demi-heure. (En 1/2 h, on parcourt la moitié de 15 km.)",
+ etapes:["En 2 h : 2 × 15 = 30 km.","En 1/2 h : 15 ÷ 2 = 7,5 km.","Total : 30 + 7,5 = 37,5 km.","Le fameux « 2 h 30 » ne se multiplie pas tel quel : 2,30 n'est pas 2 h 30 ! On découpe, c'est plus sûr."]},
+
+{id:"m6e7",w:6,titre:"Le calendrier de la rentrée",type:"qcm",
+ histoire:"Au Sommet, on prépare déjà la grande fête de la rentrée. Cette année, le 2 septembre — jour de la rentrée — tombe un mercredi. La fête, elle, aura lieu le 23 septembre.",
+ q:"Quel jour de la semaine tombera le 23 septembre ?",
+ choices:["Lundi","Mardi","Mercredi","Vendredi"],a:2,
+ indice:"Combien de jours séparent le 2 du 23 ? Que se passe-t-il tous les 7 jours ?",
+ etapes:["Du 2 au 23 septembre : 23 − 2 = 21 jours.","21 = 3 × 7 : c'est un nombre exact de semaines.","Après un nombre entier de semaines, on retombe sur le même jour : mercredi !","Les jours de la semaine « tournent » par 7 : c'est un calcul de cycle, comme le collier de la druidesse."]},
+
+{id:"m6e8",w:6,titre:"Le duel des enclos",type:"vf",vfA:false,
+ histoire:"Deux bergers du Sommet comparent leurs enclos. Tous deux ont utilisé exactement 12 m de barrière. Le premier affirme : « Même longueur de barrière, donc nos moutons ont forcément la même surface d'herbe ! »",
+ q:"A-t-il raison : deux rectangles de même périmètre ont-ils toujours la même aire ?",
+ justif:["Oui : même tour, donc forcément même surface à l'intérieur.","Non : un enclos de 1 m × 5 m et un de 3 m × 3 m ont le même tour (12 m), mais 5 m² contre 9 m² d'herbe !"],justifA:1,
+ indice:"Teste avec 12 m de barrière : compare un enclos tout allongé (1 × 5) et un enclos carré (3 × 3).",
+ etapes:["Enclos 1 × 5 : périmètre (1+5) × 2 = 12 m, aire 1 × 5 = 5 m².","Enclos 3 × 3 : périmètre (3+3) × 2 = 12 m, aire 3 × 3 = 9 m².","Même périmètre, aires différentes : l'affirmation est fausse !","À périmètre égal, c'est le carré qui offre la plus grande aire. Les moutons du deuxième berger mangent mieux !"]},
+
+{id:"m6e9",w:6,titre:"La vente de gâteaux du refuge",type:"saisie",num:10,unit:"gâteaux",
+ histoire:"Grande vente au refuge : 120 gâteaux ont été préparés. Le matin, les 3/4 des gâteaux sont vendus. L'après-midi, les gourmands achètent les 2/3 de ce qui restait.",
+ q:"Combien de gâteaux reste-t-il à la fin de la journée ?",
+ indice:"Étape 1 : combien vendus le matin ? Étape 2 : combien restait-il à midi ? Étape 3 : les 2/3 de CE reste.",
+ etapes:["Matin : 3/4 de 120 = (120 ÷ 4) × 3 = 90 gâteaux vendus.","À midi, il reste 120 − 90 = 30 gâteaux.","Après-midi : 2/3 de 30 = 20 vendus. Il reste 30 − 20 = 10 gâteaux.","Piège déjoué : les 2/3 portaient sur le RESTE (30), pas sur les 120 de départ !"]},
+
+{id:"m6e10",w:6,titre:"La bâche du bassin",type:"saisie",num:384,unit:"€",
+ histoire:"Le refuge possède un bassin rectangulaire de 8 m sur 4 m. Avant l'hiver, il faut le couvrir d'une bâche sur mesure, exactement à ses dimensions. Le fabricant vend la bâche 12 € le mètre carré.",
+ q:"Combien coûtera la bâche, en euros ?",
+ indice:"D'abord la surface du bassin (en m²), ensuite le prix.",
+ etapes:["Aire du bassin : 8 × 4 = 32 m².","Prix : 32 × 12 = 384 €.","Astuce pour 32 × 12 : 32 × 10 = 320, plus 32 × 2 = 64, total 384.","Géométrie + proportionnalité dans le même problème : au Sommet, tout se combine !"]},
+
+{id:"m6e11",w:6,titre:"Le cadeau de la guide",type:"ordre",
+ histoire:"Trois amis veulent offrir à leur guide de montagne une boussole à 45 €. Le vendeur leur accorde une remise de 10 %, et ils se partagent équitablement la dépense. Remets leur raisonnement en ordre !",
+ q:"Remets les étapes du calcul dans le bon ordre :",
+ ordre:["Je calcule la remise : 10 % de 45 € = 4,50 €.","Je calcule le prix remisé : 45 − 4,50 = 40,50 €.","Je partage entre les 3 amis : 40,50 ÷ 3 = 13,50 €.","Chaque ami paie 13,50 €."],
+ indice:"On ne peut pas partager le prix avant de le connaître : la remise se calcule en premier.",
+ etapes:["D'abord la remise : 10 % de 45 = 45 ÷ 10 = 4,50 €.","Puis le nouveau prix : 45 − 4,50 = 40,50 €.","Enfin le partage : 40,50 ÷ 3 = 13,50 € chacun.","L'ordre des étapes compte : partager 45 € d'abord donnerait un résultat faux !"]},
+
+{id:"m6e12",w:6,titre:"⭐ L'ultime défi : la kermesse du Sommet",type:"saisie",num:32.5,unit:"€",
+ histoire:"Te voilà au sommet ! Dernier défi, digne d'un rallye maths : la grande kermesse a vendu 250 tickets à 2 € pièce. Les dépenses d'organisation s'élèvent à 175 €. La moitié du bénéfice est versée à la cagnotte du voyage scolaire, et le reste est partagé équitablement entre les 5 classes de l'école.",
+ q:"Combien chaque classe reçoit-elle, en euros ?",
+ indice:"Quatre étapes t'attendent : recette totale → bénéfice (recette − dépenses) → moitié pour le voyage → partage du reste entre 5.",
+ etapes:["Recette : 250 × 2 = 500 €.","Bénéfice : 500 − 175 = 325 €.","Moitié pour le voyage : 325 ÷ 2 = 162,50 €. Il reste 162,50 € pour les classes.","162,50 ÷ 5 = 32,50 € par classe. Bravo, tu viens de gravir le Sommet des Champions ! 🏔️"]}
+];
+
+/* ================== BADGES ================== */
+const BADGES=[
+ {id:"premiere",em:"🌟",nom:"Premiers pas",desc:"Réussir ton premier exercice",
+  test:s=>Object.values(s.etoiles).some(v=>v>0)},
+ {id:"monde1",em:"🏝️",nom:"Cap sur l'Archipel",desc:"Terminer l'Archipel des Nombres",test:s=>mondeFini(s,1)},
+ {id:"monde2",em:"🍰",nom:"Reine des partages",desc:"Terminer la Vallée des Partages",test:s=>mondeFini(s,2)},
+ {id:"monde3",em:"🛒",nom:"As du marché",desc:"Terminer le Grand Marché",test:s=>mondeFini(s,3)},
+ {id:"monde4",em:"🏛️",nom:"Architecte en herbe",desc:"Terminer les Cités Géométriques",test:s=>mondeFini(s,4)},
+ {id:"monde5",em:"🌲",nom:"Esprit de la Forêt",desc:"Terminer la Forêt des Énigmes",test:s=>mondeFini(s,5)},
+ {id:"monde6",em:"🏔️",nom:"Championne du Sommet",desc:"Terminer le Sommet des Champions",test:s=>mondeFini(s,6)},
+ {id:"sansindice",em:"🧠",nom:"Tête bien faite",desc:"10 exercices réussis sans indice",
+  test:s=>Object.values(s.etoiles).filter(v=>v===3).length>=10},
+ {id:"etoiles50",em:"✨",nom:"Pluie d'étoiles",desc:"Récolter 50 étoiles",
+  test:s=>totalEtoiles(s)>=50},
+ {id:"etoiles120",em:"💫",nom:"Constellation",desc:"Récolter 120 étoiles",
+  test:s=>totalEtoiles(s)>=120},
+ {id:"streak3",em:"🔥",nom:"Bien échauffée",desc:"Jouer 3 jours d'affilée",test:s=>s.serie.record>=3},
+ {id:"streak7",em:"🚀",nom:"Semaine de feu",desc:"Jouer 7 jours d'affilée",test:s=>s.serie.record>=7},
+ {id:"defi",em:"🎯",nom:"Défi relevé",desc:"Réussir 5 défis du jour",test:s=>(s.defisReussis||0)>=5},
+ {id:"niveau5",em:"👑",nom:"Exploratrice confirmée",desc:"Atteindre le niveau 5",test:s=>niveau(s.xp)>=5},
+ {id:"atlas",em:"🗺️",nom:"L'Atlas complet",desc:"Réussir les 72 exercices",
+  test:s=>EXOS.every(e=>(s.etoiles[e.id]||0)>0)}
+];
+
+/* ================== ÉTAT & SAUVEGARDE ================== */
+const CLE="atlas6e_v1";
+const ETAT_DEFAUT=()=>({nom:"",cheveux:0,acc:"aucun",xp:0,etoiles:{},vus:{},badges:[],
+ serie:{last:"",count:0,record:0},defisReussis:0,defiFait:"",muet:false});
+let S=ETAT_DEFAUT();
+try{const brut=localStorage.getItem(CLE);if(brut)S=Object.assign(ETAT_DEFAUT(),JSON.parse(brut));}catch(e){}
+function sauve(){try{localStorage.setItem(CLE,JSON.stringify(S));}catch(e){}}
+
+const app=document.getElementById("app");
+const voile=document.getElementById("voile");
+
+/* ================== HELPERS ================== */
+function totalEtoiles(s){return Object.values(s.etoiles).reduce((a,b)=>a+b,0);}
+function niveau(xp){return Math.floor(xp/100)+1;}
+function exosDuMonde(w){return EXOS.filter(e=>e.w===w);}
+function faits(s,w){return exosDuMonde(w).filter(e=>(s.etoiles[e.id]||0)>0||s.vus[e.id]).length;}
+function mondeFini(s,w){return exosDuMonde(w).every(e=>(s.etoiles[e.id]||0)>0);}
+function mondeOuvert(w){return w===1||faits(S,w-1)>=8;}
+function echap(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function dateJour(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function hier(){const d=new Date();d.setDate(d.getDate()-1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function melange(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* normalisation des réponses saisies */
+function norm(t){return String(t).toLowerCase().replace(/\s+/g,"").replace(/,/g,".");}
+function extraitNombre(t){const m=norm(t).match(/-?\d+(?:\.\d+)?/);return m?parseFloat(m[0]):NaN;}
+function bonneSaisie(ex,val){
+  if(!val||!norm(val))return false;
+  if(ex.num!==undefined){const n=extraitNombre(val);return !isNaN(n)&&Math.abs(n-ex.num)<0.001;}
+  const v=norm(val);
+  return ex.acc.some(a=>norm(a)===v);
+}
+
+/* ================== AUDIO (Web Audio API) ================== */
+let ctxAudio=null;
+function initAudio(){if(!ctxAudio){try{ctxAudio=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}}
+document.addEventListener("pointerdown",initAudio,{once:true});
+function note(freq,debut,duree,type,vol){
+  if(!ctxAudio||S.muet)return;
+  const o=ctxAudio.createOscillator(),g=ctxAudio.createGain();
+  o.type=type||"sine";o.frequency.value=freq;
+  const t=ctxAudio.currentTime+debut;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol||0.12,t+0.02);
+  g.gain.exponentialRampToValueAtTime(0.001,t+duree);
+  o.connect(g);g.connect(ctxAudio.destination);o.start(t);o.stop(t+duree+0.05);
+}
+const SONS={
+  clic:()=>note(660,0,0.08,"sine",0.06),
+  ok:()=>{note(523,0,0.15);note(659,0.1,0.15);note(784,0.2,0.25);note(1047,0.32,0.4,"sine",0.1);},
+  ko:()=>{note(280,0,0.2,"triangle",0.08);note(230,0.15,0.28,"triangle",0.07);},
+  badge:()=>{[523,659,784,1047,1319].forEach((f,i)=>note(f,i*0.09,0.3,"sine",0.09));},
+  pose:()=>note(880,0,0.06,"sine",0.05)
+};
+function son(n){if(ctxAudio&&ctxAudio.state==="suspended")ctxAudio.resume();SONS[n]&&SONS[n]();}
+
+/* ================== CONFETTIS ================== */
+const canv=document.getElementById("confettis"),cctx=canv.getContext("2d");
+let parts=[],animConf=null;
+function redim(){canv.width=innerWidth;canv.height=innerHeight;}
+addEventListener("resize",redim);redim();
+function confettis(n){
+  const couleurs=["#6C5CE7","#FD79A8","#55EFC4","#FDCB6E","#74B9FF","#FF7675","#A29BFE"];
+  for(let i=0;i<(n||90);i++)parts.push({
+    x:Math.random()*canv.width,y:-20-Math.random()*canv.height*0.3,
+    vx:(Math.random()-0.5)*3,vy:2+Math.random()*3.5,r:4+Math.random()*6,
+    c:couleurs[Math.floor(Math.random()*couleurs.length)],
+    a:Math.random()*Math.PI,va:(Math.random()-0.5)*0.25});
+  if(!animConf)boucleConf();
+}
+function boucleConf(){
+  cctx.clearRect(0,0,canv.width,canv.height);
+  parts=parts.filter(p=>p.y<canv.height+30);
+  for(const p of parts){
+    p.x+=p.vx;p.y+=p.vy;p.a+=p.va;p.vy+=0.04;
+    cctx.save();cctx.translate(p.x,p.y);cctx.rotate(p.a);
+    cctx.fillStyle=p.c;cctx.fillRect(-p.r/2,-p.r/3,p.r,p.r*0.66);cctx.restore();
+  }
+  animConf=parts.length?requestAnimationFrame(boucleConf):null;
+}
+
+/* ================== AVATAR & MASCOTTE ================== */
+const COUL_CHEVEUX=["#6b4226","#2d3436","#f0c060","#c0392b","#8e6cf0"];
+const ACCESSOIRES=[
+ {id:"aucun",em:"🙂",nom:"Naturel",lvl:1},
+ {id:"bandana",em:"🧢",nom:"Bandana",lvl:2},
+ {id:"lunettes",em:"⭐",nom:"Lunettes étoile",lvl:3},
+ {id:"chapeau",em:"🤠",nom:"Chapeau d'exploratrice",lvl:5},
+ {id:"couronne",em:"👑",nom:"Couronne",lvl:8}
+];
+function avatarSVG(taille,accForce){
+  const hc=COUL_CHEVEUX[S.cheveux%COUL_CHEVEUX.length];
+  const acc=accForce!==undefined?accForce:S.acc;
+  let extra="";
+  if(acc==="bandana")extra='<path d="M28 34 Q50 22 72 34 L72 42 Q50 32 28 42 Z" fill="#FF7675"/><circle cx="73" cy="38" r="4" fill="#FF7675"/>';
+  if(acc==="lunettes")extra='<g fill="none" stroke="#FDCB6E" stroke-width="3"><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" stroke="none" transform="scale(0.62) translate(22,32)"/><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" stroke="none" transform="scale(0.62) translate(70,32)"/><line x1="45" y1="52" x2="55" y2="52" stroke="#FDCB6E"/></g>';
+  if(acc==="chapeau")extra='<ellipse cx="50" cy="32" rx="32" ry="8" fill="#b3813f"/><path d="M32 32 Q32 12 50 12 Q68 12 68 32 Q50 26 32 32 Z" fill="#c99552"/><rect x="33" y="24" width="34" height="5" rx="2.5" fill="#8a5a28"/>';
+  if(acc==="couronne")extra='<path d="M34 30 L38 18 L46 27 L50 15 L54 27 L62 18 L66 30 Q50 24 34 30 Z" fill="#FDCB6E" stroke="#e6a93c" stroke-width="1.5"/>';
+  return '<svg viewBox="0 0 100 110" width="'+taille+'" height="'+(taille*1.1)+'">'
+   +'<path d="M22 108 Q22 78 50 78 Q78 78 78 108 Z" fill="#6C5CE7"/>'
+   +'<path d="M40 82 L50 92 L60 82 Q55 78 50 78 Q45 78 40 82Z" fill="#FFEAA7"/>'
+   +'<circle cx="50" cy="52" r="26" fill="#ffdcb8"/>'
+   +'<path d="M24 52 Q22 24 50 24 Q78 24 76 52 Q76 34 62 32 Q70 44 60 38 Q50 32 42 38 Q34 44 38 32 Q24 34 24 52 Z" fill="'+hc+'"/>'
+   +'<path d="M24 50 Q18 66 26 76 Q30 64 28 52 Z" fill="'+hc+'"/><path d="M76 50 Q82 66 74 76 Q70 64 72 52 Z" fill="'+hc+'"/>'
+   +'<circle cx="41" cy="52" r="3.2" fill="#2D3436"/><circle cx="59" cy="52" r="3.2" fill="#2D3436"/>'
+   +'<circle cx="42.2" cy="50.8" r="1" fill="#fff"/><circle cx="60.2" cy="50.8" r="1" fill="#fff"/>'
+   +'<path d="M43 63 Q50 69 57 63" stroke="#2D3436" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
+   +'<circle cx="34" cy="59" r="4" fill="#FD79A8" opacity="0.4"/><circle cx="66" cy="59" r="4" fill="#FD79A8" opacity="0.4"/>'
+   +extra+'</svg>';
+}
+const CHOUETTE='<svg class="plume-svg" viewBox="0 0 80 80" width="54" height="54"><ellipse cx="40" cy="48" rx="24" ry="26" fill="#A29BFE"/><ellipse cx="40" cy="54" rx="15" ry="17" fill="#F4F1FB"/><circle cx="31" cy="38" r="10" fill="#fff"/><circle cx="49" cy="38" r="10" fill="#fff"/><circle cx="31" cy="38" r="4.5" fill="#2D3436"/><circle cx="49" cy="38" r="4.5" fill="#2D3436"/><circle cx="32.5" cy="36.5" r="1.5" fill="#fff"/><circle cx="50.5" cy="36.5" r="1.5" fill="#fff"/><path d="M36 46 L40 52 L44 46 Z" fill="#FDCB6E"/><path d="M22 26 L30 32 M58 26 L50 32" stroke="#A29BFE" stroke-width="5" stroke-linecap="round"/><path d="M18 50 Q10 58 16 66 M62 50 Q70 58 64 66" stroke="#8e86f5" stroke-width="6" fill="none" stroke-linecap="round"/></svg>';
+
+/* ================== SÉRIE (streak) ================== */
+function majSerie(){
+  const auj=dateJour();
+  if(S.serie.last===auj)return;
+  S.serie.count=(S.serie.last===hier())?S.serie.count+1:1;
+  S.serie.last=auj;
+  S.serie.record=Math.max(S.serie.record,S.serie.count);
+}
+
+/* ================== DÉFI DU JOUR ================== */
+function graine(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19;}return()=>{h=Math.imul(h^(h>>>16),2246822507);h=Math.imul(h^(h>>>13),3266489909);return((h^=h>>>16)>>>0)/4294967296;};}
+function defiDuJour(){
+  const dispo=EXOS.filter(e=>mondeOuvert(e.w));
+  const r=graine("defi-"+dateJour())();
+  return dispo[Math.floor(r*dispo.length)];
+}
+
+/* ================== BADGES ================== */
+function verifBadges(){
+  const nouveaux=[];
+  for(const b of BADGES)if(!S.badges.includes(b.id)&&b.test(S)){S.badges.push(b.id);nouveaux.push(b);}
+  return nouveaux;
+}
+
+/* ================== EN-TÊTE COMMUNE ================== */
+function entete(titre,retour){
+  return '<header>'
+   +(retour?'<button class="btn-rond" data-act="retour">←</button>':'')
+   +'<div class="h-titre">'+titre+'</div>'
+   +'<div class="pastille">⭐ '+totalEtoiles(S)+'</div>'
+   +(S.serie.count>0?'<div class="pastille">🔥 '+S.serie.count+'</div>':'')
+   +'<button class="btn-rond" data-act="muet">'+(S.muet?"🔇":"🔊")+'</button>'
+   +'<button class="btn-rond" data-act="profil" style="padding:2px">'+avatarSVG(34)+'</button>'
+   +'</header>';
+}
+
+/* ================== ÉCRAN : ACCUEIL / ONBOARDING ================== */
+function rAccueil(){
+  let sel=S.cheveux||0;
+  app.innerHTML='<div class="ecran actif"><div class="centreur">'
+   +'<div class="flotte">'+CHOUETTE+'</div>'
+   +'<h1 class="titre-jeu">L\'Atlas des<br>6 Royaumes</h1>'
+   +'<p class="sous-titre">Je suis <b>Plume</b>, la chouette cartographe. L\'Atlas du monde s\'est effacé, et seule une exploratrice futée peut le redessiner… royaume après royaume, énigme après énigme. J\'ai besoin de toi !</p>'
+   +'<input class="champ" id="champNom" maxlength="16" placeholder="Ton prénom d\'exploratrice" autocomplete="off">'
+   +'<p class="sous-titre" style="margin-bottom:-6px">Choisis ta couleur de cheveux :</p>'
+   +'<div class="rang-choix" id="rangCheveux">'
+   +COUL_CHEVEUX.map((c,i)=>'<button class="choix-pastille'+(i===sel?" sel":"")+'" data-i="'+i+'" style="background:'+c+'"></button>').join("")
+   +'</div>'
+   +'<div id="apercuAvatar">'+avatarSVG(88)+'</div>'
+   +'<button class="btn large" id="btnDepart" style="max-width:340px">C\'est parti ! 🧭</button>'
+   +'</div></div>';
+  document.getElementById("rangCheveux").addEventListener("click",e=>{
+    const b=e.target.closest("[data-i]");if(!b)return;
+    sel=+b.dataset.i;S.cheveux=sel;son("clic");
+    document.querySelectorAll(".choix-pastille").forEach(p=>p.classList.toggle("sel",+p.dataset.i===sel));
+    document.getElementById("apercuAvatar").innerHTML=avatarSVG(88);
+  });
+  document.getElementById("btnDepart").addEventListener("click",()=>{
+    const nom=document.getElementById("champNom").value.trim();
+    if(!nom){document.getElementById("champNom").style.borderColor="var(--corail)";
+      document.getElementById("champNom").placeholder="Écris ton prénom ici !";return;}
+    S.nom=nom;S.cheveux=sel;sauve();son("ok");confettis(60);rCarte();
+  });
+}
+
+/* ================== ÉCRAN : CARTE DES MONDES ================== */
+function rCarte(){
+  const defi=defiDuJour();
+  const defiFait=S.defiFait===dateJour();
+  app.innerHTML='<div class="ecran actif">'+entete("Bonjour, "+echap(S.nom)+" !")
+   +'<div class="defile">'
+   +'<div class="bulle-plume" style="margin:0 auto 16px">'+CHOUETTE
+   +'<p><b>Plume :</b> « '+messagePlume()+' »</p></div>'
+   +(defi?'<div class="bandeau-defi'+(defiFait?" fait":"")+'" data-act="defi" data-id="'+defi.id+'">'
+     +'<span class="em">'+(defiFait?"✅":"🎯")+'</span><div style="flex:1"><b>Défi du jour '+(defiFait?"— réussi !":"(XP ×2 !)")+'</b>'
+     +'<small>'+echap(defi.titre)+" · "+MONDES[defi.w-1].nom+'</small></div></div>':"")
+   +'<div class="grille-mondes">'
+   +MONDES.map(m=>{
+     const ouvert=mondeOuvert(m.id),f=faits(S,m.id),et=exosDuMonde(m.id).reduce((a,e)=>a+(S.etoiles[e.id]||0),0);
+     return '<div class="carte-monde'+(ouvert?"":" verrou")+'" style="background:'+m.coul+'" data-act="monde" data-w="'+m.id+'">'
+      +'<span class="deco-monde">'+m.em+'</span>'
+      +(ouvert?"":'<span class="cadenas">🔒</span>')
+      +'<span class="em">'+m.em+'</span><div><h3>'+m.nom+'</h3><div class="desc">'+m.desc+'</div></div>'
+      +'<span class="prog">'+(ouvert?f+"/12 · ⭐ "+et:"Termine le royaume précédent")+'</span></div>';
+   }).join("")
+   +'</div></div></div>';
+}
+function messagePlume(){
+  const n=niveau(S.xp),tot=Object.values(S.etoiles).filter(v=>v>0).length;
+  if(tot===0)return "Notre aventure commence ! Touche le premier royaume, l'Archipel des Nombres, et montre-moi de quoi tu es capable.";
+  if(EXOS.every(e=>(S.etoiles[e.id]||0)>0))return "Tu as redessiné l'Atlas en entier… Tu es prête pour la 6e, championne ! Tu peux rejouer les exercices pour viser 3 étoiles partout.";
+  if(S.serie.count>=3)return S.serie.count+" jours d'affilée, quelle exploratrice ! Ta régularité est ta plus grande force.";
+  if(n>=5)return "Niveau "+n+" ! Les royaumes n'ont presque plus de secrets pour toi. Continue !";
+  return "Tu as déjà réussi "+tot+" exercice"+(tot>1?"s":"")+". Chaque énigme résolue redessine un bout de l'Atlas !";
+}
+
+/* ================== ÉCRAN : UN MONDE ================== */
+function rMonde(w){
+  const m=MONDES[w-1];
+  app.innerHTML='<div class="ecran actif">'+entete(m.em+" "+m.nom,"carte")
+   +'<div class="defile">'
+   +'<div class="bulle-plume intro-monde" style="margin:0 auto 16px">'+CHOUETTE+'<p>'+m.intro+'</p></div>'
+   +'<div class="chemin">'
+   +exosDuMonde(w).map((e,i)=>{
+     const et=S.etoiles[e.id]||0,vu=S.vus[e.id];
+     return '<div class="noeud'+(vu&&!et?" vu":"")+'" data-act="exo" data-id="'+e.id+'">'
+      +'<div class="num" style="background:'+(et>0?m.coul:"linear-gradient(135deg,#b2bec3,#dfe6e9)")+'">'+(i+1)+'</div>'
+      +'<div class="mini-titre">'+echap(e.titre)+'</div>'
+      +'<div class="etoiles">'+(et>0?"⭐".repeat(et)+"☆".repeat(3-et):(vu?"👀":"☆☆☆"))+'</div></div>';
+   }).join("")
+   +'</div></div></div>';
+}
+
+/* ================== ÉCRAN : EXERCICE ================== */
+let EX=null,essais=0,indiceUtilise=false,resolu=0,etapeVF=0,ordreRep=[],estDefi=false;
+
+function rExo(id,defi){
+  EX=EXOS.find(e=>e.id===id);essais=0;indiceUtilise=false;resolu=0;etapeVF=0;ordreRep=[];estDefi=!!defi;
+  const m=MONDES[EX.w-1];
+  let corps="";
+  if(EX.type==="qcm"){
+    corps='<div class="choix-liste">'+melange(EX.choices.map((c,i)=>({c,i}))).map(o=>
+      '<button class="choix-btn" data-choix="'+o.i+'"><span class="lettre"></span><span>'+o.c+'</span></button>').join("")+'</div>';
+  }else if(EX.type==="vf"){
+    corps='<div class="vf-rang"><button class="choix-btn" data-vf="1">👍 VRAI</button>'
+     +'<button class="choix-btn" data-vf="0">👎 FAUX</button></div><div id="zoneJustif"></div>';
+  }else if(EX.type==="saisie"){
+    corps='<div class="rang-saisie"><input class="champ" id="champRep" inputmode="'
+     +(EX.num!==undefined?"decimal":"text")+'" autocomplete="off" placeholder="Ta réponse…">'
+     +(EX.unit?'<span class="suffixe-unite">'+EX.unit+'</span>':"")+'</div>';
+  }else if(EX.type==="ordre"){
+    corps='<p class="consigne-ordre">👆 Touche les étiquettes pour les placer dans l\'ordre — dans la zone, fais-les glisser pour les réordonner, ou touche-les pour les retirer.</p>'
+     +'<div class="zone-reponse" id="zoneRep"></div><div class="zone-source" id="zoneSrc"></div>';
+  }
+  app.innerHTML='<div class="ecran actif">'+entete(m.em+" "+echap(EX.titre),"monde")
+   +'<div class="zone-exo">'
+   +(estDefi?'<div class="retour indice" style="margin:0 0 12px">🎯 <b>Défi du jour :</b> réussis cet exercice et tes points d\'expérience sont doublés !</div>':"")
+   +'<div class="histoire">'+EX.histoire+'</div>'
+   +(EX.svg?'<div class="illu-exo">'+EX.svg+'</div>':"")
+   +'<div class="question">'+EX.q+'</div>'+corps
+   +'<div id="zoneRetour"></div><div id="zoneSolution"></div>'
+   +'</div>'
+   +'<div class="barre-exo"><button class="btn doux" data-act="indice">💡 Indice</button>'
+   +(EX.type==="saisie"||EX.type==="ordre"?'<button class="btn vert" data-act="valider">Valider ✓</button>':"")
+   +'</div></div>';
+  if(EX.type==="qcm")document.querySelectorAll(".lettre").forEach((l,i)=>l.textContent="ABCD"[i]);
+  if(EX.type==="ordre")initOrdre();
+  const ch=document.getElementById("champRep");
+  if(ch)ch.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();validerExo();}});
+}
+
+/* ----- type ordre : construction + glisser-déposer ----- */
+let ordreItems=[];
+function initOrdre(){
+  ordreItems=melange(EX.ordre.map((t,i)=>({t,i})));
+  // évite un mélange déjà dans le bon ordre
+  if(ordreItems.every((o,k)=>o.i===k))ordreItems.reverse();
+  ordreRep=[];rendOrdre();
+}
+function rendOrdre(){
+  const zr=document.getElementById("zoneRep"),zs=document.getElementById("zoneSrc");
+  if(!zr||!zs)return;
+  zr.innerHTML=ordreRep.length?ordreRep.map((o,k)=>
+    '<div class="chip dans-reponse" data-k="'+k+'"><span class="poignee">⠿</span><span>'+o.t+'</span></div>').join("")
+   :'<div style="color:var(--gris);font-size:14px;text-align:center;padding:8px">Place ici la première étape…</div>';
+  zs.innerHTML=ordreItems.map((o,k)=>
+    '<div class="chip" data-s="'+k+'"><span class="poignee">＋</span><span>'+o.t+'</span></div>').join("");
+  zs.querySelectorAll("[data-s]").forEach(el=>el.addEventListener("click",()=>{
+    const k=+el.dataset.s;ordreRep.push(ordreItems[k]);ordreItems.splice(k,1);son("pose");rendOrdre();
+  }));
+  zr.querySelectorAll("[data-k]").forEach(el=>{
+    el.addEventListener("pointerdown",ev=>debutGlisse(ev,el));
+  });
+}
+let glisse=null;
+function debutGlisse(ev,el){
+  const k=+el.dataset.k;
+  glisse={k,el,x0:ev.clientX,y0:ev.clientY,bouge:false,clone:null};
+  el.setPointerCapture(ev.pointerId);
+  el.addEventListener("pointermove",mvGlisse);
+  el.addEventListener("pointerup",finGlisse);
+  el.addEventListener("pointercancel",finGlisse);
+}
+function mvGlisse(ev){
+  if(!glisse)return;
+  if(!glisse.bouge&&Math.abs(ev.clientY-glisse.y0)<8&&Math.abs(ev.clientX-glisse.x0)<8)return;
+  if(!glisse.bouge){
+    glisse.bouge=true;
+    const r=glisse.el.getBoundingClientRect();
+    glisse.clone=glisse.el.cloneNode(true);glisse.clone.classList.add("drag");
+    glisse.clone.style.setProperty("--wchip",r.width+"px");
+    glisse.clone.style.left=r.left+"px";glisse.clone.style.top=r.top+"px";
+    document.body.appendChild(glisse.clone);glisse.el.classList.add("fantome");
+  }
+  glisse.clone.style.transform="translate("+(ev.clientX-glisse.x0)+"px,"+(ev.clientY-glisse.y0)+"px) rotate(2deg)";
+  // calcul de la position cible
+  const zr=document.getElementById("zoneRep");
+  const chips=[...zr.querySelectorAll("[data-k]")].filter(c=>c!==glisse.el);
+  let cible=ordreRep.length-1;
+  for(let i=0;i<chips.length;i++){
+    const r=chips[i].getBoundingClientRect();
+    if(ev.clientY<r.top+r.height/2){cible=+chips[i].dataset.k;if(cible>glisse.k)cible--;break;}
+    if(i===chips.length-1)cible=ordreRep.length-1;
+  }
+  glisse.cible=cible;
+}
+function finGlisse(ev){
+  if(!glisse)return;
+  const g=glisse;glisse=null;
+  g.el.removeEventListener("pointermove",mvGlisse);
+  g.el.removeEventListener("pointerup",finGlisse);
+  g.el.removeEventListener("pointercancel",finGlisse);
+  if(g.clone)g.clone.remove();
+  if(g.bouge){
+    if(g.cible!==undefined&&g.cible!==g.k){
+      const it=ordreRep.splice(g.k,1)[0];ordreRep.splice(g.cible,0,it);son("pose");
+    }
+    rendOrdre();
+  }else{ // simple toucher : renvoyer vers la source
+    const it=ordreRep.splice(g.k,1)[0];ordreItems.push(it);son("clic");rendOrdre();
+  }
+}
+
+/* ----- validation & feedback ----- */
+const ENCOURAGEMENTS=["Pas tout à fait… mais tu es sur la bonne piste !","Hmm, ce n'est pas ça — respire un bon coup et relis l'énoncé.","Presque ! Les grandes exploratrices se trompent souvent avant de trouver.","Ce n'est pas la bonne réponse, mais chaque essai t'apprend quelque chose !"];
+function feedbackErreur(){
+  essais++;son("ko");
+  const z=document.getElementById("zoneRetour");
+  let piste="";
+  if(essais===1)piste="<br><b>Piste :</b> relis bien la question — que te demande-t-on exactement ?";
+  if(essais>=2&&!indiceUtilise)piste="<br><b>Piste :</b> l'indice 💡 peut vraiment t'aider, il ne coûte qu'une étoile !";
+  z.innerHTML='<div class="retour oups">😅 '+ENCOURAGEMENTS[Math.min(essais-1,3)]+piste+'</div>';
+  if(essais>=2)ajouteBoutonSolution();
+  z.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function ajouteBoutonSolution(){
+  const zs=document.getElementById("zoneSolution");
+  if(zs&&!zs.querySelector("[data-act='solution']")&&!zs.querySelector(".solution"))
+    zs.innerHTML='<button class="btn doux large" data-act="solution" style="margin-top:12px">🗝️ Voir la solution expliquée</button>';
+}
+function montreIndice(){
+  if(!indiceUtilise){indiceUtilise=true;son("clic");}
+  document.getElementById("zoneRetour").innerHTML='<div class="retour indice">💡 <b>Indice :</b> '+EX.indice+'</div>';
+}
+function montreSolution(marqueVu){
+  const zs=document.getElementById("zoneSolution");
+  zs.innerHTML='<div class="solution"><h4>🗝️ La solution, pas à pas</h4>'
+   +EX.etapes.map((e,i)=>'<div class="etape-sol" style="animation-delay:'+(i*0.35)+'s"><span class="puce">'+(i+1)+'</span><span>'+e+'</span></div>').join("")
+   +(marqueVu?'<button class="btn large" data-act="retour-apres-solution" style="margin-top:14px">J\'ai compris, je réessaierai ! 💪</button>':"")
+   +'</div>';
+  if(marqueVu){S.vus[EX.id]=1;sauve();}
+  zs.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function validerExo(){
+  if(resolu)return;
+  let ok=false;
+  if(EX.type==="saisie"){
+    const ch=document.getElementById("champRep");
+    if(!ch||!ch.value.trim())return;
+    ok=bonneSaisie(EX,ch.value);
+    if(!ok){ch.classList.add("ko");ch.style.borderColor="var(--corail)";ch.style.animation="secousse .4s";
+      setTimeout(()=>{ch.style.animation="";ch.style.borderColor="var(--lavande)";},600);}
+  }else if(EX.type==="ordre"){
+    if(ordreRep.length!==EX.ordre.length){
+      document.getElementById("zoneRetour").innerHTML='<div class="retour indice">Place d\'abord toutes les étiquettes dans la zone !</div>';return;
+    }
+    ok=ordreRep.every((o,k)=>o.i===k);
+    if(!ok){document.getElementById("zoneRep").style.animation="secousse .4s";
+      setTimeout(()=>{document.getElementById("zoneRep").style.animation="";},500);}
+  }
+  ok?reussite():feedbackErreur();
+}
+function clicQCM(btn){
+  if(resolu)return;
+  const i=+btn.dataset.choix;
+  if(i===EX.a){btn.classList.add("ok");reussite();}
+  else{btn.classList.add("ko");setTimeout(()=>btn.classList.remove("ko"),700);feedbackErreur();}
+}
+function clicVF(btn){
+  if(resolu)return;
+  const rep=btn.dataset.vf==="1";
+  if(rep===EX.vfA){
+    btn.classList.add("ok");son("clic");
+    if(EX.justif&&etapeVF===0){
+      etapeVF=1;
+      document.getElementById("zoneJustif").innerHTML=
+        '<div class="question" style="margin-top:18px">Bien vu ! Maintenant, pourquoi ?</div><div class="choix-liste">'
+        +melange(EX.justif.map((j,i)=>({j,i}))).map(o=>'<button class="choix-btn" data-justif="'+o.i+'"><span class="lettre">➜</span><span>'+o.j+'</span></button>').join("")+'</div>';
+      document.getElementById("zoneJustif").scrollIntoView({behavior:"smooth",block:"nearest"});
+    }else reussite();
+  }else{btn.classList.add("ko");setTimeout(()=>btn.classList.remove("ko"),700);feedbackErreur();}
+}
+function clicJustif(btn){
+  if(resolu)return;
+  if(+btn.dataset.justif===EX.justifA){btn.classList.add("ok");reussite();}
+  else{btn.classList.add("ko");setTimeout(()=>btn.classList.remove("ko"),700);feedbackErreur();}
+}
+
+/* ----- réussite ----- */
+function reussite(){
+  resolu=1;son("ok");confettis(essais===0&&!indiceUtilise?130:80);
+  let et=3;if(indiceUtilise)et--;if(essais>0)et--;et=Math.max(1,et);
+  const deja=S.etoiles[EX.id]||0;
+  S.etoiles[EX.id]=Math.max(deja,et);
+  delete S.vus[EX.id];
+  let xp=5+et*5;
+  const defi=defiDuJour();
+  let bonusDefi=false;
+  if(estDefi||(defi&&defi.id===EX.id&&S.defiFait!==dateJour())){
+    if(S.defiFait!==dateJour()){S.defiFait=dateJour();S.defisReussis=(S.defisReussis||0)+1;xp*=2;bonusDefi=true;}
+  }
+  const nivAvant=niveau(S.xp);
+  S.xp+=xp;majSerie();
+  const nouveaux=verifBadges();
+  const nivApres=niveau(S.xp);
+  sauve();
+  if(nouveaux.length)setTimeout(()=>son("badge"),650);
+  montreSolution(false);
+  const MSGS=["Magnifique raisonnement !","Bravo, quelle exploratrice !","Excellent ! L'Atlas se redessine…","Tu as l'étoffe d'une championne !","Superbe ! Plume est impressionnée."];
+  voile.innerHTML='<div class="modale">'
+   +'<div style="font-size:50px">'+(et===3?"🏆":"🎉")+'</div>'
+   +'<h2>'+MSGS[Math.floor(Math.random()*MSGS.length)]+'</h2>'
+   +'<div class="grosses-etoiles">'+[0,1,2].map(i=>'<span>'+(i<et?"⭐":"☆")+'</span>').join("")+'</div>'
+   +(et<3&&deja<3?'<p class="msg">'+(indiceUtilise?"L'indice t'a coûté une étoile — la prochaine fois, tente d'abord toute seule !":"Rejoue cet exercice un autre jour pour viser les 3 étoiles !")+'</p>':"")
+   +'<div class="gain-xp">+'+xp+' XP'+(bonusDefi?" (défi ×2 ! 🎯)":"")+(nivApres>nivAvant?" · Niveau "+nivApres+" ! 🎖️":"")+'</div>'
+   +nouveaux.map(b=>'<div class="nouveau-badge"><span class="em">'+b.em+'</span>Nouveau badge : <b>'+b.nom+'</b></div>').join("")
+   +'<div style="display:flex;gap:10px;margin-top:6px">'
+   +'<button class="btn doux" data-act="revoir" style="flex:1">Relire la solution</button>'
+   +'<button class="btn vert" data-act="suivant" style="flex:1">Continuer →</button></div></div>';
+  voile.classList.add("actif");
+}
+function exoSuivant(){
+  voile.classList.remove("actif");
+  if(estDefi){rCarte();return;}
+  const liste=exosDuMonde(EX.w);
+  const prochain=liste.find(e=>!(S.etoiles[e.id]>0)&&e.id!==EX.id);
+  if(prochain)rExo(prochain.id);else rMonde(EX.w);
+}
+
+/* ================== ÉCRAN : PROFIL ================== */
+function rProfil(){
+  const n=niveau(S.xp),pct=S.xp%100,reussis=Object.values(S.etoiles).filter(v=>v>0).length;
+  app.innerHTML='<div class="ecran actif">'+entete("Mon carnet d'exploratrice","carte")
+   +'<div class="defile"><div style="max-width:560px;margin:0 auto">'
+   +'<div class="carte entete-profil">'+avatarSVG(92)
+   +'<div class="infos"><h2>'+echap(S.nom)+'</h2><small style="color:var(--gris)">Niveau '+n+' · '+S.xp+' XP</small>'
+   +'<div class="barre-niveau"><div style="width:'+pct+'%"></div></div>'
+   +'<small style="color:var(--gris)">'+(100-pct)+' XP avant le niveau '+(n+1)+'</small></div></div>'
+   +'<div class="stat-rang">'
+   +'<div class="stat-carte"><b>⭐ '+totalEtoiles(S)+'</b><small>étoiles</small></div>'
+   +'<div class="stat-carte"><b>✅ '+reussis+'/72</b><small>exercices</small></div>'
+   +'<div class="stat-carte"><b>🔥 '+S.serie.count+'</b><small>jours d\'affilée</small></div>'
+   +'<div class="stat-carte"><b>🎯 '+(S.defisReussis||0)+'</b><small>défis du jour</small></div></div>'
+   +'<div class="carte" style="margin-bottom:16px"><b>Ma tenue</b> <small style="color:var(--gris)">(de nouveaux accessoires se débloquent en gagnant des niveaux !)</small>'
+   +'<div class="rang-accessoires">'
+   +ACCESSOIRES.map(a=>{const ok=n>=a.lvl;
+     return '<button class="acc-btn'+(S.acc===a.id?" sel":"")+(ok?"":" verrou")+'" data-acc="'+a.id+'" '+(ok?"":"disabled")+'>'+a.em+'<small>'+(ok?a.nom:"Niv. "+a.lvl)+'</small></button>';}).join("")
+   +'</div></div>'
+   +'<div class="carte"><b>Mes badges ('+S.badges.length+'/'+BADGES.length+')</b>'
+   +'<div class="grille-badges" style="margin-top:12px">'
+   +BADGES.map(b=>'<div class="badge'+(S.badges.includes(b.id)?"":" gris")+'"><span class="em">'+b.em+'</span><b>'+b.nom+'</b><small>'+b.desc+'</small></div>').join("")
+   +'</div></div>'
+   +'<button class="btn doux large" data-act="reset" style="margin-top:18px;color:var(--corail)">Recommencer l\'aventure à zéro</button>'
+   +'</div></div></div>';
+  app.querySelectorAll("[data-acc]").forEach(b=>b.addEventListener("click",()=>{
+    S.acc=b.dataset.acc;sauve();son("clic");rProfil();
+  }));
+}
+
+/* ================== NAVIGATION GLOBALE ================== */
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act],[data-choix],[data-vf],[data-justif]");
+  if(!el)return;
+  if(el.dataset.choix!==undefined)return clicQCM(el);
+  if(el.dataset.vf!==undefined)return clicVF(el);
+  if(el.dataset.justif!==undefined)return clicJustif(el);
+  const act=el.dataset.act;
+  if(act==="muet"){S.muet=!S.muet;sauve();el.textContent=S.muet?"🔇":"🔊";return;}
+  son("clic");
+  if(act==="retour"){if(EX&&document.querySelector(".zone-exo"))rMonde(EX.w);else rCarte();}
+  else if(act==="profil")rProfil();
+  else if(act==="monde"){const w=+el.dataset.w;if(mondeOuvert(w))rMonde(w);else son("ko");}
+  else if(act==="exo")rExo(el.dataset.id);
+  else if(act==="defi")rExo(el.dataset.id,true);
+  else if(act==="indice")montreIndice();
+  else if(act==="valider")validerExo();
+  else if(act==="solution")montreSolution(true);
+  else if(act==="retour-apres-solution")rMonde(EX.w);
+  else if(act==="revoir"){voile.classList.remove("actif");}
+  else if(act==="suivant")exoSuivant();
+  else if(act==="reset"){
+    if(el.dataset.confirme){localStorage.removeItem(CLE);S=ETAT_DEFAUT();rAccueil();}
+    else{el.dataset.confirme="1";el.textContent="Sûre ? Touche encore une fois pour tout effacer !";}
+  }
+});
+
+/* correction du bouton retour dans un exercice : revenir au monde, pas à la carte */
+/* (géré ci-dessus via EX + présence de .zone-exo) */
+
+/* ================== LANCEMENT ================== */
+majAffichageInitial();
+function majAffichageInitial(){
+  if(!S.nom)rAccueil();else rCarte();
+}
+
+/* PWA : service worker (offline apres la 1re visite) — inactif en file:// ou aperçu */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
