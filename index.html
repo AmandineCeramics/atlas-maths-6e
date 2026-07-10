@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
-<title>Atlas des 6 Royaumes — Maths 6e</title>
+<title>Atlas Maths — 3 parcours (GS · CE2 · 6e)</title>
 <style>
 :root{
   --violet:#6C5CE7; --violet-d:#5546c8; --rose:#FD79A8; --peche:#FFB88C;
@@ -284,6 +284,43 @@ header{
 .acc-btn.verrou{opacity:.4;filter:grayscale(1)}
 .acc-btn small{display:block;font-size:9.5px;color:var(--gris);font-weight:700}
 
+/* ===== sélection de profil ===== */
+.grille-profils{display:flex;flex-direction:column;gap:14px;width:min(440px,92vw)}
+.carte-profil{
+  display:flex;align-items:center;gap:14px;background:var(--carte);border-radius:var(--r);
+  padding:14px 18px;box-shadow:var(--ombre);cursor:pointer;transition:transform .15s;text-align:left;
+  border:3px solid transparent;font-family:inherit;width:100%;
+}
+.carte-profil:active{transform:scale(.97)}
+.carte-profil .infos-p{flex:1;min-width:0}
+.carte-profil b{font-size:19px;display:block}
+.carte-profil small{color:var(--gris);font-size:13px;display:block;margin-top:2px}
+.carte-profil .fleche{font-size:22px;color:var(--lavande)}
+.carte-profil.nouveau{border:3px dashed var(--lavande);background:rgba(255,255,255,.6);justify-content:center;color:var(--violet);font-weight:800;font-size:16px;min-height:64px}
+
+/* création de profil */
+.rang-genre,.rang-parcours{display:flex;gap:10px;width:min(440px,92vw)}
+.opt-genre{
+  flex:1;background:var(--carte);border:3px solid transparent;border-radius:18px;padding:12px;
+  font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;box-shadow:var(--ombre);color:var(--encre);
+}
+.opt-genre.sel{border-color:var(--violet);background:#F3F0FF}
+.rang-parcours{flex-direction:column}
+.opt-parcours{
+  background:var(--carte);border:3px solid transparent;border-radius:18px;padding:13px 16px;
+  font-family:inherit;cursor:pointer;box-shadow:var(--ombre);text-align:left;color:var(--encre);
+  display:flex;align-items:center;gap:12px;
+}
+.opt-parcours.sel{border-color:var(--violet);background:#F3F0FF}
+.opt-parcours .em{font-size:28px}
+.opt-parcours b{font-size:15.5px;display:block}
+.opt-parcours small{color:var(--gris);font-size:12.5px;line-height:1.3;display:block}
+
+/* gros choix (parcours Grande Section) */
+.choix-btn.gros{justify-content:center;font-size:30px;min-height:70px;text-align:center}
+.choix-btn.gros .lettre{display:none}
+.question.grosse{font-size:24px;line-height:1.6;text-align:center}
+
 /* ===== confettis & anims ===== */
 #confettis{position:fixed;inset:0;pointer-events:none;z-index:80}
 @keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
@@ -304,8 +341,8 @@ header{
 <div class="voile" id="voile"></div>
 <script>
 "use strict";
-/* ================== DONNÉES : MONDES ================== */
-const MONDES=[
+/* ================== PARCOURS 6e : MONDES ================== */
+const MONDES_6E=[
  {id:1,nom:"L'Archipel des Nombres",em:"🏝️",coul:"linear-gradient(135deg,#74B9FF,#0984e3)",cnum:"#0984e3",
   desc:"Ordres de grandeur, calcul malin et nombres décimaux.",
   intro:"Bienvenue sur l'Archipel des Nombres ! Ici, les habitants ne calculent jamais bêtement : ils rusent, ils arrondissent, ils décomposent. Montre-leur que toi aussi, tu sais faire travailler ta tête plutôt que tes doigts."},
@@ -330,7 +367,7 @@ const MONDES=[
  Types : qcm (choices + a:index) · saisie (num OU acc:[textes], unit?) ·
  vf (vfA:bool, justif?:[..], justifA:index) · ordre (ordre:[étapes dans le bon ordre])
  Champs communs : id, w, titre, histoire, q, indice, etapes (correction pas à pas), svg? */
-const EXOS=[
+const EXOS_6E=[
 
 /* ---------- MONDE 1 · L'Archipel des Nombres ---------- */
 {id:"m1e1",w:1,titre:"Le cinéma en plein air",type:"qcm",
@@ -807,48 +844,515 @@ const EXOS=[
  etapes:["Recette : 250 × 2 = 500 €.","Bénéfice : 500 − 175 = 325 €.","Moitié pour le voyage : 325 ÷ 2 = 162,50 €. Il reste 162,50 € pour les classes.","162,50 ÷ 5 = 32,50 € par classe. Bravo, tu viens de gravir le Sommet des Champions ! 🏔️"]}
 ];
 
-/* ================== BADGES ================== */
-const BADGES=[
- {id:"premiere",em:"🌟",nom:"Premiers pas",desc:"Réussir ton premier exercice",
-  test:s=>Object.values(s.etoiles).some(v=>v>0)},
- {id:"monde1",em:"🏝️",nom:"Cap sur l'Archipel",desc:"Terminer l'Archipel des Nombres",test:s=>mondeFini(s,1)},
- {id:"monde2",em:"🍰",nom:"Reine des partages",desc:"Terminer la Vallée des Partages",test:s=>mondeFini(s,2)},
- {id:"monde3",em:"🛒",nom:"As du marché",desc:"Terminer le Grand Marché",test:s=>mondeFini(s,3)},
- {id:"monde4",em:"🏛️",nom:"Architecte en herbe",desc:"Terminer les Cités Géométriques",test:s=>mondeFini(s,4)},
- {id:"monde5",em:"🌲",nom:"Esprit de la Forêt",desc:"Terminer la Forêt des Énigmes",test:s=>mondeFini(s,5)},
- {id:"monde6",em:"🏔️",nom:"Championne du Sommet",desc:"Terminer le Sommet des Champions",test:s=>mondeFini(s,6)},
- {id:"sansindice",em:"🧠",nom:"Tête bien faite",desc:"10 exercices réussis sans indice",
-  test:s=>Object.values(s.etoiles).filter(v=>v===3).length>=10},
- {id:"etoiles50",em:"✨",nom:"Pluie d'étoiles",desc:"Récolter 50 étoiles",
-  test:s=>totalEtoiles(s)>=50},
- {id:"etoiles120",em:"💫",nom:"Constellation",desc:"Récolter 120 étoiles",
-  test:s=>totalEtoiles(s)>=120},
- {id:"streak3",em:"🔥",nom:"Bien échauffée",desc:"Jouer 3 jours d'affilée",test:s=>s.serie.record>=3},
- {id:"streak7",em:"🚀",nom:"Semaine de feu",desc:"Jouer 7 jours d'affilée",test:s=>s.serie.record>=7},
- {id:"defi",em:"🎯",nom:"Défi relevé",desc:"Réussir 5 défis du jour",test:s=>(s.defisReussis||0)>=5},
- {id:"niveau5",em:"👑",nom:"Exploratrice confirmée",desc:"Atteindre le niveau 5",test:s=>niveau(s.xp)>=5},
- {id:"atlas",em:"🗺️",nom:"L'Atlas complet",desc:"Réussir les 72 exercices",
-  test:s=>EXOS.every(e=>(s.etoiles[e.id]||0)>0)}
+/* ================== PARCOURS CE2 : LES 4 CONTRÉES ================== */
+const MONDES_CE2=[
+ {id:1,nom:"La Montagne des Calculs",em:"⛰️",coul:"linear-gradient(135deg,#74B9FF,#0984e3)",cnum:"#0984e3",
+  desc:"Additions, soustractions et multiplications malignes.",
+  intro:"Bienvenue sur la Montagne des Calculs ! Ici, les marmottes calculent de tête plus vite que leur ombre. Montre-leur tes meilleures astuces pour grimper jusqu'au sommet."},
+ {id:2,nom:"Le Port des Nombres",em:"⚓",coul:"linear-gradient(135deg,#FD79A8,#e84393)",cnum:"#e84393",
+  desc:"Les grands nombres jusqu'à 1 000 : comparer, ranger, décomposer.",
+  intro:"Au Port des Nombres, chaque bateau porte un numéro et le capitaine les veut parfaitement rangés. Sauras-tu naviguer entre les centaines, les dizaines et les unités ?"},
+ {id:3,nom:"Le Village des Mesures",em:"🏡",coul:"linear-gradient(135deg,#55EFC4,#00b894)",cnum:"#00b894",
+  desc:"Monnaie, heures, longueurs et masses de la vraie vie.",
+  intro:"Au Village des Mesures, tout se compte : les euros du marché, les minutes de l'horloge, les mètres de ruban. Les villageois ont besoin d'un assistant de confiance : toi !"},
+ {id:4,nom:"Le Labyrinthe Logique",em:"🌀",coul:"linear-gradient(135deg,#A29BFE,#6C5CE7)",cnum:"#6C5CE7",
+  desc:"Énigmes, problèmes à étapes et pièges rigolos.",
+  intro:"Le Labyrinthe Logique ne s'ouvre qu'aux esprits malins. Ici, il faut lire lentement, réfléchir… et se méfier des pièges cachés dans les questions !"}
 ];
 
-/* ================== ÉTAT & SAUVEGARDE ================== */
-const CLE="atlas6e_v1";
-const ETAT_DEFAUT=()=>({nom:"",cheveux:0,acc:"aucun",xp:0,etoiles:{},vus:{},badges:[],
- serie:{last:"",count:0,record:0},defisReussis:0,defiFait:"",muet:false});
-let S=ETAT_DEFAUT();
-try{const brut=localStorage.getItem(CLE);if(brut)S=Object.assign(ETAT_DEFAUT(),JSON.parse(brut));}catch(e){}
+const EXOS_CE2=[
+/* ---------- CE2 Monde 1 · La Montagne des Calculs ---------- */
+{id:"c1e1",w:1,titre:"Les jumelles aux billes",type:"qcm",
+ histoire:"Les jumelles marmottes ont exactement les mêmes billes. Lila en a 8, et Lola en a autant qu'elle. Elles versent tout dans un même sac.",
+ q:"Combien de billes y a-t-il dans le sac ? (C'est le double de 8 !)",
+ choices:["14","16","18","12"],a:1,
+ indice:"Le double, c'est deux fois pareil : 8 + 8.",
+ etapes:["Le double de 8, c'est 8 + 8.","8 + 8 = 16 billes.","Connaître ses doubles par cœur, c'est une super arme de calcul mental !"]},
+
+{id:"c1e2",w:1,titre:"L'échelle du chalet",type:"saisie",num:4,unit:"barreaux",
+ histoire:"L'échelle du chalet a 10 barreaux. La marmotte bricoleuse en a déjà grimpé 6, son marteau à la patte.",
+ q:"Combien de barreaux lui reste-t-il à grimper ?",
+ indice:"Cherche le complément : 6 + ? = 10.",
+ etapes:["On cherche ce qui manque pour aller de 6 à 10.","6 + 4 = 10, donc il reste 4 barreaux.","Les compléments à 10 (6+4, 7+3, 8+2…) sont les meilleurs amis du calcul rapide !"]},
+
+{id:"c1e3",w:1,titre:"La collection de cartes",type:"saisie",num:42,unit:"cartes",
+ histoire:"Tom la marmotte collectionne les cartes de montagnes. Il en a déjà 25, et son grand-père lui en offre 17 nouvelles pour son anniversaire.",
+ q:"Combien de cartes a-t-il maintenant ?",
+ indice:"Ajoute d'abord les dizaines (25 + 10), puis les unités (+ 7).",
+ etapes:["25 + 17, on peut le découper : 25 + 10 = 35.","Puis 35 + 7 = 42.","Tom a 42 cartes. Découper en dizaines puis unités, c'est la technique des pros !"]},
+
+{id:"c1e4",w:1,titre:"Le collier de perles des neiges",type:"saisie",num:22,unit:"perles",
+ histoire:"Mamie marmotte a enfilé 52 perles des neiges sur un fil. Elle en donne 30 à sa petite-fille pour faire un bracelet.",
+ q:"Combien de perles lui reste-t-il ?",
+ indice:"Enlever 30, c'est enlever 3 dizaines : 52, 42, 32…",
+ etapes:["52 − 30 : on enlève 3 dizaines.","52 → 42 → 32 → 22.","Il lui reste 22 perles. Enlever des dizaines entières, c'est facile et rapide !"]},
+
+{id:"c1e5",w:1,titre:"Le goûter des randonneurs",type:"qcm",
+ histoire:"Pour le goûter, la guide prépare 4 paquets de 5 biscuits chacun. Les randonneurs ont très faim !",
+ q:"Combien de biscuits y a-t-il en tout ?",
+ choices:["15","20","25","9"],a:1,
+ indice:"4 paquets de 5, c'est 5 + 5 + 5 + 5… ou bien 4 × 5 !",
+ etapes:["4 paquets de 5 biscuits : 5 + 5 + 5 + 5.","C'est la multiplication 4 × 5 = 20.","La multiplication, c'est une addition répétée en raccourci !"]},
+
+{id:"c1e6",w:1,titre:"Le partage des cerises",type:"saisie",num:9,unit:"cerises",
+ histoire:"Deux amis marmottes ont cueilli 18 cerises des montagnes. Ils se les partagent équitablement : chacun la même quantité, pas une de plus !",
+ q:"Combien de cerises reçoit chaque ami ? (C'est la moitié de 18.)",
+ indice:"La moitié de 18… Quel nombre, ajouté à lui-même, donne 18 ?",
+ etapes:["Chercher la moitié de 18, c'est chercher ? + ? = 18.","9 + 9 = 18 : la moitié de 18, c'est 9.","Chaque ami reçoit 9 cerises. Doubles et moitiés fonctionnent en équipe !"]},
+
+{id:"c1e7",w:1,titre:"L'astuce du vieux guide",type:"ordre",
+ histoire:"Le vieux guide de la Montagne calcule 36 + 19 de tête en une seconde ! Il t'explique son astuce, mais le vent a mélangé ses fiches…",
+ q:"Remets les étapes de son calcul malin dans l'ordre :",
+ ordre:["Je remarque que 19, c'est presque 20.","Je calcule 36 + 20 = 56.","J'ai ajouté 1 de trop, alors je l'enlève : 56 − 1 = 55.","Donc 36 + 19 = 55."],
+ indice:"Son secret : remplacer 19 par 20, qui est bien plus facile… puis corriger.",
+ etapes:["19 = 20 − 1, donc ajouter 19 revient à ajouter 20 puis enlever 1.","36 + 20 = 56, puis 56 − 1 = 55.","Cette astuce marche avec tous les nombres finissant par 9 !"]},
+
+{id:"c1e8",w:1,titre:"Les semaines de vacances",type:"saisie",num:21,unit:"jours",
+ histoire:"Les marmottes partent hiberner pendant exactement 3 semaines. Le calendrier de la Montagne ne compte qu'en jours !",
+ q:"Combien de jours dure leur hibernation ? (1 semaine = 7 jours.)",
+ indice:"3 semaines, c'est 7 + 7 + 7… ou 3 × 7.",
+ etapes:["1 semaine = 7 jours.","3 semaines = 3 × 7 = 21 jours.","La table de 7 sert tout le temps avec le calendrier !"]},
+
+{id:"c1e9",w:1,titre:"La balance du berger",type:"vf",vfA:true,
+ histoire:"Le berger pose 45 kg de foin et encore 5 kg sur le plateau gauche de sa balance. Sur le plateau droit, il pose 40 kg et encore 10 kg. Il annonce : « C'est équilibré ! »",
+ q:"Le berger a-t-il raison : 45 + 5 est-il égal à 40 + 10 ?",
+ justif:["Oui : 45 + 5 = 50 et 40 + 10 = 50. Les deux côtés font 50 !","Non : les nombres sont différents, donc les totaux sont différents."],justifA:0,
+ indice:"Calcule chaque plateau séparément : 45 + 5 = ? et 40 + 10 = ?",
+ etapes:["Plateau gauche : 45 + 5 = 50 kg.","Plateau droit : 40 + 10 = 50 kg.","50 = 50 : la balance est équilibrée, le berger a raison !","Des calculs différents peuvent donner le même résultat — c'est ça, l'égalité."]},
+
+{id:"c1e10",w:1,titre:"Le trésor du sommet",type:"saisie",num:36,unit:"pièces",
+ histoire:"Au sommet de la Montagne, un coffre contenait 100 pièces d'or. L'écureuil aventurier en a déjà retrouvé 64, éparpillées dans la neige.",
+ q:"Combien de pièces reste-t-il à retrouver ?",
+ indice:"Cherche le complément à 100 : de 64, avance jusqu'à 70, puis jusqu'à 100.",
+ etapes:["De 64 à 70, il y a 6.","De 70 à 100, il y a 30.","6 + 30 = 36 : il reste 36 pièces à retrouver.","Vérification : 64 + 36 = 100 ✓"]},
+
+/* ---------- CE2 Monde 2 · Le Port des Nombres ---------- */
+{id:"c2e1",w:2,titre:"La course des voiliers",type:"qcm",
+ histoire:"Trois voiliers rentrent au Port, chacun avec son numéro sur la voile : le 389, le 398 et le 401. Le capitaine du port veut féliciter celui qui porte le plus grand numéro.",
+ q:"Quel voilier a le plus grand numéro ?",
+ choices:["Le 389","Le 398","Le 401","Ils se valent"],a:2,
+ indice:"Compare d'abord les centaines : 3 centaines… ou 4 centaines ?",
+ etapes:["On compare d'abord les centaines : 389 et 398 commencent par 3, mais 401 commence par 4.","4 centaines, c'est plus que 3 centaines, peu importe la suite.","Le plus grand numéro est 401 !"]},
+
+{id:"c2e2",w:2,titre:"Le chargement du cargo",type:"saisie",num:357,unit:"oranges",
+ histoire:"Le cargo du Port décharge des oranges : 3 conteneurs de 100 oranges, 5 caisses de 10 oranges, et 7 oranges toutes seules dans un filet.",
+ q:"Combien d'oranges en tout ?",
+ indice:"3 centaines, 5 dizaines, 7 unités… Assemble-les !",
+ etapes:["3 conteneurs de 100 → 300 oranges.","5 caisses de 10 → 50 oranges. Et 7 oranges seules.","300 + 50 + 7 = 357 oranges.","C'est exactement comme ça que les nombres s'écrivent : centaines, dizaines, unités !"]},
+
+{id:"c2e3",w:2,titre:"La place de parking",type:"qcm",
+ histoire:"Au Port, les places de bateaux sont numérotées dans l'ordre. Le vieux pêcheur cherche la place juste avant la place 200.",
+ q:"Quel est le numéro de la place juste avant la 200 ?",
+ choices:["199","201","190","209"],a:0,
+ indice:"Juste avant 200, c'est 200 − 1.",
+ etapes:["Le nombre juste avant, c'est un de moins : 200 − 1.","200 − 1 = 199.","Attention au passage des centaines : après 199 vient 200, comme après 99 vient 100 !"]},
+
+{id:"c2e4",w:2,titre:"Les bouées de la rade",type:"saisie",num:270,
+ histoire:"Les bouées de la rade sont numérotées de 10 en 10 : 240, 250, 260… La suivante a perdu son numéro dans la tempête !",
+ q:"Quel numéro porte la bouée suivante ?",
+ indice:"On avance de 10 en 10 : que vaut 260 + 10 ?",
+ etapes:["La suite avance de 10 en 10.","260 + 10 = 270.","Compter de 10 en 10, de 100 en 100 : le rythme des grands nombres !"]},
+
+{id:"c2e5",w:2,titre:"La parade des matelots",type:"vf",vfA:false,
+ histoire:"37 matelots doivent défiler sur le quai. Le capitaine ordonne : « Mettez-vous par deux, et que personne ne reste seul ! »",
+ q:"Est-ce possible : 37 matelots peuvent-ils tous se mettre par deux ?",
+ justif:["Oui : il suffit de bien s'organiser.","Non : 37 est un nombre impair, il restera toujours un matelot tout seul."],justifA:1,
+ indice:"37 se termine par 7. Les nombres qui se rangent parfaitement par 2 se terminent par 0, 2, 4, 6 ou 8…",
+ etapes:["Par deux : 18 paires font 36 matelots.","Il reste 1 matelot tout seul : 37 = 36 + 1.","37 est un nombre impair, le défilé parfait est impossible !","Pairs : 0, 2, 4, 6, 8 en chiffre des unités. Impairs : 1, 3, 5, 7, 9."]},
+
+{id:"c2e6",w:2,titre:"Le phare compteur",type:"saisie",num:505,
+ histoire:"Le phare du Port a déjà brillé 495 nuits. Le gardien réfléchit : « Dans 10 nuits, je fêterai un joli nombre… »",
+ q:"Combien de nuits le phare aura-t-il brillé dans 10 nuits ? (495 + 10)",
+ indice:"Ajoute 5 pour arriver à 500, puis encore 5.",
+ etapes:["495 + 5 = 500 (on atteint la centaine ronde).","500 + 5 = 505.","495 + 10 = 505. Le passage de la centaine est un petit saut d'obstacle : découpe-le !"]},
+
+{id:"c2e7",w:2,titre:"Le concours de pêche",type:"qcm",
+ histoire:"Quatre pêcheurs comparent leurs scores de l'année : 909 poissons, 990, 899 et 908. Le plus PETIT score doit payer la tournée de chocolats chauds !",
+ q:"Quel est le plus petit score ?",
+ choices:["909","990","899","908"],a:2,
+ indice:"Compare les centaines d'abord : huit-cent-quelque-chose, c'est moins que neuf-cent-quelque-chose.",
+ etapes:["899 commence par 8 centaines ; tous les autres par 9 centaines.","8 centaines < 9 centaines, donc 899 est le plus petit.","Pas besoin de regarder la fin des nombres quand les centaines suffisent à départager !"]},
+
+{id:"c2e8",w:2,titre:"Le code du coffre de bord",type:"saisie",num:7,
+ histoire:"Le coffre du navire s'ouvre avec un seul chiffre secret : « le chiffre des dizaines du nombre 274 », dit le parchemin.",
+ q:"Quel est le chiffre des dizaines de 274 ?",
+ indice:"Dans 274 : 2 centaines, ? dizaines, 4 unités.",
+ etapes:["274 = 200 + 70 + 4.","Le chiffre des centaines est 2, celui des dizaines est 7, celui des unités est 4.","Le code est 7 ! Chaque chiffre a sa place et sa valeur."]},
+
+{id:"c2e9",w:2,titre:"Les caisses de l'épicier du port",type:"qcm",
+ histoire:"L'épicier du Port reçoit une grosse caisse marquée « 100 biscuits ». Il veut la ranger en petites boîtes de 10 biscuits, sans en laisser un seul dehors.",
+ q:"Combien de boîtes de 10 va-t-il remplir ?",
+ choices:["5 boîtes","10 boîtes","100 boîtes","20 boîtes"],a:1,
+ indice:"Combien de fois 10 y a-t-il dans 100 ? Compte : 10, 20, 30…",
+ etapes:["10, 20, 30, 40, 50, 60, 70, 80, 90, 100 : on compte 10 sauts.","100, c'est 10 paquets de 10.","Voilà pourquoi 100 s'écrit avec un 1 suivi de deux zéros !"]},
+
+{id:"c2e10",w:2,titre:"Le numéro mystère de la sirène",type:"saisie",num:64,
+ histoire:"Une sirène garde l'entrée du Port et te lance son énigme : « Mon nombre est entre 60 et 70, et son chiffre des unités est 4. Trouve-le, et je te laisse passer ! »",
+ q:"Quel est le nombre mystère de la sirène ?",
+ indice:"Liste les nombres entre 60 et 70 : lequel finit par 4 ?",
+ etapes:["Entre 60 et 70 : 61, 62, 63, 64, 65, 66, 67, 68, 69.","Celui qui a 4 comme chiffre des unités : 64.","Croiser deux indices pour trouver un nombre, c'est déjà de la vraie logique !"]},
+
+/* ---------- CE2 Monde 3 · Le Village des Mesures ---------- */
+{id:"c3e1",w:3,titre:"La tirelire du marché",type:"saisie",num:6,unit:"€",
+ histoire:"Jour de marché au Village ! Tu casses ta tirelire et tu y trouves 3 pièces de 2 euros, brillantes comme des soleils.",
+ q:"Combien d'argent as-tu, en euros ?",
+ indice:"3 pièces de 2 € : compte 2, 4, 6…",
+ etapes:["3 pièces de 2 € : 2 + 2 + 2.","C'est 3 × 2 = 6 €.","Compter la monnaie, c'est de la multiplication déguisée !"]},
+
+{id:"c3e2",w:3,titre:"L'horloge du clocher",type:"qcm",
+ histoire:"Sur le clocher du Village, la petite aiguille pointe sur le 4 et la grande aiguille pointe sur le 12. Le boulanger te demande l'heure.",
+ q:"Quelle heure est-il ?",
+ choices:["12 heures","4 heures","4 h 12","6 heures"],a:1,
+ indice:"La grande aiguille sur le 12 veut dire « heure pile ». La petite aiguille donne l'heure.",
+ etapes:["Grande aiguille sur 12 = heure pile.","Petite aiguille sur 4 = 4 heures.","Il est 4 heures pile ! La petite aiguille dit l'heure, la grande dit les minutes."]},
+
+{id:"c3e3",w:3,titre:"Le goûter chez Mamilou",type:"saisie",acc:["16h30","16:30","16 h 30"],
+ histoire:"Chez Mamilou, le goûter commence à 16 h pile : chocolat chaud et crêpes ! Il dure exactement 30 minutes (montre en main, Mamilou est stricte sur les crêpes).",
+ q:"À quelle heure le goûter se termine-t-il ? (Écris par exemple 15h30.)",
+ indice:"Pars de 16 h et ajoute 30 minutes.",
+ etapes:["16 h + 30 minutes = 16 h 30.","Le goûter se termine à 16 h 30.","30 minutes, c'est une demi-heure : la grande aiguille fait un demi-tour."]},
+
+{id:"c3e4",w:3,titre:"Le choix du bon outil",type:"qcm",
+ histoire:"L'instituteur du Village veut mesurer la longueur de la salle de classe pour installer une bibliothèque. Il hésite sur l'unité à utiliser.",
+ q:"Quelle unité convient le mieux pour mesurer la salle de classe ?",
+ choices:["Le centimètre (cm)","Le mètre (m)","Le kilomètre (km)","Le gramme (g)"],a:1,
+ indice:"Le cm, c'est pour un crayon ; le km, c'est pour une route ; le gramme, c'est pour peser…",
+ etapes:["Une salle mesure entre 5 et 10 mètres : le mètre est parfait.","En cm on aurait des nombres énormes ; le km est mille fois trop grand.","Le gramme sert à peser, pas à mesurer une longueur !","Toujours choisir une unité adaptée à la taille de l'objet."]},
+
+{id:"c3e5",w:3,titre:"Le ruban de la mercière",type:"saisie",num:60,unit:"cm",
+ histoire:"La mercière du Village a un ruban doré de 1 mètre exactement. Elle en coupe 40 centimètres pour décorer un chapeau.",
+ q:"Quelle longueur de ruban lui reste-t-il, en centimètres ? (1 m = 100 cm.)",
+ indice:"Transforme d'abord le mètre en centimètres : 1 m = 100 cm.",
+ etapes:["1 m = 100 cm.","100 − 40 = 60 cm.","Il lui reste 60 cm. Pour calculer, il faut d'abord tout mettre dans la MÊME unité !"]},
+
+{id:"c3e6",w:3,titre:"La monnaie du fromager",type:"saisie",num:3,unit:"€",
+ histoire:"Au stand du fromager, ton morceau de tomme coûte 7 €. Tu tends un billet de 10 € en essayant de calculer la monnaie avant lui !",
+ q:"Combien le fromager doit-il te rendre, en euros ?",
+ indice:"Cherche : 7 + ? = 10.",
+ etapes:["On cherche le complément de 7 à 10.","7 + 3 = 10 : il doit te rendre 3 €.","Rendre la monnaie, c'est compléter jusqu'au billet !"]},
+
+{id:"c3e7",w:3,titre:"La fête du Village",type:"qcm",
+ histoire:"Nous sommes le 28 juin au Village. La grande fête d'été aura lieu dans exactement 3 jours, annonce l'affiche de la mairie. Mais attention : le mois de juin n'a que 30 jours !",
+ q:"Quel jour aura lieu la fête ?",
+ choices:["Le 30 juin","Le 31 juin","Le 1er juillet","Le 2 juillet"],a:2,
+ indice:"Compte : 29 juin… 30 juin… et ensuite ? (Le 31 juin n'existe pas !)",
+ etapes:["Dans 1 jour : 29 juin. Dans 2 jours : 30 juin.","Juin s'arrête au 30 : le jour suivant est le 1er juillet.","La fête aura lieu le 1er juillet ! Piège déjoué : certains mois ont 30 jours, d'autres 31."]},
+
+{id:"c3e8",w:3,titre:"La pâte à crêpes géante",type:"saisie",num:500,unit:"g",
+ histoire:"Pour la fête, le pâtissier du Village verse 250 g de farine de blé dans son saladier, puis 250 g de farine de châtaigne. Sa balance affiche le total.",
+ q:"Quelle masse de farine y a-t-il dans le saladier, en grammes ?",
+ indice:"250 + 250… C'est un double que tu connais peut-être !",
+ etapes:["250 + 250 = 500 g.","C'est le double de 250 — et 500 g, c'est aussi la moitié d'un kilo !","Les masses s'additionnent comme les nombres, tant qu'on garde la même unité."]},
+
+{id:"c3e9",w:3,titre:"Le panneau du randonneur",type:"vf",vfA:true,
+ histoire:"À la sortie du Village, un panneau indique : « Cascade : 1 km » et « Moulin : 500 m ». Ton ami affirme : « La cascade est plus loin que le moulin. »",
+ q:"Ton ami a-t-il raison ?",
+ justif:["Oui : 1 km = 1 000 m, et 1 000 m c'est plus loin que 500 m.","Non : 1 est plus petit que 500, donc la cascade est plus près."],justifA:0,
+ indice:"Attention, les unités sont différentes ! Convertis : 1 km = 1 000 m.",
+ etapes:["On ne compare jamais des nombres avec des unités différentes.","1 km = 1 000 m.","1 000 m > 500 m : la cascade est bien plus loin. Ton ami a raison !","Le piège « 1 < 500 » ne marche pas : il faut d'abord tout convertir."]},
+
+{id:"c3e10",w:3,titre:"Le petit train des collines",type:"saisie",acc:["9h40","9:40","9 h 40"],
+ histoire:"Le petit train touristique quitte le Village à 9 h 20. Le trajet jusqu'aux collines dure 20 minutes, à travers les champs de lavande.",
+ q:"À quelle heure le train arrive-t-il ? (Écris par exemple 9h15.)",
+ indice:"Ajoute les minutes : 20 + 20 = ?",
+ etapes:["Départ 9 h 20, trajet 20 minutes.","20 + 20 = 40 : il arrive à 9 h 40.","Ici les minutes s'additionnent sans dépasser 60 — pas de piège cette fois !"]},
+
+/* ---------- CE2 Monde 4 · Le Labyrinthe Logique ---------- */
+{id:"c4e1",w:4,titre:"Les dalles magiques",type:"saisie",num:15,
+ histoire:"Les dalles du Labyrinthe portent des nombres : 3, 6, 9, 12… Pour avancer, tu dois sauter sur la dalle suivante, mais son nombre est effacé !",
+ q:"Quel nombre porte la dalle suivante ?",
+ indice:"Regarde comment on passe d'une dalle à l'autre : 3 → 6 → 9 → 12…",
+ etapes:["De 3 à 6 : +3. De 6 à 9 : +3. De 9 à 12 : +3.","La suite avance de 3 en 3 : 12 + 3 = 15.","Tu viens de réciter la table de 3 sans t'en rendre compte !"]},
+
+{id:"c4e2",w:4,titre:"Les trois dragons",type:"qcm",
+ histoire:"Trois petits dragons gardent le Labyrinthe : Flocon, Orage et Braise. L'un est rouge, l'un est bleu, l'un est vert. Tu sais que : Orage est bleu. Et Flocon déteste le feu, il n'est sûrement pas rouge !",
+ q:"Qui est le dragon rouge ?",
+ choices:["Flocon","Orage","Braise","Impossible à savoir"],a:2,
+ indice:"Procède par élimination : Orage est bleu, Flocon n'est pas rouge… Qui reste-t-il ?",
+ etapes:["Orage est bleu, donc il n'est pas rouge.","Flocon n'est pas rouge non plus.","Il ne reste que Braise : c'est lui le dragon rouge ! (Et Flocon est donc vert.)","Éliminer les impossibles jusqu'au dernier : la méthode des détectives."]},
+
+{id:"c4e3",w:4,titre:"L'album d'images",type:"saisie",num:25,unit:"images",
+ histoire:"Dans le Labyrinthe, tu trouves un coffret : 2 paquets de 10 images de créatures magiques, plus 5 images brillantes posées à côté.",
+ q:"Combien d'images as-tu trouvées en tout ?",
+ indice:"Deux étapes : d'abord les paquets (2 × 10), puis les images seules.",
+ etapes:["Les paquets : 2 × 10 = 20 images.","On ajoute les 5 brillantes : 20 + 5 = 25.","25 images ! Les problèmes à deux étapes se résolvent une étape à la fois."]},
+
+{id:"c4e4",w:4,titre:"L'âge du lutin Nino",type:"saisie",num:8,unit:"ans",
+ histoire:"Le lutin Nino monte la garde à un carrefour du Labyrinthe. Il te lance : « Dans 2 ans, j'aurai 10 ans ! Devine mon âge, et je t'ouvre le passage. »",
+ q:"Quel âge a Nino aujourd'hui ?",
+ indice:"Remonte le temps : s'il aura 10 ans dans 2 ans, enlève 2.",
+ etapes:["Dans 2 ans : 10 ans. Aujourd'hui, c'est 2 de moins.","10 − 2 = 8 ans.","Vérification : 8 + 2 = 10 ✓ Les énigmes d'âge se résolvent souvent à l'envers !"]},
+
+{id:"c4e5",w:4,titre:"L'intrus de la salle des nombres",type:"qcm",
+ histoire:"Dans la salle des nombres, cinq portes sont marquées : 2, 4, 6, 7, 8. Une voix gronde : « L'une de ces portes n'est pas comme les autres… C'est la sortie ! »",
+ q:"Quel nombre est l'intrus ?",
+ choices:["2","4","7","8"],a:2,
+ indice:"Regarde bien : presque tous ces nombres peuvent se ranger par paires…",
+ etapes:["2, 4, 6 et 8 sont des nombres pairs.","7 est impair : c'est lui l'intrus !","Chercher le point commun des autres, c'est la clé des jeux d'intrus."]},
+
+{id:"c4e6",w:4,titre:"La basse-cour enchantée",type:"saisie",num:10,unit:"pattes",
+ histoire:"Au détour d'un couloir, une basse-cour enchantée : 3 poules qui caquettent et 1 lapin qui grignote. Le gardien te demande de compter toutes leurs pattes !",
+ q:"Combien de pattes en tout ? (Une poule a 2 pattes, un lapin en a 4.)",
+ indice:"Compte d'abord les pattes des poules, puis ajoute celles du lapin.",
+ etapes:["Les 3 poules : 3 × 2 = 6 pattes.","Le lapin : 4 pattes.","6 + 4 = 10 pattes en tout !","Bien lire l'énoncé : poules et lapins n'ont pas le même nombre de pattes."]},
+
+{id:"c4e7",w:4,titre:"La prophétie du calendrier",type:"vf",vfA:true,
+ histoire:"L'horloge parlante du Labyrinthe déclare : « Si aujourd'hui c'est mardi, alors dans exactement 7 jours… ce sera encore mardi ! »",
+ q:"L'horloge dit-elle vrai ?",
+ justif:["Oui : une semaine complète fait 7 jours, on retombe toujours sur le même jour.","Non : dans 7 jours, ce sera forcément un autre jour de la semaine."],justifA:0,
+ indice:"Récite les jours en comptant sur tes doigts : mercredi, jeudi… jusqu'à 7.",
+ etapes:["Mercredi (1), jeudi (2), vendredi (3), samedi (4), dimanche (5), lundi (6)… mardi (7) !","Après 7 jours, la semaine a fait un tour complet.","Les jours tournent en boucle de 7 : c'est un cycle, comme un manège."]},
+
+{id:"c4e8",w:4,titre:"L'escalier farceur",type:"saisie",num:7,unit:"marches",
+ histoire:"L'escalier du Labyrinthe est farceur ! Tu montes 5 marches, il t'en fait redescendre 2 en glissant, puis tu remontes 4 marches d'un coup.",
+ q:"À quelle marche es-tu arrivé ?",
+ indice:"Suis le trajet dans l'ordre : monte 5, descends 2, remonte 4.",
+ etapes:["Je monte 5 marches : je suis à la marche 5.","Je glisse de 2 : 5 − 2 = 3.","Je remonte 4 : 3 + 4 = 7.","Tu es à la 7e marche ! Avancer pas à pas évite de s'emmêler."]},
+
+{id:"c4e9",w:4,titre:"Les bus de la sortie scolaire",type:"ordre",
+ histoire:"L'école du Labyrinthe part en sortie : 23 enfants, et seulement 2 petits bus de 10 places chacun. La maîtresse fait ses calculs à voix haute, mais ses phrases se sont mélangées !",
+ q:"Remets son raisonnement dans l'ordre :",
+ ordre:["Je compte les places : 2 bus × 10 places = 20 places.","Je compare : nous sommes 23, pour 20 places.","Je calcule 23 − 20 = 3.","Il manque 3 places : 3 enfants iront avec la voiture du directeur !"],
+ indice:"D'abord compter ce qu'on a (les places), ensuite comparer avec ce qu'il faut.",
+ etapes:["Étape 1 : compter les places disponibles (2 × 10 = 20).","Étape 2 : comparer aux 23 enfants.","Étape 3 : 23 − 20 = 3 enfants sans place dans les bus.","Compter, comparer, conclure : le trio gagnant des problèmes !"]},
+
+{id:"c4e10",w:4,titre:"La cible du grand archer",type:"saisie",num:7,
+ histoire:"Dernier défi du Labyrinthe ! Le grand archer a tiré 3 flèches et marqué 22 points en tout. La première flèche a marqué 10 points, la deuxième 5 points… et la troisième s'est plantée dans un nombre effacé.",
+ q:"Combien de points a marqué la troisième flèche ?",
+ indice:"Additionne les deux premières flèches, puis cherche ce qui manque pour arriver à 22.",
+ etapes:["Les deux premières flèches : 10 + 5 = 15 points.","Il manque : 22 − 15 = 7 points.","La troisième flèche a marqué 7 points !","Vérification : 10 + 5 + 7 = 22 ✓ Bravo, le Labyrinthe s'ouvre devant toi ! 🌀"]}
+];
+
+/* ================== PARCOURS GS : LE JARDIN DES DÉCOUVERTES ================== */
+const MONDES_GS=[
+ {id:1,nom:"La Prairie des Nombres",em:"🌼",coul:"linear-gradient(135deg,#74B9FF,#0984e3)",cnum:"#0984e3",
+  desc:"Compter les animaux et les fleurs jusqu'à 10.",
+  intro:"Bienvenue dans la Prairie ! Les petits animaux adorent qu'on les compte. Compte bien avec ton doigt, sans en oublier un seul !"},
+ {id:2,nom:"Le Bois des Formes",em:"🍄",coul:"linear-gradient(135deg,#FD79A8,#e84393)",cnum:"#e84393",
+  desc:"Les formes, les tailles et les jolis motifs.",
+  intro:"Dans le Bois, tout a une forme : des ronds, des carrés, des triangles… Ouvre grand tes yeux de petit explorateur !"},
+ {id:3,nom:"La Rivière des Petits Malins",em:"🐸",coul:"linear-gradient(135deg,#55EFC4,#00b894)",cnum:"#00b894",
+  desc:"Ajouter, enlever, comparer : les premiers calculs !",
+  intro:"Au bord de la Rivière, les grenouilles jouent à saute-mouton. Il va falloir compter ce qui arrive… et ce qui s'en va !"}
+];
+
+const EXOS_GS=[
+/* ---------- GS Monde 1 · La Prairie des Nombres ---------- */
+{id:"g1e1",w:1,titre:"Les canards de la mare",type:"qcm",gros:1,
+ histoire:"Des canards nagent sur la mare de la Prairie.",
+ q:"Compte les canards : 🦆 🦆 🦆",
+ choices:["2","3","4"],a:1,
+ indice:"Pose ton doigt sur chaque canard en comptant : un… deux…",
+ etapes:["On compte : un 🦆, deux 🦆, trois 🦆.","Il y a 3 canards !"]},
+
+{id:"g1e2",w:1,titre:"Les fleurs du pré",type:"qcm",gros:1,
+ histoire:"De jolies fleurs ont poussé dans le pré.",
+ q:"Compte les fleurs : 🌸 🌸 🌸 🌸 🌸",
+ choices:["4","5","6"],a:1,
+ indice:"Compte doucement avec ton doigt, une fleur à la fois.",
+ etapes:["Un, deux, trois, quatre, cinq.","Il y a 5 fleurs ! Comme les 5 doigts de ta main."]},
+
+{id:"g1e3",w:1,titre:"Un lapin de plus",type:"qcm",gros:1,
+ histoire:"Deux lapins jouent dans l'herbe : 🐰 🐰. Un autre lapin arrive en sautant !",
+ q:"Combien de lapins maintenant ?",
+ choices:["2","3","4"],a:1,
+ indice:"Il y en avait 2, et encore un qui arrive… Compte : deux, et un de plus…",
+ etapes:["2 lapins, plus 1 qui arrive.","Après 2 vient 3 : il y a 3 lapins !"]},
+
+{id:"g1e4",w:1,titre:"Les papillons",type:"qcm",gros:1,
+ histoire:"Des papillons volent au-dessus des fleurs.",
+ q:"Compte les papillons : 🦋 🦋 🦋 🦋 🦋 🦋 🦋",
+ choices:["6","7","8"],a:1,
+ indice:"C'est beaucoup ! Compte lentement avec ton doigt, sans en sauter.",
+ etapes:["Un, deux, trois, quatre, cinq, six, sept.","Il y a 7 papillons !"]},
+
+{id:"g1e5",w:1,titre:"Le panier le plus rempli",type:"qcm",gros:1,
+ histoire:"Deux paniers de pommes sont posés dans la Prairie.",
+ q:"Quel panier a le PLUS de pommes ?",
+ choices:["🍎🍎🍎🍎","🍎🍎"],a:0,
+ indice:"Compte les pommes de chaque panier : 4 d'un côté, 2 de l'autre. Où y en a-t-il le plus ?",
+ etapes:["Premier panier : 4 pommes. Deuxième panier : 2 pommes.","4 c'est plus que 2 : le premier panier gagne !"]},
+
+{id:"g1e6",w:1,titre:"Le panier de 4 fraises",type:"qcm",gros:1,
+ histoire:"Le hérisson veut exactement 4 fraises pour son goûter.",
+ q:"Touche le panier qui a 4 fraises :",
+ choices:["🍓🍓🍓","🍓🍓🍓🍓","🍓🍓"],a:1,
+ indice:"Compte les fraises de chaque panier et cherche celui qui en a quatre.",
+ etapes:["3 fraises… 4 fraises… 2 fraises.","C'est le panier du milieu qui a 4 fraises !"]},
+
+{id:"g1e7",w:1,titre:"Le ballon envolé",type:"qcm",gros:1,
+ histoire:"Tu tiens 5 ballons : 🎈 🎈 🎈 🎈 🎈. Oh non, un ballon s'envole dans le ciel !",
+ q:"Combien de ballons te reste-t-il ?",
+ choices:["3","4","5"],a:1,
+ indice:"Il y en avait 5, et un est parti. Compte à l'envers : cinq… quatre !",
+ etapes:["5 ballons, moins 1 qui s'envole.","Il en reste 4 !"]},
+
+{id:"g1e8",w:1,titre:"Les étoiles de la nuit",type:"qcm",gros:1,
+ histoire:"La nuit tombe sur la Prairie et les étoiles s'allument une à une.",
+ q:"Compte les étoiles : ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐",
+ choices:["9","10","8"],a:1,
+ indice:"Ça en fait beaucoup ! Compte bien jusqu'au bout, avec ton doigt.",
+ etapes:["Un, deux, trois… huit, neuf, DIX !","Il y a 10 étoiles. Dix, c'est tous les doigts des deux mains !"]},
+
+/* ---------- GS Monde 2 · Le Bois des Formes ---------- */
+{id:"g2e1",w:2,titre:"La forme ronde",type:"qcm",gros:1,
+ histoire:"Dans le Bois, trois pierres magiques sont posées sur la mousse.",
+ q:"Touche la forme RONDE :",
+ choices:["🔺","🔵","🟥"],a:1,
+ indice:"Le rond est tout lisse, sans aucune pointe — comme un ballon.",
+ etapes:["Le triangle a 3 pointes, le carré a 4 coins.","Le rond 🔵 n'a pas de coin du tout : c'est lui !"]},
+
+{id:"g2e2",w:2,titre:"Les pointes du triangle",type:"qcm",gros:1,
+ histoire:"L'écureuil a trouvé un chapeau pointu en forme de triangle : 🔺",
+ q:"Combien de pointes a le triangle ?",
+ choices:["2","3","4"],a:1,
+ indice:"Touche chaque pointe du triangle avec ton doigt en comptant.",
+ etapes:["Une pointe en haut, une en bas à gauche, une en bas à droite.","Le triangle a 3 pointes ! « Tri », ça veut dire trois."]},
+
+{id:"g2e3",w:2,titre:"Le collier de perles",type:"qcm",gros:1,
+ histoire:"La chouette enfile des perles en suivant toujours le même ordre : 🔴 🔵 🔴 🔵 🔴 …",
+ q:"Quelle perle vient après ?",
+ choices:["🔴","🔵"],a:1,
+ indice:"Dis le collier à voix haute : rouge, bleu, rouge, bleu, rouge… et après ?",
+ etapes:["C'est toujours rouge PUIS bleu, rouge puis bleu.","Après le rouge vient le bleu 🔵 !"]},
+
+{id:"g2e4",w:2,titre:"Le plus grand animal",type:"qcm",gros:1,
+ histoire:"Trois animaux se promènent dans le Bois.",
+ q:"Quel est le PLUS GRAND animal ?",
+ choices:["🐭","🐱","🐘"],a:2,
+ indice:"Dans la vraie vie, lequel est immense, plus grand qu'une voiture ?",
+ etapes:["La souris est toute petite, le chat est moyen.","L'éléphant 🐘 est géant : c'est le plus grand !"]},
+
+{id:"g2e5",w:2,titre:"Le chemin de pierres",type:"qcm",gros:1,
+ histoire:"Un chemin de pierres traverse le Bois, toujours dans le même ordre : 🟡 ⬛ 🟡 ⬛ 🟡 …",
+ q:"Quelle pierre vient après ?",
+ choices:["🟡","⬛"],a:1,
+ indice:"Dis le chemin à voix haute : jaune, noir, jaune, noir, jaune… et ensuite ?",
+ etapes:["Le motif se répète : jaune puis noir, jaune puis noir.","Après le jaune vient le noir ⬛ !"]},
+
+{id:"g2e6",w:2,titre:"La fenêtre carrée",type:"qcm",gros:1,
+ histoire:"La cabane du Bois a trois fenêtres de formes différentes.",
+ q:"Touche la fenêtre CARRÉE :",
+ choices:["🔵","🟦","🔺"],a:1,
+ indice:"Le carré a 4 coins bien droits, comme un biscuit croustillant.",
+ etapes:["Le rond n'a pas de coin, le triangle a 3 pointes.","Le carré 🟦 a 4 coins : c'est lui !"]},
+
+{id:"g2e7",w:2,titre:"Le défilé des coccinelles",type:"qcm",gros:1,
+ histoire:"Les coccinelles défilent avec les fleurs, toujours dans le même ordre : 🐞 🐞 🌼 🐞 🐞 🌼 🐞 🐞 …",
+ q:"Qui vient juste après ?",
+ choices:["🐞","🌼"],a:1,
+ indice:"Le motif, c'est : deux coccinelles PUIS une fleur. Il y a déjà deux coccinelles à la fin…",
+ etapes:["Le motif qui se répète : 🐞 🐞 🌼.","Après deux coccinelles vient la fleur 🌼 !"]},
+
+{id:"g2e8",w:2,titre:"Le plus petit animal",type:"qcm",gros:1,
+ histoire:"Trois animaux font la course dans le Bois.",
+ q:"Quel est le PLUS PETIT animal ?",
+ choices:["🐜","🐕","🐎"],a:0,
+ indice:"Lequel pourrait se cacher sous ton ongle ?",
+ etapes:["Le cheval est très grand, le chien est moyen.","La fourmi 🐜 est minuscule : c'est la plus petite !"]},
+
+/* ---------- GS Monde 3 · La Rivière des Petits Malins ---------- */
+{id:"g3e1",w:3,titre:"Les grenouilles réunies",type:"qcm",gros:1,
+ histoire:"Deux grenouilles sont sur le nénuphar : 🐸 🐸. Une autre grenouille saute les rejoindre !",
+ q:"Combien de grenouilles sur le nénuphar ?",
+ choices:["2","3","4"],a:1,
+ indice:"Deux grenouilles, et une de plus qui arrive : deux… trois !",
+ etapes:["2 grenouilles + 1 grenouille.","Ça fait 3 grenouilles sur le nénuphar !"]},
+
+{id:"g3e2",w:3,titre:"Les canetons en famille",type:"qcm",gros:1,
+ histoire:"Deux canetons nagent devant : 🦆 🦆. Deux autres canetons les suivent : 🦆 🦆.",
+ q:"Combien de canetons en tout ?",
+ choices:["3","4","5"],a:1,
+ indice:"Compte-les tous : les deux devant, puis les deux derrière.",
+ etapes:["2 devant et 2 derrière.","2 + 2 = 4 canetons !"]},
+
+{id:"g3e3",w:3,titre:"La course de la Rivière",type:"qcm",gros:1,
+ histoire:"C'est la grande course ! Les animaux font la queue derrière le drapeau : 🚩 🐢 🐇 🦊",
+ q:"Qui est le PREMIER, juste à côté du drapeau ?",
+ choices:["🐢","🐇","🦊"],a:0,
+ indice:"Regarde qui touche presque le drapeau 🚩.",
+ etapes:["Le premier, c'est celui qui est juste derrière le drapeau.","C'est la tortue 🐢 ! Puis le lapin deuxième, et le renard troisième."]},
+
+{id:"g3e4",w:3,titre:"Les carottes des lapins",type:"qcm",gros:1,
+ histoire:"Quatre lapins ont très faim : 🐰 🐰 🐰 🐰. Mais il n'y a que trois carottes : 🥕 🥕 🥕",
+ q:"Est-ce que chaque lapin aura sa carotte ?",
+ choices:["Oui","Non"],a:1,
+ indice:"Donne une carotte à chaque lapin avec ton doigt… Est-ce qu'il en reste pour le dernier ?",
+ etapes:["4 lapins mais seulement 3 carottes.","Un lapin n'aura rien : il manque une carotte !","4 c'est plus que 3."]},
+
+{id:"g3e5",w:3,titre:"Les poissons argentés",type:"qcm",gros:1,
+ histoire:"Trois poissons nagent dans la Rivière : 🐟 🐟 🐟. Deux poissons arrivent encore : 🐟 🐟",
+ q:"Combien de poissons maintenant ?",
+ choices:["4","5","6"],a:1,
+ indice:"Trois, et deux de plus : continue à compter… quatre, cinq !",
+ etapes:["3 poissons + 2 poissons.","Quatre… cinq : 5 poissons !"]},
+
+{id:"g3e6",w:3,titre:"L'oiseau envolé",type:"qcm",gros:1,
+ histoire:"Quatre oiseaux sont posés sur la branche : 🐦 🐦 🐦 🐦. Un oiseau s'envole vers les nuages !",
+ q:"Combien d'oiseaux restent sur la branche ?",
+ choices:["2","3","4"],a:1,
+ indice:"Il y en avait 4, un est parti. Cache un oiseau avec ton doigt et compte les autres.",
+ etapes:["4 oiseaux, moins 1 qui s'envole.","Il en reste 3 !"]},
+
+{id:"g3e7",w:3,titre:"Les doigts de la main",type:"qcm",gros:1,
+ histoire:"La loutre te salue avec sa patte : ✋ « Coucou petit malin ! »",
+ q:"Combien de doigts a une main ?",
+ choices:["4","5","6"],a:1,
+ indice:"Regarde ta propre main et compte tes doigts, pouce compris !",
+ etapes:["Pouce, index, majeur, annulaire, auriculaire…","Une main a 5 doigts !"]},
+
+{id:"g3e8",w:3,titre:"Le grand plongeon",type:"qcm",gros:1,
+ histoire:"Cinq grenouilles sont au bord de la Rivière : 🐸 🐸 🐸 🐸 🐸. PLOUF ! Deux grenouilles plongent dans l'eau.",
+ q:"Combien de grenouilles restent au bord ?",
+ choices:["2","3","4"],a:1,
+ indice:"Il y en avait 5, et 2 ont plongé. Cache 2 grenouilles avec tes doigts et compte le reste.",
+ etapes:["5 grenouilles, moins 2 qui plongent.","Il en reste 3 au bord !","Bravo, tu as traversé tout le Jardin des Découvertes ! 🌈"]}
+];
+
+/* ================== REGISTRE DES PARCOURS ================== */
+const PARCOURS={
+ "gs":{nom:"Le Jardin des Découvertes",cible:"Vers la Grande Section",em:"🌈",age:"4-5 ans",
+   mondes:MONDES_GS,exos:EXOS_GS,
+   pitch:"Compter, comparer, reconnaître les formes — tout en images !"},
+ "ce2":{nom:"Les 4 Contrées",cible:"Vers le CE2",em:"🗻",age:"7-9 ans",
+   mondes:MONDES_CE2,exos:EXOS_CE2,
+   pitch:"Calcul malin, grands nombres, mesures et énigmes."},
+ "6e":{nom:"L'Atlas des 6 Royaumes",cible:"Vers la 6e",em:"🗺️",age:"10-12 ans",
+   mondes:MONDES_6E,exos:EXOS_6E,
+   pitch:"Problèmes à étapes, fractions, proportionnalité et grands défis."}
+};
+
+/* ================== ÉTAT MULTI-PROFILS & SAUVEGARDE ================== */
+const CLE="atlas6e_v2",CLE_V1="atlas6e_v1";
+const PROFIL_DEFAUT=()=>({nom:"",genre:"f",cheveux:0,acc:"aucun",parcours:"6e",xp:0,
+ etoiles:{},vus:{},badges:[],serie:{last:"",count:0,record:0},defisReussis:0,defiFait:""});
+let S={profils:{},actif:null,muet:false};
+try{
+  const brut=localStorage.getItem(CLE);
+  if(brut){S=Object.assign({profils:{},actif:null,muet:false},JSON.parse(brut));}
+  else{
+    const v1=localStorage.getItem(CLE_V1); // migration : l'ancienne sauvegarde devient un profil 6e
+    if(v1){const a=JSON.parse(v1);
+      const p=Object.assign(PROFIL_DEFAUT(),a,{parcours:"6e",genre:"f"});delete p.muet;
+      p.id="p"+Date.now();S.profils[p.id]=p;S.muet=!!a.muet;}
+  }
+}catch(e){}
 function sauve(){try{localStorage.setItem(CLE,JSON.stringify(S));}catch(e){}}
+function P(){return S.profils[S.actif];}
+function pc(){return PARCOURS[P().parcours];}
+function g(fem,masc){return P()&&P().genre==="m"?masc:fem;}
 
 const app=document.getElementById("app");
 const voile=document.getElementById("voile");
 
 /* ================== HELPERS ================== */
-function totalEtoiles(s){return Object.values(s.etoiles).reduce((a,b)=>a+b,0);}
+function totalEtoiles(p){return Object.values(p.etoiles).reduce((a,b)=>a+b,0);}
 function niveau(xp){return Math.floor(xp/100)+1;}
-function exosDuMonde(w){return EXOS.filter(e=>e.w===w);}
-function faits(s,w){return exosDuMonde(w).filter(e=>(s.etoiles[e.id]||0)>0||s.vus[e.id]).length;}
-function mondeFini(s,w){return exosDuMonde(w).every(e=>(s.etoiles[e.id]||0)>0);}
-function mondeOuvert(w){return w===1||faits(S,w-1)>=8;}
+function exosDuMonde(w){return pc().exos.filter(e=>e.w===w);}
+function faits(p,w){return pc().exos.filter(e=>e.w===w&&((p.etoiles[e.id]||0)>0||p.vus[e.id])).length;}
+function mondeFini(p,w){return pc().exos.filter(e=>e.w===w).every(e=>(p.etoiles[e.id]||0)>0);}
+function seuilMonde(w){return Math.ceil(exosDuMonde(w).length*2/3);}
+function mondeOuvert(w){return w===1||faits(P(),w-1)>=seuilMonde(w-1);}
 function echap(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function dateJour(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function hier(){const d=new Date();d.setDate(d.getDate()-1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
@@ -917,23 +1421,28 @@ const ACCESSOIRES=[
  {id:"aucun",em:"🙂",nom:"Naturel",lvl:1},
  {id:"bandana",em:"🧢",nom:"Bandana",lvl:2},
  {id:"lunettes",em:"⭐",nom:"Lunettes étoile",lvl:3},
- {id:"chapeau",em:"🤠",nom:"Chapeau d'exploratrice",lvl:5},
+ {id:"chapeau",em:"🤠",nom:"Chapeau d'aventure",lvl:5},
  {id:"couronne",em:"👑",nom:"Couronne",lvl:8}
 ];
-function avatarSVG(taille,accForce){
-  const hc=COUL_CHEVEUX[S.cheveux%COUL_CHEVEUX.length];
-  const acc=accForce!==undefined?accForce:S.acc;
+function avatarSVG(taille,profil){
+  const p=profil||P()||{cheveux:0,acc:"aucun",genre:"f"};
+  const hc=COUL_CHEVEUX[p.cheveux%COUL_CHEVEUX.length];
+  const acc=p.acc||"aucun";
   let extra="";
   if(acc==="bandana")extra='<path d="M28 34 Q50 22 72 34 L72 42 Q50 32 28 42 Z" fill="#FF7675"/><circle cx="73" cy="38" r="4" fill="#FF7675"/>';
-  if(acc==="lunettes")extra='<g fill="none" stroke="#FDCB6E" stroke-width="3"><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" stroke="none" transform="scale(0.62) translate(22,32)"/><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" stroke="none" transform="scale(0.62) translate(70,32)"/><line x1="45" y1="52" x2="55" y2="52" stroke="#FDCB6E"/></g>';
+  if(acc==="lunettes")extra='<g><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" transform="scale(0.62) translate(22,32)"/><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" transform="scale(0.62) translate(70,32)"/></g>';
   if(acc==="chapeau")extra='<ellipse cx="50" cy="32" rx="32" ry="8" fill="#b3813f"/><path d="M32 32 Q32 12 50 12 Q68 12 68 32 Q50 26 32 32 Z" fill="#c99552"/><rect x="33" y="24" width="34" height="5" rx="2.5" fill="#8a5a28"/>';
   if(acc==="couronne")extra='<path d="M34 30 L38 18 L46 27 L50 15 L54 27 L62 18 L66 30 Q50 24 34 30 Z" fill="#FDCB6E" stroke="#e6a93c" stroke-width="1.5"/>';
+  // cheveux : longs (f) ou courts (m)
+  const cheveux=p.genre==="m"
+   ?'<path d="M24 52 Q22 24 50 24 Q78 24 76 52 Q76 34 62 32 Q70 44 60 38 Q50 32 42 38 Q34 44 38 32 Q24 34 24 52 Z" fill="'+hc+'"/>'
+   :'<path d="M24 52 Q22 24 50 24 Q78 24 76 52 Q76 34 62 32 Q70 44 60 38 Q50 32 42 38 Q34 44 38 32 Q24 34 24 52 Z" fill="'+hc+'"/>'
+    +'<path d="M24 50 Q18 66 26 76 Q30 64 28 52 Z" fill="'+hc+'"/><path d="M76 50 Q82 66 74 76 Q70 64 72 52 Z" fill="'+hc+'"/>';
   return '<svg viewBox="0 0 100 110" width="'+taille+'" height="'+(taille*1.1)+'">'
    +'<path d="M22 108 Q22 78 50 78 Q78 78 78 108 Z" fill="#6C5CE7"/>'
    +'<path d="M40 82 L50 92 L60 82 Q55 78 50 78 Q45 78 40 82Z" fill="#FFEAA7"/>'
    +'<circle cx="50" cy="52" r="26" fill="#ffdcb8"/>'
-   +'<path d="M24 52 Q22 24 50 24 Q78 24 76 52 Q76 34 62 32 Q70 44 60 38 Q50 32 42 38 Q34 44 38 32 Q24 34 24 52 Z" fill="'+hc+'"/>'
-   +'<path d="M24 50 Q18 66 26 76 Q30 64 28 52 Z" fill="'+hc+'"/><path d="M76 50 Q82 66 74 76 Q70 64 72 52 Z" fill="'+hc+'"/>'
+   +cheveux
    +'<circle cx="41" cy="52" r="3.2" fill="#2D3436"/><circle cx="59" cy="52" r="3.2" fill="#2D3436"/>'
    +'<circle cx="42.2" cy="50.8" r="1" fill="#fff"/><circle cx="60.2" cy="50.8" r="1" fill="#fff"/>'
    +'<path d="M43 63 Q50 69 57 63" stroke="#2D3436" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
@@ -944,109 +1453,171 @@ const CHOUETTE='<svg class="plume-svg" viewBox="0 0 80 80" width="54" height="54
 
 /* ================== SÉRIE (streak) ================== */
 function majSerie(){
-  const auj=dateJour();
-  if(S.serie.last===auj)return;
-  S.serie.count=(S.serie.last===hier())?S.serie.count+1:1;
-  S.serie.last=auj;
-  S.serie.record=Math.max(S.serie.record,S.serie.count);
+  const p=P(),auj=dateJour();
+  if(p.serie.last===auj)return;
+  p.serie.count=(p.serie.last===hier())?p.serie.count+1:1;
+  p.serie.last=auj;
+  p.serie.record=Math.max(p.serie.record,p.serie.count);
 }
 
-/* ================== DÉFI DU JOUR ================== */
+/* ================== DÉFI DU JOUR (par profil) ================== */
 function graine(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19;}return()=>{h=Math.imul(h^(h>>>16),2246822507);h=Math.imul(h^(h>>>13),3266489909);return((h^=h>>>16)>>>0)/4294967296;};}
 function defiDuJour(){
-  const dispo=EXOS.filter(e=>mondeOuvert(e.w));
-  const r=graine("defi-"+dateJour())();
+  const dispo=pc().exos.filter(e=>mondeOuvert(e.w));
+  if(!dispo.length)return null;
+  const r=graine("defi-"+P().parcours+"-"+dateJour())();
   return dispo[Math.floor(r*dispo.length)];
 }
 
-/* ================== BADGES ================== */
+/* ================== BADGES (dynamiques par parcours) ================== */
+function listeBadges(){
+  const p=P(),mondes=pc().mondes,nb=pc().exos.length;
+  const b=[
+   {id:"premiere",em:"🌟",nom:"Premiers pas",desc:"Réussir ton premier exercice",
+    test:()=>Object.values(p.etoiles).some(v=>v>0)}];
+  mondes.forEach(m=>b.push({id:"monde"+m.id,em:m.em,nom:m.nom,desc:"Terminer ce monde",
+    test:()=>mondeFini(p,m.id)}));
+  b.push(
+   {id:"sansindice",em:"🧠",nom:"Tête bien faite",desc:"8 exercices réussis du premier coup, sans indice",
+    test:()=>Object.values(p.etoiles).filter(v=>v===3).length>=8},
+   {id:"etoiles50",em:"✨",nom:"Pluie d'étoiles",desc:"Récolter "+Math.min(50,nb*2)+" étoiles",
+    test:()=>totalEtoiles(p)>=Math.min(50,nb*2)},
+   {id:"streak3",em:"🔥",nom:g("Bien échauffée","Bien échauffé"),desc:"Jouer 3 jours d'affilée",test:()=>p.serie.record>=3},
+   {id:"streak7",em:"🚀",nom:"Semaine de feu",desc:"Jouer 7 jours d'affilée",test:()=>p.serie.record>=7},
+   {id:"defi",em:"🎯",nom:"Défi relevé",desc:"Réussir 5 défis du jour",test:()=>(p.defisReussis||0)>=5},
+   {id:"niveau5",em:"👑",nom:g("Exploratrice confirmée","Explorateur confirmé"),desc:"Atteindre le niveau 5",test:()=>niveau(p.xp)>=5},
+   {id:"atlas",em:"🗺️",nom:"Parcours complet",desc:"Réussir les "+nb+" exercices",
+    test:()=>pc().exos.every(e=>(p.etoiles[e.id]||0)>0)});
+  return b;
+}
 function verifBadges(){
-  const nouveaux=[];
-  for(const b of BADGES)if(!S.badges.includes(b.id)&&b.test(S)){S.badges.push(b.id);nouveaux.push(b);}
+  const p=P(),nouveaux=[];
+  for(const b of listeBadges())if(!p.badges.includes(b.id)&&b.test()){p.badges.push(b.id);nouveaux.push(b);}
   return nouveaux;
 }
 
 /* ================== EN-TÊTE COMMUNE ================== */
-function entete(titre,retour){
+function entete(titre,retourVers){
   return '<header>'
-   +(retour?'<button class="btn-rond" data-act="retour">←</button>':'')
+   +(retourVers?'<button class="btn-rond" data-act="retour" data-vers="'+retourVers+'">←</button>':'')
    +'<div class="h-titre">'+titre+'</div>'
-   +'<div class="pastille">⭐ '+totalEtoiles(S)+'</div>'
-   +(S.serie.count>0?'<div class="pastille">🔥 '+S.serie.count+'</div>':'')
+   +'<div class="pastille">⭐ '+totalEtoiles(P())+'</div>'
+   +(P().serie.count>0?'<div class="pastille">🔥 '+P().serie.count+'</div>':'')
    +'<button class="btn-rond" data-act="muet">'+(S.muet?"🔇":"🔊")+'</button>'
    +'<button class="btn-rond" data-act="profil" style="padding:2px">'+avatarSVG(34)+'</button>'
    +'</header>';
 }
 
-/* ================== ÉCRAN : ACCUEIL / ONBOARDING ================== */
-function rAccueil(){
-  let sel=S.cheveux||0;
+/* ================== ÉCRAN : CHOIX DU PROFIL ================== */
+function rProfils(){
+  const ids=Object.keys(S.profils);
   app.innerHTML='<div class="ecran actif"><div class="centreur">'
    +'<div class="flotte">'+CHOUETTE+'</div>'
-   +'<h1 class="titre-jeu">L\'Atlas des<br>6 Royaumes</h1>'
-   +'<p class="sous-titre">Je suis <b>Plume</b>, la chouette cartographe. L\'Atlas du monde s\'est effacé, et seule une exploratrice futée peut le redessiner… royaume après royaume, énigme après énigme. J\'ai besoin de toi !</p>'
-   +'<input class="champ" id="champNom" maxlength="16" placeholder="Ton prénom d\'exploratrice" autocomplete="off">'
-   +'<p class="sous-titre" style="margin-bottom:-6px">Choisis ta couleur de cheveux :</p>'
+   +'<h1 class="titre-jeu">Atlas Maths</h1>'
+   +'<p class="sous-titre">Qui part à l\'aventure aujourd\'hui ?</p>'
+   +'<div class="grille-profils">'
+   +ids.map(id=>{const p=S.profils[id],pk=PARCOURS[p.parcours];
+     return '<button class="carte-profil" data-choisir="'+id+'">'+avatarSVG(56,p)
+      +'<span class="infos-p"><b>'+echap(p.nom)+'</b><small>'+pk.em+" "+pk.nom+" · "+pk.cible+" · Niveau "+niveau(p.xp)+" · ⭐ "+totalEtoiles(p)+'</small></span>'
+      +'<span class="fleche">→</span></button>';}).join("")
+   +'<button class="carte-profil nouveau" data-act="nouveau-profil">＋ Nouvel explorateur</button>'
+   +'</div></div></div>';
+}
+
+/* ================== ÉCRAN : CRÉATION DE PROFIL ================== */
+let creation=null;
+function rNouveauProfil(){
+  creation={genre:"f",cheveux:0,parcours:null};
+  const retour=Object.keys(S.profils).length>0;
+  app.innerHTML='<div class="ecran actif"><div class="centreur" style="justify-content:flex-start;padding-top:calc(18px + var(--safe-top))">'
+   +(retour?'<button class="btn-rond" data-act="retour-profils" style="align-self:flex-start">←</button>':'')
+   +'<div class="bulle-plume">'+CHOUETTE
+   +'<p><b>Plume :</b> « Je suis la chouette cartographe. Les cartes du monde se sont effacées, et il me faut de nouveaux explorateurs pour les redessiner ! Dis-moi tout… »</p></div>'
+   +'<input class="champ" id="champNom" maxlength="16" placeholder="Ton prénom" autocomplete="off">'
+   +'<div class="rang-genre">'
+   +'<button class="opt-genre sel" data-genre="f">👧 Exploratrice</button>'
+   +'<button class="opt-genre" data-genre="m">👦 Explorateur</button></div>'
+   +'<p class="sous-titre" style="margin:-6px 0 -10px">Ta couleur de cheveux :</p>'
    +'<div class="rang-choix" id="rangCheveux">'
-   +COUL_CHEVEUX.map((c,i)=>'<button class="choix-pastille'+(i===sel?" sel":"")+'" data-i="'+i+'" style="background:'+c+'"></button>').join("")
+   +COUL_CHEVEUX.map((c,i)=>'<button class="choix-pastille'+(i===0?" sel":"")+'" data-i="'+i+'" style="background:'+c+'"></button>').join("")
    +'</div>'
-   +'<div id="apercuAvatar">'+avatarSVG(88)+'</div>'
-   +'<button class="btn large" id="btnDepart" style="max-width:340px">C\'est parti ! 🧭</button>'
-   +'</div></div>';
-  document.getElementById("rangCheveux").addEventListener("click",e=>{
-    const b=e.target.closest("[data-i]");if(!b)return;
-    sel=+b.dataset.i;S.cheveux=sel;son("clic");
-    document.querySelectorAll(".choix-pastille").forEach(p=>p.classList.toggle("sel",+p.dataset.i===sel));
-    document.getElementById("apercuAvatar").innerHTML=avatarSVG(88);
+   +'<div id="apercuAvatar">'+avatarSVG(80,{genre:"f",cheveux:0,acc:"aucun"})+'</div>'
+   +'<p class="sous-titre" style="margin:-6px 0 -10px">Ton aventure :</p>'
+   +'<div class="rang-parcours">'
+   +Object.entries(PARCOURS).map(([k,pk])=>'<button class="opt-parcours" data-parcours="'+k+'">'
+     +'<span class="em">'+pk.em+'</span><span><b>'+pk.nom+" — "+pk.cible+" ("+pk.age+')</b>'
+     +'<small>'+pk.pitch+" · "+pk.exos.length+' énigmes</small></span></button>').join("")
+   +'</div>'
+   +'<button class="btn large" id="btnDepart" style="max-width:440px">C\'est parti ! 🧭</button>'
+   +'<div style="height:10px"></div></div></div>';
+  const maj=()=>{document.getElementById("apercuAvatar").innerHTML=avatarSVG(80,{genre:creation.genre,cheveux:creation.cheveux,acc:"aucun"});};
+  app.addEventListener("click",e=>{
+    const bg=e.target.closest("[data-genre]");
+    if(bg){creation.genre=bg.dataset.genre;son("clic");
+      app.querySelectorAll("[data-genre]").forEach(x=>x.classList.toggle("sel",x===bg));maj();}
+    const bc=e.target.closest("[data-i]");
+    if(bc){creation.cheveux=+bc.dataset.i;son("clic");
+      app.querySelectorAll(".choix-pastille").forEach(x=>x.classList.toggle("sel",x===bc));maj();}
+    const bp=e.target.closest("[data-parcours]");
+    if(bp){creation.parcours=bp.dataset.parcours;son("clic");
+      app.querySelectorAll("[data-parcours]").forEach(x=>x.classList.toggle("sel",x===bp));}
   });
   document.getElementById("btnDepart").addEventListener("click",()=>{
     const nom=document.getElementById("champNom").value.trim();
-    if(!nom){document.getElementById("champNom").style.borderColor="var(--corail)";
-      document.getElementById("champNom").placeholder="Écris ton prénom ici !";return;}
-    S.nom=nom;S.cheveux=sel;sauve();son("ok");confettis(60);rCarte();
+    const ch=document.getElementById("champNom");
+    if(!nom){ch.style.borderColor="var(--corail)";ch.placeholder="Écris ton prénom ici !";return;}
+    if(!creation.parcours){son("ko");
+      document.querySelector(".rang-parcours").style.animation="secousse .4s";
+      setTimeout(()=>document.querySelector(".rang-parcours").style.animation="",500);return;}
+    const p=PROFIL_DEFAUT();
+    p.nom=nom;p.genre=creation.genre;p.cheveux=creation.cheveux;p.parcours=creation.parcours;
+    p.id="p"+Date.now();
+    S.profils[p.id]=p;S.actif=p.id;sauve();
+    son("ok");confettis(60);rCarte();
   });
 }
 
 /* ================== ÉCRAN : CARTE DES MONDES ================== */
 function rCarte(){
   const defi=defiDuJour();
-  const defiFait=S.defiFait===dateJour();
-  app.innerHTML='<div class="ecran actif">'+entete("Bonjour, "+echap(S.nom)+" !")
+  const defiFait=P().defiFait===dateJour();
+  app.innerHTML='<div class="ecran actif">'+entete("Bonjour, "+echap(P().nom)+" !")
    +'<div class="defile">'
    +'<div class="bulle-plume" style="margin:0 auto 16px">'+CHOUETTE
    +'<p><b>Plume :</b> « '+messagePlume()+' »</p></div>'
    +(defi?'<div class="bandeau-defi'+(defiFait?" fait":"")+'" data-act="defi" data-id="'+defi.id+'">'
      +'<span class="em">'+(defiFait?"✅":"🎯")+'</span><div style="flex:1"><b>Défi du jour '+(defiFait?"— réussi !":"(XP ×2 !)")+'</b>'
-     +'<small>'+echap(defi.titre)+" · "+MONDES[defi.w-1].nom+'</small></div></div>':"")
+     +'<small>'+echap(defi.titre)+" · "+pc().mondes[defi.w-1].nom+'</small></div></div>':"")
    +'<div class="grille-mondes">'
-   +MONDES.map(m=>{
-     const ouvert=mondeOuvert(m.id),f=faits(S,m.id),et=exosDuMonde(m.id).reduce((a,e)=>a+(S.etoiles[e.id]||0),0);
+   +pc().mondes.map(m=>{
+     const ouvert=mondeOuvert(m.id),f=faits(P(),m.id),n=exosDuMonde(m.id).length,
+       et=exosDuMonde(m.id).reduce((a,e)=>a+(P().etoiles[e.id]||0),0);
      return '<div class="carte-monde'+(ouvert?"":" verrou")+'" style="background:'+m.coul+'" data-act="monde" data-w="'+m.id+'">'
       +'<span class="deco-monde">'+m.em+'</span>'
       +(ouvert?"":'<span class="cadenas">🔒</span>')
       +'<span class="em">'+m.em+'</span><div><h3>'+m.nom+'</h3><div class="desc">'+m.desc+'</div></div>'
-      +'<span class="prog">'+(ouvert?f+"/12 · ⭐ "+et:"Termine le royaume précédent")+'</span></div>';
+      +'<span class="prog">'+(ouvert?f+"/"+n+" · ⭐ "+et:"Termine le monde précédent")+'</span></div>';
    }).join("")
    +'</div></div></div>';
 }
 function messagePlume(){
-  const n=niveau(S.xp),tot=Object.values(S.etoiles).filter(v=>v>0).length;
-  if(tot===0)return "Notre aventure commence ! Touche le premier royaume, l'Archipel des Nombres, et montre-moi de quoi tu es capable.";
-  if(EXOS.every(e=>(S.etoiles[e.id]||0)>0))return "Tu as redessiné l'Atlas en entier… Tu es prête pour la 6e, championne ! Tu peux rejouer les exercices pour viser 3 étoiles partout.";
-  if(S.serie.count>=3)return S.serie.count+" jours d'affilée, quelle exploratrice ! Ta régularité est ta plus grande force.";
-  if(n>=5)return "Niveau "+n+" ! Les royaumes n'ont presque plus de secrets pour toi. Continue !";
-  return "Tu as déjà réussi "+tot+" exercice"+(tot>1?"s":"")+". Chaque énigme résolue redessine un bout de l'Atlas !";
+  const p=P(),n=niveau(p.xp),tot=Object.values(p.etoiles).filter(v=>v>0).length,nb=pc().exos.length;
+  if(tot===0)return "Notre aventure commence ! Touche le premier monde et montre-moi de quoi tu es capable.";
+  if(pc().exos.every(e=>(p.etoiles[e.id]||0)>0))return "Tu as tout réussi… "+g("Championne","Champion")+" ! Tu peux rejouer les exercices pour viser 3 étoiles partout.";
+  if(p.serie.count>=3)return p.serie.count+" jours d'affilée, quel"+g("le exploratrice"," explorateur")+" ! Ta régularité est ta plus grande force.";
+  if(n>=5)return "Niveau "+n+" ! Ce parcours n'a presque plus de secrets pour toi. Continue !";
+  return "Tu as déjà réussi "+tot+" exercice"+(tot>1?"s":"")+" sur "+nb+". Chaque énigme résolue redessine un bout de la carte !";
 }
 
 /* ================== ÉCRAN : UN MONDE ================== */
 function rMonde(w){
-  const m=MONDES[w-1];
+  const m=pc().mondes[w-1];
   app.innerHTML='<div class="ecran actif">'+entete(m.em+" "+m.nom,"carte")
    +'<div class="defile">'
    +'<div class="bulle-plume intro-monde" style="margin:0 auto 16px">'+CHOUETTE+'<p>'+m.intro+'</p></div>'
    +'<div class="chemin">'
    +exosDuMonde(w).map((e,i)=>{
-     const et=S.etoiles[e.id]||0,vu=S.vus[e.id];
+     const et=P().etoiles[e.id]||0,vu=P().vus[e.id];
      return '<div class="noeud'+(vu&&!et?" vu":"")+'" data-act="exo" data-id="'+e.id+'">'
       +'<div class="num" style="background:'+(et>0?m.coul:"linear-gradient(135deg,#b2bec3,#dfe6e9)")+'">'+(i+1)+'</div>'
       +'<div class="mini-titre">'+echap(e.titre)+'</div>'
@@ -1059,12 +1630,12 @@ function rMonde(w){
 let EX=null,essais=0,indiceUtilise=false,resolu=0,etapeVF=0,ordreRep=[],estDefi=false;
 
 function rExo(id,defi){
-  EX=EXOS.find(e=>e.id===id);essais=0;indiceUtilise=false;resolu=0;etapeVF=0;ordreRep=[];estDefi=!!defi;
-  const m=MONDES[EX.w-1];
+  EX=pc().exos.find(e=>e.id===id);essais=0;indiceUtilise=false;resolu=0;etapeVF=0;ordreRep=[];estDefi=!!defi;
+  const m=pc().mondes[EX.w-1],gros=EX.gros?" gros":"";
   let corps="";
   if(EX.type==="qcm"){
     corps='<div class="choix-liste">'+melange(EX.choices.map((c,i)=>({c,i}))).map(o=>
-      '<button class="choix-btn" data-choix="'+o.i+'"><span class="lettre"></span><span>'+o.c+'</span></button>').join("")+'</div>';
+      '<button class="choix-btn'+gros+'" data-choix="'+o.i+'"><span class="lettre"></span><span>'+o.c+'</span></button>').join("")+'</div>';
   }else if(EX.type==="vf"){
     corps='<div class="vf-rang"><button class="choix-btn" data-vf="1">👍 VRAI</button>'
      +'<button class="choix-btn" data-vf="0">👎 FAUX</button></div><div id="zoneJustif"></div>';
@@ -1081,13 +1652,13 @@ function rExo(id,defi){
    +(estDefi?'<div class="retour indice" style="margin:0 0 12px">🎯 <b>Défi du jour :</b> réussis cet exercice et tes points d\'expérience sont doublés !</div>':"")
    +'<div class="histoire">'+EX.histoire+'</div>'
    +(EX.svg?'<div class="illu-exo">'+EX.svg+'</div>':"")
-   +'<div class="question">'+EX.q+'</div>'+corps
+   +'<div class="question'+(EX.gros?" grosse":"")+'">'+EX.q+'</div>'+corps
    +'<div id="zoneRetour"></div><div id="zoneSolution"></div>'
    +'</div>'
    +'<div class="barre-exo"><button class="btn doux" data-act="indice">💡 Indice</button>'
    +(EX.type==="saisie"||EX.type==="ordre"?'<button class="btn vert" data-act="valider">Valider ✓</button>':"")
    +'</div></div>';
-  if(EX.type==="qcm")document.querySelectorAll(".lettre").forEach((l,i)=>l.textContent="ABCD"[i]);
+  if(EX.type==="qcm"&&!EX.gros)document.querySelectorAll(".lettre").forEach((l,i)=>l.textContent="ABCD"[i]);
   if(EX.type==="ordre")initOrdre();
   const ch=document.getElementById("champRep");
   if(ch)ch.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();validerExo();}});
@@ -1097,7 +1668,6 @@ function rExo(id,defi){
 let ordreItems=[];
 function initOrdre(){
   ordreItems=melange(EX.ordre.map((t,i)=>({t,i})));
-  // évite un mélange déjà dans le bon ordre
   if(ordreItems.every((o,k)=>o.i===k))ordreItems.reverse();
   ordreRep=[];rendOrdre();
 }
@@ -1137,7 +1707,6 @@ function mvGlisse(ev){
     document.body.appendChild(glisse.clone);glisse.el.classList.add("fantome");
   }
   glisse.clone.style.transform="translate("+(ev.clientX-glisse.x0)+"px,"+(ev.clientY-glisse.y0)+"px) rotate(2deg)";
-  // calcul de la position cible
   const zr=document.getElementById("zoneRep");
   const chips=[...zr.querySelectorAll("[data-k]")].filter(c=>c!==glisse.el);
   let cible=ordreRep.length-1;
@@ -1150,23 +1719,23 @@ function mvGlisse(ev){
 }
 function finGlisse(ev){
   if(!glisse)return;
-  const g=glisse;glisse=null;
-  g.el.removeEventListener("pointermove",mvGlisse);
-  g.el.removeEventListener("pointerup",finGlisse);
-  g.el.removeEventListener("pointercancel",finGlisse);
-  if(g.clone)g.clone.remove();
-  if(g.bouge){
-    if(g.cible!==undefined&&g.cible!==g.k){
-      const it=ordreRep.splice(g.k,1)[0];ordreRep.splice(g.cible,0,it);son("pose");
+  const g2=glisse;glisse=null;
+  g2.el.removeEventListener("pointermove",mvGlisse);
+  g2.el.removeEventListener("pointerup",finGlisse);
+  g2.el.removeEventListener("pointercancel",finGlisse);
+  if(g2.clone)g2.clone.remove();
+  if(g2.bouge){
+    if(g2.cible!==undefined&&g2.cible!==g2.k){
+      const it=ordreRep.splice(g2.k,1)[0];ordreRep.splice(g2.cible,0,it);son("pose");
     }
     rendOrdre();
-  }else{ // simple toucher : renvoyer vers la source
-    const it=ordreRep.splice(g.k,1)[0];ordreItems.push(it);son("clic");rendOrdre();
+  }else{
+    const it=ordreRep.splice(g2.k,1)[0];ordreItems.push(it);son("clic");rendOrdre();
   }
 }
 
 /* ----- validation & feedback ----- */
-const ENCOURAGEMENTS=["Pas tout à fait… mais tu es sur la bonne piste !","Hmm, ce n'est pas ça — respire un bon coup et relis l'énoncé.","Presque ! Les grandes exploratrices se trompent souvent avant de trouver.","Ce n'est pas la bonne réponse, mais chaque essai t'apprend quelque chose !"];
+const ENCOURAGEMENTS=["Pas tout à fait… mais tu es sur la bonne piste !","Hmm, ce n'est pas ça — respire un bon coup et relis l'énoncé.","Presque ! Les grands aventuriers se trompent souvent avant de trouver.","Ce n'est pas la bonne réponse, mais chaque essai t'apprend quelque chose !"];
 function feedbackErreur(){
   essais++;son("ko");
   const z=document.getElementById("zoneRetour");
@@ -1192,7 +1761,7 @@ function montreSolution(marqueVu){
    +EX.etapes.map((e,i)=>'<div class="etape-sol" style="animation-delay:'+(i*0.35)+'s"><span class="puce">'+(i+1)+'</span><span>'+e+'</span></div>').join("")
    +(marqueVu?'<button class="btn large" data-act="retour-apres-solution" style="margin-top:14px">J\'ai compris, je réessaierai ! 💪</button>':"")
    +'</div>';
-  if(marqueVu){S.vus[EX.id]=1;sauve();}
+  if(marqueVu){P().vus[EX.id]=1;sauve();}
   zs.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function validerExo(){
@@ -1202,7 +1771,7 @@ function validerExo(){
     const ch=document.getElementById("champRep");
     if(!ch||!ch.value.trim())return;
     ok=bonneSaisie(EX,ch.value);
-    if(!ok){ch.classList.add("ko");ch.style.borderColor="var(--corail)";ch.style.animation="secousse .4s";
+    if(!ok){ch.style.borderColor="var(--corail)";ch.style.animation="secousse .4s";
       setTimeout(()=>{ch.style.animation="";ch.style.borderColor="var(--lavande)";},600);}
   }else if(EX.type==="ordre"){
     if(ordreRep.length!==EX.ordre.length){
@@ -1243,29 +1812,30 @@ function clicJustif(btn){
 /* ----- réussite ----- */
 function reussite(){
   resolu=1;son("ok");confettis(essais===0&&!indiceUtilise?130:80);
+  const p=P();
   let et=3;if(indiceUtilise)et--;if(essais>0)et--;et=Math.max(1,et);
-  const deja=S.etoiles[EX.id]||0;
-  S.etoiles[EX.id]=Math.max(deja,et);
-  delete S.vus[EX.id];
+  const deja=p.etoiles[EX.id]||0;
+  p.etoiles[EX.id]=Math.max(deja,et);
+  delete p.vus[EX.id];
   let xp=5+et*5;
   const defi=defiDuJour();
   let bonusDefi=false;
-  if(estDefi||(defi&&defi.id===EX.id&&S.defiFait!==dateJour())){
-    if(S.defiFait!==dateJour()){S.defiFait=dateJour();S.defisReussis=(S.defisReussis||0)+1;xp*=2;bonusDefi=true;}
+  if(defi&&defi.id===EX.id&&p.defiFait!==dateJour()){
+    p.defiFait=dateJour();p.defisReussis=(p.defisReussis||0)+1;xp*=2;bonusDefi=true;
   }
-  const nivAvant=niveau(S.xp);
-  S.xp+=xp;majSerie();
+  const nivAvant=niveau(p.xp);
+  p.xp+=xp;majSerie();
   const nouveaux=verifBadges();
-  const nivApres=niveau(S.xp);
+  const nivApres=niveau(p.xp);
   sauve();
   if(nouveaux.length)setTimeout(()=>son("badge"),650);
   montreSolution(false);
-  const MSGS=["Magnifique raisonnement !","Bravo, quelle exploratrice !","Excellent ! L'Atlas se redessine…","Tu as l'étoffe d'une championne !","Superbe ! Plume est impressionnée."];
+  const MSGS=["Magnifique raisonnement !","Bravo, quel"+g("le exploratrice"," explorateur")+" !","Excellent ! La carte se redessine…","Tu as l'étoffe d'un"+g("e championne"," champion")+" !","Superbe ! Plume est impressionnée."];
   voile.innerHTML='<div class="modale">'
    +'<div style="font-size:50px">'+(et===3?"🏆":"🎉")+'</div>'
    +'<h2>'+MSGS[Math.floor(Math.random()*MSGS.length)]+'</h2>'
    +'<div class="grosses-etoiles">'+[0,1,2].map(i=>'<span>'+(i<et?"⭐":"☆")+'</span>').join("")+'</div>'
-   +(et<3&&deja<3?'<p class="msg">'+(indiceUtilise?"L'indice t'a coûté une étoile — la prochaine fois, tente d'abord toute seule !":"Rejoue cet exercice un autre jour pour viser les 3 étoiles !")+'</p>':"")
+   +(et<3&&deja<3?'<p class="msg">'+(indiceUtilise?"L'indice t'a coûté une étoile — la prochaine fois, tente d'abord tout seul"+g("e","")+" !":"Rejoue cet exercice un autre jour pour viser les 3 étoiles !")+'</p>':"")
    +'<div class="gain-xp">+'+xp+' XP'+(bonusDefi?" (défi ×2 ! 🎯)":"")+(nivApres>nivAvant?" · Niveau "+nivApres+" ! 🎖️":"")+'</div>'
    +nouveaux.map(b=>'<div class="nouveau-badge"><span class="em">'+b.em+'</span>Nouveau badge : <b>'+b.nom+'</b></div>').join("")
    +'<div style="display:flex;gap:10px;margin-top:6px">'
@@ -1277,52 +1847,59 @@ function exoSuivant(){
   voile.classList.remove("actif");
   if(estDefi){rCarte();return;}
   const liste=exosDuMonde(EX.w);
-  const prochain=liste.find(e=>!(S.etoiles[e.id]>0)&&e.id!==EX.id);
+  const prochain=liste.find(e=>!(P().etoiles[e.id]>0)&&e.id!==EX.id);
   if(prochain)rExo(prochain.id);else rMonde(EX.w);
 }
 
-/* ================== ÉCRAN : PROFIL ================== */
+/* ================== ÉCRAN : PROFIL / CARNET ================== */
 function rProfil(){
-  const n=niveau(S.xp),pct=S.xp%100,reussis=Object.values(S.etoiles).filter(v=>v>0).length;
-  app.innerHTML='<div class="ecran actif">'+entete("Mon carnet d'exploratrice","carte")
+  const p=P(),n=niveau(p.xp),pct=p.xp%100,
+    reussis=Object.values(p.etoiles).filter(v=>v>0).length,nb=pc().exos.length,
+    badges=listeBadges();
+  app.innerHTML='<div class="ecran actif">'+entete("Mon carnet d'aventure","carte")
    +'<div class="defile"><div style="max-width:560px;margin:0 auto">'
    +'<div class="carte entete-profil">'+avatarSVG(92)
-   +'<div class="infos"><h2>'+echap(S.nom)+'</h2><small style="color:var(--gris)">Niveau '+n+' · '+S.xp+' XP</small>'
+   +'<div class="infos"><h2>'+echap(p.nom)+'</h2>'
+   +'<small style="color:var(--gris)">'+pc().em+" "+pc().nom+" · Niveau "+n+" · "+p.xp+' XP</small>'
    +'<div class="barre-niveau"><div style="width:'+pct+'%"></div></div>'
    +'<small style="color:var(--gris)">'+(100-pct)+' XP avant le niveau '+(n+1)+'</small></div></div>'
    +'<div class="stat-rang">'
-   +'<div class="stat-carte"><b>⭐ '+totalEtoiles(S)+'</b><small>étoiles</small></div>'
-   +'<div class="stat-carte"><b>✅ '+reussis+'/72</b><small>exercices</small></div>'
-   +'<div class="stat-carte"><b>🔥 '+S.serie.count+'</b><small>jours d\'affilée</small></div>'
-   +'<div class="stat-carte"><b>🎯 '+(S.defisReussis||0)+'</b><small>défis du jour</small></div></div>'
+   +'<div class="stat-carte"><b>⭐ '+totalEtoiles(p)+'</b><small>étoiles</small></div>'
+   +'<div class="stat-carte"><b>✅ '+reussis+"/"+nb+'</b><small>exercices</small></div>'
+   +'<div class="stat-carte"><b>🔥 '+p.serie.count+'</b><small>jours d\'affilée</small></div>'
+   +'<div class="stat-carte"><b>🎯 '+(p.defisReussis||0)+'</b><small>défis du jour</small></div></div>'
    +'<div class="carte" style="margin-bottom:16px"><b>Ma tenue</b> <small style="color:var(--gris)">(de nouveaux accessoires se débloquent en gagnant des niveaux !)</small>'
    +'<div class="rang-accessoires">'
    +ACCESSOIRES.map(a=>{const ok=n>=a.lvl;
-     return '<button class="acc-btn'+(S.acc===a.id?" sel":"")+(ok?"":" verrou")+'" data-acc="'+a.id+'" '+(ok?"":"disabled")+'>'+a.em+'<small>'+(ok?a.nom:"Niv. "+a.lvl)+'</small></button>';}).join("")
+     return '<button class="acc-btn'+(p.acc===a.id?" sel":"")+(ok?"":" verrou")+'" data-acc="'+a.id+'" '+(ok?"":"disabled")+'>'+a.em+'<small>'+(ok?a.nom:"Niv. "+a.lvl)+'</small></button>';}).join("")
    +'</div></div>'
-   +'<div class="carte"><b>Mes badges ('+S.badges.length+'/'+BADGES.length+')</b>'
+   +'<div class="carte"><b>Mes badges ('+p.badges.length+'/'+badges.length+')</b>'
    +'<div class="grille-badges" style="margin-top:12px">'
-   +BADGES.map(b=>'<div class="badge'+(S.badges.includes(b.id)?"":" gris")+'"><span class="em">'+b.em+'</span><b>'+b.nom+'</b><small>'+b.desc+'</small></div>').join("")
+   +badges.map(b=>'<div class="badge'+(p.badges.includes(b.id)?"":" gris")+'"><span class="em">'+b.em+'</span><b>'+b.nom+'</b><small>'+b.desc+'</small></div>').join("")
    +'</div></div>'
-   +'<button class="btn doux large" data-act="reset" style="margin-top:18px;color:var(--corail)">Recommencer l\'aventure à zéro</button>'
+   +'<button class="btn large" data-act="vers-profils" style="margin-top:18px">👥 Changer d\'explorateur</button>'
+   +'<button class="btn doux large" data-act="reset" style="margin-top:10px;color:var(--corail)">Recommencer MON aventure à zéro</button>'
    +'</div></div></div>';
   app.querySelectorAll("[data-acc]").forEach(b=>b.addEventListener("click",()=>{
-    S.acc=b.dataset.acc;sauve();son("clic");rProfil();
+    P().acc=b.dataset.acc;sauve();son("clic");rProfil();
   }));
 }
 
 /* ================== NAVIGATION GLOBALE ================== */
 document.addEventListener("click",e=>{
-  const el=e.target.closest("[data-act],[data-choix],[data-vf],[data-justif]");
+  const el=e.target.closest("[data-act],[data-choix],[data-vf],[data-justif],[data-choisir]");
   if(!el)return;
+  if(el.dataset.choisir){S.actif=el.dataset.choisir;sauve();son("ok");rCarte();return;}
   if(el.dataset.choix!==undefined)return clicQCM(el);
   if(el.dataset.vf!==undefined)return clicVF(el);
   if(el.dataset.justif!==undefined)return clicJustif(el);
   const act=el.dataset.act;
   if(act==="muet"){S.muet=!S.muet;sauve();el.textContent=S.muet?"🔇":"🔊";return;}
   son("clic");
-  if(act==="retour"){if(EX&&document.querySelector(".zone-exo"))rMonde(EX.w);else rCarte();}
+  if(act==="retour"){if(el.dataset.vers==="monde"&&EX)rMonde(EX.w);else rCarte();}
   else if(act==="profil")rProfil();
+  else if(act==="vers-profils"||act==="retour-profils")rProfils();
+  else if(act==="nouveau-profil")rNouveauProfil();
   else if(act==="monde"){const w=+el.dataset.w;if(mondeOuvert(w))rMonde(w);else son("ko");}
   else if(act==="exo")rExo(el.dataset.id);
   else if(act==="defi")rExo(el.dataset.id,true);
@@ -1333,24 +1910,28 @@ document.addEventListener("click",e=>{
   else if(act==="revoir"){voile.classList.remove("actif");}
   else if(act==="suivant")exoSuivant();
   else if(act==="reset"){
-    if(el.dataset.confirme){localStorage.removeItem(CLE);S=ETAT_DEFAUT();rAccueil();}
-    else{el.dataset.confirme="1";el.textContent="Sûre ? Touche encore une fois pour tout effacer !";}
+    if(el.dataset.confirme){
+      const id=S.actif,ancien=S.profils[id];
+      const neuf=PROFIL_DEFAUT();
+      neuf.id=id;neuf.nom=ancien.nom;neuf.genre=ancien.genre;
+      neuf.cheveux=ancien.cheveux;neuf.parcours=ancien.parcours;
+      S.profils[id]=neuf;sauve();rCarte();
+    }
+    else{el.dataset.confirme="1";el.textContent="Sûr"+g("e","")+" ? Touche encore une fois pour tout effacer !";}
   }
 });
 
-/* correction du bouton retour dans un exercice : revenir au monde, pas à la carte */
-/* (géré ci-dessus via EX + présence de .zone-exo) */
-
-/* ================== LANCEMENT ================== */
-majAffichageInitial();
-function majAffichageInitial(){
-  if(!S.nom)rAccueil();else rCarte();
-}
-
-/* PWA : service worker (offline apres la 1re visite) — inactif en file:// ou aperçu */
+/* ================== PWA : service worker (offline après la 1re visite) ================== */
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){
   addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 }
+
+/* ================== LANCEMENT ================== */
+(function(){
+  const ids=Object.keys(S.profils);
+  if(!ids.length)rNouveauProfil();
+  else rProfils();
+})();
 </script>
 </body>
 </html>
