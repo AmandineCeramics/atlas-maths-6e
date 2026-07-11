@@ -2176,10 +2176,15 @@ const COIFFURES=[
 ];
 /* conditions de déblocage : t = niveau | etoiles | serie | defis | exos | mondes | complet */
 const TENUES=[
+ /* couleurs libres, dès la création */
  {id:"violet",nom:"Violette",c:"#6C5CE7"},
- {id:"menthe",nom:"Menthe",c:"#00b894",cond:{t:"etoiles",v:10}},
- {id:"corail",nom:"Corail",c:"#e84393",cond:{t:"etoiles",v:25}},
- {id:"ciel",nom:"Ciel",c:"#0984e3",cond:{t:"serie",v:3}},
+ {id:"ciel",nom:"Ciel",c:"#0984e3"},
+ {id:"menthe",nom:"Menthe",c:"#00b894"},
+ {id:"corail",nom:"Corail",c:"#e84393"},
+ {id:"peche",nom:"Pêche",c:"#e17055"},
+ /* tenues spéciales, à mériter */
+ {id:"rubis",nom:"Rubis",c:"#d63031",cond:{t:"etoiles",v:10}},
+ {id:"foret",nom:"Forêt",c:"#2d6a4f",cond:{t:"etoiles",v:25}},
  {id:"nuit",nom:"Nuit",c:"#2D3436",cond:{t:"niveau",v:6}},
  {id:"or",nom:"Dorée",c:"#e6a93c",cond:{t:"etoiles",v:50}},
  {id:"arc",nom:"Arc-en-ciel",c:"arc",cond:{t:"etoiles",v:100}}
@@ -2367,7 +2372,7 @@ function rProfils(){
 /* ================== ÉCRAN : CRÉATION DE PROFIL ================== */
 let creation=null;
 function rNouveauProfil(){
-  creation={genre:"f",cheveux:0,peau:0,coiffure:"longue",coifChoisie:false,parcours:null};
+  creation={genre:"f",cheveux:0,peau:0,coiffure:"longue",tenue:"violet",coifChoisie:false,parcours:null};
   const retour=Object.keys(S.profils).length>0;
   app.innerHTML='<div class="ecran actif"><div class="centreur" style="justify-content:flex-start;padding-top:calc(18px + var(--safe-top))">'
    +(retour?'<button class="btn-rond" data-act="retour-profils" style="align-self:flex-start">←</button>':'')
@@ -2389,7 +2394,11 @@ function rNouveauProfil(){
    +'<div class="rang-choix" id="rangCoif">'
    +COIFFURES.map(c=>'<button class="acc-btn'+(c.id==="longue"?" sel":"")+'" data-coif="'+c.id+'" style="font-size:13px;font-weight:800">'+c.nom+'</button>').join("")
    +'</div>'
-   +'<div id="apercuAvatar">'+avatarSVG(80,{genre:"f",cheveux:0,peau:0,coiffure:"longue",acc:"aucun"})+'</div>'
+   +'<p class="sous-titre" style="margin:-6px 0 -10px">La couleur de ton t-shirt :</p>'
+   +'<div class="rang-choix" id="rangTenue">'
+   +TENUES.filter(t=>!t.cond).map(t=>'<button class="choix-pastille'+(t.id==="violet"?" sel":"")+'" data-tenue="'+t.id+'" style="background:'+t.c+';border-radius:14px"></button>').join("")
+   +'</div>'
+   +'<div id="apercuAvatar">'+avatarSVG(80,{genre:"f",cheveux:0,peau:0,coiffure:"longue",tenue:"violet",acc:"aucun"})+'</div>'
    +'<p class="sous-titre" style="margin:-6px 0 -10px">Ton aventure :</p>'
    +'<div class="rang-parcours">'
    +Object.entries(PARCOURS).map(([k,pk])=>'<button class="opt-parcours" data-parcours="'+k+'">'
@@ -2398,7 +2407,7 @@ function rNouveauProfil(){
    +'</div>'
    +'<button class="btn large" id="btnDepart" style="max-width:440px">C\'est parti ! 🧭</button>'
    +'<div style="height:10px"></div></div></div>';
-  const maj=()=>{document.getElementById("apercuAvatar").innerHTML=avatarSVG(80,{genre:creation.genre,cheveux:creation.cheveux,peau:creation.peau,coiffure:creation.coiffure,acc:"aucun"});};
+  const maj=()=>{document.getElementById("apercuAvatar").innerHTML=avatarSVG(80,{genre:creation.genre,cheveux:creation.cheveux,peau:creation.peau,coiffure:creation.coiffure,tenue:creation.tenue,acc:"aucun"});};
   const majCoif=()=>{app.querySelectorAll("[data-coif]").forEach(x=>x.classList.toggle("sel",x.dataset.coif===creation.coiffure));};
   app.addEventListener("click",e=>{
     const bg=e.target.closest("[data-genre]");
@@ -2413,6 +2422,9 @@ function rNouveauProfil(){
       document.querySelectorAll("#rangCheveux .choix-pastille").forEach(x=>x.classList.toggle("sel",x===bc));maj();}
     const bco=e.target.closest("[data-coif]");
     if(bco){creation.coiffure=bco.dataset.coif;creation.coifChoisie=true;son("clic");majCoif();maj();}
+    const bt=e.target.closest("[data-tenue]");
+    if(bt){creation.tenue=bt.dataset.tenue;son("clic");
+      document.querySelectorAll("#rangTenue .choix-pastille").forEach(x=>x.classList.toggle("sel",x===bt));maj();}
     const bp=e.target.closest("[data-parcours]");
     if(bp){creation.parcours=bp.dataset.parcours;son("clic");
       app.querySelectorAll("[data-parcours]").forEach(x=>x.classList.toggle("sel",x===bp));}
@@ -2426,7 +2438,7 @@ function rNouveauProfil(){
       setTimeout(()=>document.querySelector(".rang-parcours").style.animation="",500);return;}
     const p=PROFIL_DEFAUT();
     p.nom=nom;p.genre=creation.genre;p.cheveux=creation.cheveux;p.parcours=creation.parcours;
-    p.peau=creation.peau;p.coiffure=creation.coiffure;p.tenue="violet";p.compagnon="aucun";p.objetsVus=[];
+    p.peau=creation.peau;p.coiffure=creation.coiffure;p.tenue=creation.tenue;p.compagnon="aucun";p.objetsVus=[];
     p.id="p"+Date.now();
     S.profils[p.id]=p;S.actif=p.id;sauve();
     son("ok");confettis(60);rCarte();
@@ -2774,14 +2786,19 @@ function exoSuivant(){
 }
 
 /* ================== ÉCRAN : PROFIL / CARNET ================== */
-function rProfil(){
+function rProfil(editionNom){
   const p=P(),n=niveau(p.xp),pct=p.xp%100,
     reussis=Object.values(p.etoiles).filter(v=>v>0).length,nb=pc().exos.length,
     badges=listeBadges();
+  const blocNom=editionNom
+   ?'<div style="display:flex;gap:8px;align-items:center"><input class="champ" id="champRenom" maxlength="16" value="'+echap(p.nom)+'" style="flex:1;width:auto;min-width:0;text-align:left;font-size:17px;padding:9px 12px">'
+    +'<button class="btn-rond" data-act="valider-nom" style="background:var(--menthe)">✓</button></div>'
+   :'<h2 style="display:flex;align-items:center;gap:8px">'+echap(p.nom)
+    +'<button class="btn-rond" data-act="renommer" style="width:32px;height:32px;min-width:32px;font-size:13px" title="Changer de prénom">✏️</button></h2>';
   app.innerHTML='<div class="ecran actif">'+entete("Mon carnet d'aventure","carte")
    +'<div class="defile"><div style="max-width:560px;margin:0 auto">'
    +'<div class="carte entete-profil">'+avatarSVG(92)
-   +'<div class="infos"><h2>'+echap(p.nom)+'</h2>'
+   +'<div class="infos">'+blocNom
    +'<small style="color:var(--gris)">'+pc().em+" "+pc().nom+" · Niveau "+n+" · "+p.xp+' XP</small>'
    +'<div class="barre-niveau"><div style="width:'+pct+'%"></div></div>'
    +'<small style="color:var(--gris)">'+(100-pct)+' XP avant le niveau '+(n+1)+'</small></div></div>'
@@ -2829,6 +2846,19 @@ function rProfil(){
     if(champ==="peau"||champ==="cheveux")pp[champ]=+val;else pp[champ]=val;
     sauve();son("clic");rProfil();
   }));
+  const chRenom=document.getElementById("champRenom");
+  if(chRenom){
+    chRenom.focus();chRenom.select();
+    chRenom.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();validerRenommage();}});
+  }
+}
+
+function validerRenommage(){
+  const ch=document.getElementById("champRenom");
+  if(!ch)return;
+  const v=ch.value.trim();
+  if(!v){ch.style.borderColor="var(--corail)";return;}
+  P().nom=v.slice(0,16);sauve();son("ok");rProfil();
 }
 
 /* ================== NAVIGATION GLOBALE ================== */
@@ -2844,6 +2874,8 @@ document.addEventListener("click",e=>{
   son("clic");
   if(act==="retour"){if(el.dataset.vers==="monde"&&EX)rMonde(EX.w);else rCarte();}
   else if(act==="profil")rProfil();
+  else if(act==="renommer")rProfil(true);
+  else if(act==="valider-nom")validerRenommage();
   else if(act==="vers-profils"||act==="retour-profils")rProfils();
   else if(act==="nouveau-profil")rNouveauProfil();
   else if(act==="monde"){const w=+el.dataset.w;if(mondeOuvert(w))rMonde(w);else son("ko");}
