@@ -3869,11 +3869,25 @@ function son(n){if(ctxAudio&&ctxAudio.state==="suspended")ctxAudio.resume();SONS
 /* ================== VOIX (dictée des énoncés, pour les non-lecteurs) ================== */
 const TTS_OK="speechSynthesis" in window;
 let voixFR=null,voixEN=null;
+/* Voix « à effets » (Apple) : sonnent fun/robotiques exprès, jamais un bon choix pour lire un énoncé. */
+const VOIX_A_EFFETS=/(albert|bad news|bahh|bells?|boing|bouffon|jester|bubbles?|bulles|cellos?|violoncelles?|deranged|hysterical|organ|orgue|pipe|superstar|trinoids?|trinoïdes|whisper|murmure|zarvox|sandy|rocko|shelley|eddy|flo|grandma|grandpa|reed|kathy|junior|ralph|good news|bonnes nouvelles|mauvaises nouvelles|wobble)/i;
+function meilleureVoix(vs,re){
+  const cands=vs.filter(v=>re.test(v.lang));
+  if(!cands.length)return null;
+  const score=v=>{
+    let s=0;
+    if(v.localService===false)s-=1000; // évite les voix réseau : casse le mode hors-ligne de la PWA
+    if(/premium|enhanced|plus|amélior|neural/i.test(v.name))s+=100;
+    if(VOIX_A_EFFETS.test(v.name))s-=200; // voix à effets/personnages : jamais préférables à la voix standard
+    return s;
+  };
+  return cands.map(v=>({v,s:score(v)})).sort((a,b)=>b.s-a.s)[0].v;
+}
 function chargeVoix(){
   if(!TTS_OK)return;
   const vs=speechSynthesis.getVoices();
-  voixFR=vs.find(v=>/^fr/i.test(v.lang)&&/fr[-_]FR/i.test(v.lang))||vs.find(v=>/^fr/i.test(v.lang))||null;
-  voixEN=vs.find(v=>/^en/i.test(v.lang)&&/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;
+  voixFR=meilleureVoix(vs,/^fr[-_]FR/i)||meilleureVoix(vs,/^fr/i);
+  voixEN=meilleureVoix(vs,/^en[-_]GB/i)||meilleureVoix(vs,/^en/i);
 }
 if(TTS_OK){chargeVoix();speechSynthesis.onvoiceschanged=chargeVoix;}
 function estGS(){return P()&&P().parcours==="gs";}
