@@ -162,6 +162,12 @@ header{
 }
 .histoire::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:5px;
   border-radius:4px;background:linear-gradient(var(--rose),var(--violet))}
+.btn.ecouter{
+  background:linear-gradient(135deg,var(--or),var(--peche));box-shadow:0 6px 18px rgba(230,169,60,.35);
+  margin-bottom:14px;font-size:18px;display:flex;align-items:center;justify-content:center;gap:8px;
+  animation:respire 2.2s ease-in-out infinite;
+}
+@keyframes respire{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
 .question{font-size:18px;font-weight:800;line-height:1.45;margin:16px 4px 14px}
 .illu-exo{display:flex;justify-content:center;margin:10px 0}
 .illu-exo svg{max-width:100%;height:auto}
@@ -2144,6 +2150,33 @@ const SONS={
 };
 function son(n){if(ctxAudio&&ctxAudio.state==="suspended")ctxAudio.resume();SONS[n]&&SONS[n]();}
 
+/* ================== VOIX (dictée des énoncés, pour les non-lecteurs) ================== */
+const TTS_OK="speechSynthesis" in window;
+let voixFR=null;
+function chargeVoixFR(){
+  if(!TTS_OK)return;
+  const vs=speechSynthesis.getVoices();
+  voixFR=vs.find(v=>/^fr/i.test(v.lang)&&/fr[-_]FR/i.test(v.lang))||vs.find(v=>/^fr/i.test(v.lang))||null;
+}
+if(TTS_OK){chargeVoixFR();speechSynthesis.onvoiceschanged=chargeVoixFR;}
+function estGS(){return P()&&P().parcours==="gs";}
+function texteLisible(t){
+  return String(t||"")
+   .replace(/[\u{1F1E6}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}️‍]/gu,"")
+   .replace(/\s+/g," ").trim();
+}
+function parle(texte){
+  if(!TTS_OK||S.muet)return;
+  const t=texteLisible(texte);
+  if(!t)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  if(voixFR)u.voice=voixFR;
+  u.lang="fr-FR";u.rate=0.9;u.pitch=1.05;
+  try{speechSynthesis.speak(u);}catch(e){}
+}
+function arreteParole(){if(TTS_OK)try{speechSynthesis.cancel();}catch(e){}}
+
 /* ================== CONFETTIS ================== */
 const canv=document.getElementById("confettis"),cctx=canv.getContext("2d");
 let parts=[],animConf=null;
@@ -2565,9 +2598,11 @@ function rExo(id,defi){
     corps='<p class="consigne-ordre">👆 Touche les étiquettes pour les placer dans l\'ordre — dans la zone, fais-les glisser pour les réordonner, ou touche-les pour les retirer.</p>'
      +'<div class="zone-reponse" id="zoneRep"></div><div class="zone-source" id="zoneSrc"></div>';
   }
+  const ecoute=estGS()?'<button class="btn ecouter large" data-act="parler">🔊 Écouter la question</button>':"";
   app.innerHTML='<div class="ecran actif">'+entete(m.em+" "+echap(EX.titre),"monde")
    +'<div class="zone-exo">'
    +(estDefi?'<div class="retour indice" style="margin:0 0 12px">🎯 <b>Défi du jour :</b> réussis cet exercice et tes points d\'expérience sont doublés !</div>':"")
+   +ecoute
    +'<div class="histoire">'+EX.histoire+'</div>'
    +(EX.svg?'<div class="illu-exo">'+EX.svg+'</div>':"")
    +'<div class="question'+(EX.gros?" grosse":"")+'">'+EX.q+'</div>'+corps
@@ -2580,6 +2615,7 @@ function rExo(id,defi){
   if(EX.type==="ordre")initOrdre();
   const ch=document.getElementById("champRep");
   if(ch)ch.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();validerExo();}});
+  if(estGS())parle(EX.histoire+". "+EX.q);
 }
 
 /* ----- type ordre : construction + glisser-déposer ----- */
@@ -2672,6 +2708,7 @@ function ajouteBoutonSolution(){
 function montreIndice(){
   if(!indiceUtilise){indiceUtilise=true;son("clic");}
   document.getElementById("zoneRetour").innerHTML='<div class="retour indice">💡 <b>Indice :</b> '+EX.indice+'</div>';
+  if(estGS())parle(EX.indice);
 }
 function montreSolution(marqueVu){
   const zs=document.getElementById("zoneSolution");
@@ -2741,7 +2778,7 @@ function clicJustif(btn){
 let mondeNeufEnAttente=0;
 function mondesOuvertsIds(){return pc().mondes.filter(m=>mondeOuvert(m.id)).map(m=>m.id);}
 function reussite(){
-  resolu=1;son("ok");confettis(essais===0&&!indiceUtilise?130:80);
+  resolu=1;arreteParole();son("ok");confettis(essais===0&&!indiceUtilise?130:80);
   const p=P();
   const ouvertsAvant=mondesOuvertsIds();
   let et=3;if(indiceUtilise)et--;if(essais>0)et--;et=Math.max(1,et);
@@ -2880,18 +2917,19 @@ document.addEventListener("click",e=>{
   if(el.dataset.vf!==undefined)return clicVF(el);
   if(el.dataset.justif!==undefined)return clicJustif(el);
   const act=el.dataset.act;
-  if(act==="muet"){S.muet=!S.muet;sauve();el.textContent=S.muet?"🔇":"🔊";return;}
+  if(act==="muet"){S.muet=!S.muet;sauve();el.textContent=S.muet?"🔇":"🔊";if(S.muet)arreteParole();return;}
   son("clic");
-  if(act==="retour"){if(el.dataset.vers==="monde"&&EX)rMonde(EX.w);else rCarte();}
-  else if(act==="profil")rProfil();
+  if(act==="retour"){arreteParole();if(el.dataset.vers==="monde"&&EX)rMonde(EX.w);else rCarte();}
+  else if(act==="profil"){arreteParole();rProfil();}
   else if(act==="renommer")rProfil(true);
   else if(act==="valider-nom")validerRenommage();
-  else if(act==="vers-profils"||act==="retour-profils")rProfils();
-  else if(act==="nouveau-profil")rNouveauProfil();
-  else if(act==="monde"){const w=+el.dataset.w;if(mondeOuvert(w))rMonde(w);else son("ko");}
+  else if(act==="vers-profils"||act==="retour-profils"){arreteParole();rProfils();}
+  else if(act==="nouveau-profil"){arreteParole();rNouveauProfil();}
+  else if(act==="monde"){const w=+el.dataset.w;if(mondeOuvert(w)){arreteParole();rMonde(w);}else son("ko");}
   else if(act==="exo")rExo(el.dataset.id);
   else if(act==="defi")rExo(el.dataset.id,true);
   else if(act==="indice")montreIndice();
+  else if(act==="parler")parle(EX.histoire+". "+EX.q);
   else if(act==="valider")validerExo();
   else if(act==="solution")montreSolution(true);
   else if(act==="retour-apres-solution"){
