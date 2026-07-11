@@ -1667,7 +1667,31 @@ const MONDES_GS=[
   intro:"Dans le Bois, tout a une forme : des ronds, des carrés, des triangles… Ouvre grand tes yeux de petit explorateur !"},
  {id:3,nom:"La Rivière des Petits Malins",em:"🐸",coul:"linear-gradient(135deg,#55EFC4,#00b894)",cnum:"#00b894",
   desc:"Ajouter, enlever, comparer : les premiers calculs !",
-  intro:"Au bord de la Rivière, les grenouilles jouent à saute-mouton. Il va falloir compter ce qui arrive… et ce qui s'en va !"}
+  intro:"Au bord de la Rivière, les grenouilles jouent à saute-mouton. Il va falloir compter ce qui arrive… et ce qui s'en va !"},
+ {id:4,nom:"Le Marché aux Couleurs",em:"🎨",coul:"linear-gradient(135deg,#ff9ff3,#f368e0)",cnum:"#f368e0",
+  desc:"Reconnaître, associer et mélanger les couleurs.",
+  intro:"Bienvenue au Marché aux Couleurs ! Ici, chaque fruit, chaque ballon, chaque tissu a sa couleur bien à lui. Le marchand a besoin d'un œil vif pour ne jamais se tromper !"},
+ {id:5,nom:"Le Cirque des Grands Nombres",em:"🎪",coul:"linear-gradient(135deg,#feca57,#ff9f43)",cnum:"#ff9f43",
+  desc:"Compter plus loin que 10, jusqu'à 20 !",
+  intro:"Sous le grand chapiteau du Cirque, les artistes jonglent avec des nombres immenses… jusqu'à 20 ! Prépare tes yeux et tes doigts, ça va compter fort !"},
+ {id:6,nom:"La Plage des Tailles",em:"🏖️",coul:"linear-gradient(135deg,#54a0ff,#2e86de)",cnum:"#2e86de",
+  desc:"Grand, petit, lourd, léger, long, court : comparer comme un champion.",
+  intro:"Sur la Plage des Tailles, les crabes, les coquillages et les châteaux de sable n'ont pas tous la même taille. Sauras-tu dire qui est le plus grand, le plus lourd, le plus long ?"},
+ {id:7,nom:"Le Zoo des Familles",em:"🦁",coul:"linear-gradient(135deg,#1dd1a1,#10ac84)",cnum:"#10ac84",
+  desc:"Ranger les animaux et les objets par familles.",
+  intro:"Au Zoo des Familles, chaque animal doit retrouver ses cousins ! Les animaux de la ferme d'un côté, les animaux sauvages de l'autre. À toi de les aider à se ranger !"},
+ {id:8,nom:"La Fête des Rythmes",em:"🎵",coul:"linear-gradient(135deg,#a29bfe,#6c5ce7)",cnum:"#6c5ce7",
+  desc:"Des suites et des rythmes de plus en plus malins.",
+  intro:"À la Fête des Rythmes, la musique et les décorations suivent toujours un motif secret. Observe bien… et devine ce qui vient après !"},
+ {id:9,nom:"Le Jardin des Additions",em:"🌻",coul:"linear-gradient(135deg,#ff6b6b,#ee5253)",cnum:"#ee5253",
+  desc:"Additionner des petits groupes, jusqu'à 10 et même un peu plus.",
+  intro:"Le jardinier du Jardin des Additions adore compter ses fleurs et ses légumes par groupes. Aide-le à additionner ses récoltes, une brouette à la fois !"},
+ {id:10,nom:"La Forêt des Contraires",em:"🌳",coul:"linear-gradient(135deg,#00d2d3,#01a3a4)",cnum:"#01a3a4",
+  desc:"Grand/petit, dedans/dehors, plein/vide : le monde des contraires.",
+  intro:"La Forêt des Contraires est un endroit étrange où tout va par paires opposées. Le hibou sage te met au défi de bien reconnaître chaque contraire !"},
+ {id:11,nom:"Le Château des Nombres Amis",em:"🏯",coul:"linear-gradient(135deg,#576574,#8395a7)",cnum:"#576574",
+  desc:"Compléments à 5 et à 10, doubles : des nombres qui s'aiment bien.",
+  intro:"Au sommet du Château, les nombres amis se tiennent toujours la main : ceux qui, ensemble, font 5, ou font 10. Le roi du Château cherche un dernier chevalier pour les assembler !"}
 ];
 
 const EXOS_GS=[
@@ -1845,9 +1869,9 @@ const EXOS_GS=[
 
 /* ================== REGISTRE DES PARCOURS ================== */
 const PARCOURS={
- "gs":{nom:"Le Jardin des Découvertes",cible:"Vers la Grande Section",em:"🌈",age:"4-5 ans",
+ "gs":{nom:"Le Jardin des Découvertes",cible:"Vers la Grande Section",em:"🌈",age:"4-6 ans",
    mondes:MONDES_GS,exos:EXOS_GS,
-   pitch:"Compter, comparer, reconnaître les formes — tout en images !"},
+   pitch:"Compter jusqu'à 20, comparer, couleurs, rythmes et familles — tout en images !"},
  "ce2":{nom:"Les 6 Contrées",cible:"Vers le CE2",em:"🗻",age:"7-10 ans",
    mondes:MONDES_CE2,exos:EXOS_CE2,
    pitch:"Calcul malin, grands nombres, mesures, énigmes, fractions et géométrie."},
@@ -2778,6 +2802,800 @@ EXOS_CE2.push(
  etapes:["Périmètre : (10 + 6) × 2 = 32 m.","Coût de la bordure : 32 × 5 = 160 €.","La bordure dorée coûtera 160 €. Bravo, tu es maintenant l'architecte officiel du Château ! 🏰"]}
 );
 
+/* ================== EXTENSION GS : 8 nouveaux mondes (128 exercices) ================== */
+
+/* ---- GS Monde 4 · Le Marché aux Couleurs ---- */
+EXOS_GS.push(
+{id:"g4e1",w:4,titre:"Le fruit rouge",type:"qcm",gros:1,
+ histoire:"Sur l'étal du marchand, plein de fruits colorés attendent d'être choisis.",
+ q:"Touche le fruit ROUGE :",choices:["🍎","🍌","🫐"],a:0,
+ indice:"Le rouge, c'est la couleur d'une pomme bien mûre.",
+ etapes:["La pomme 🍎 est rouge.","La banane est jaune, la myrtille est bleue.","C'était bien la pomme !"]},
+
+{id:"g4e2",w:4,titre:"Le ballon jaune",type:"qcm",gros:1,
+ histoire:"Trois ballons colorés flottent au-dessus du marché.",
+ q:"Touche le ballon JAUNE :",choices:["🔴","🟡","🔵"],a:1,
+ indice:"Le jaune, c'est la couleur du soleil.",
+ etapes:["Le ballon du milieu 🟡 est jaune.","Les autres sont rouge et bleu.","Bravo, tu as l'œil !"]},
+
+{id:"g4e3",w:4,titre:"La couleur du ciel",type:"qcm",gros:1,
+ histoire:"Le marchand lève les yeux vers le ciel, tout dégagé aujourd'hui.",
+ q:"Quelle couleur est le ciel par une belle journée ?",choices:["Bleu","Rouge","Vert"],a:0,
+ indice:"Regarde par la fenêtre un jour ensoleillé !",
+ etapes:["Le ciel est bleu quand il fait beau.","La bonne réponse est Bleu !"]},
+
+{id:"g4e4",w:4,titre:"La couleur de l'herbe",type:"qcm",gros:1,
+ histoire:"Derrière le marché, un beau pré tout couvert d'herbe s'étend au loin.",
+ q:"Quelle couleur est l'herbe ?",choices:["Vert","Orange","Rose"],a:0,
+ indice:"C'est la même couleur qu'une feuille d'arbre.",
+ etapes:["L'herbe est verte.","La bonne réponse est Vert !"]},
+
+{id:"g4e5",w:4,titre:"L'objet vert",type:"qcm",gros:1,
+ histoire:"Le marchand trie ses fruits et légumes par couleur.",
+ q:"Touche l'objet VERT :",choices:["🍀","🍊","🍇"],a:0,
+ indice:"Un trèfle porte-bonheur, de quelle couleur est-il ?",
+ etapes:["Le trèfle 🍀 est vert.","L'orange est orange, le raisin est violet.","C'était le trèfle !"]},
+
+{id:"g4e6",w:4,titre:"La couleur du soleil",type:"qcm",gros:1,
+ histoire:"Il fait chaud aujourd'hui : le soleil brille très fort sur le marché.",
+ q:"Le soleil est de quelle couleur ?",choices:["Jaune","Bleu","Noir"],a:0,
+ indice:"C'est la même couleur qu'un citron ou qu'un ballon jaune.",
+ etapes:["Le soleil est jaune (parfois un peu orange).","La bonne réponse est Jaune !"]},
+
+{id:"g4e7",w:4,titre:"L'objet violet",type:"qcm",gros:1,
+ histoire:"Sur l'étal du marchand, un fruit tout violet attire ton regard.",
+ q:"Touche l'objet VIOLET :",choices:["🍇","🍎","🍋"],a:0,
+ indice:"C'est un petit fruit rond qu'on mange par grappes.",
+ etapes:["Le raisin 🍇 est violet.","La pomme est rouge, le citron est jaune.","C'était le raisin !"]},
+
+{id:"g4e8",w:4,titre:"Le mélange bleu et jaune",type:"qcm",gros:1,
+ histoire:"Le peintre du marché trempe son pinceau dans la peinture bleue, puis dans la jaune, et les mélange.",
+ q:"Quelle couleur obtient-on en mélangeant le BLEU et le JAUNE ?",choices:["Vert","Rouge","Violet"],a:0,
+ indice:"C'est la couleur de l'herbe et des feuilles !",
+ etapes:["Bleu + Jaune = Vert.","C'est de la magie des couleurs !"]},
+
+{id:"g4e9",w:4,titre:"Le mélange rouge et jaune",type:"qcm",gros:1,
+ histoire:"Le peintre essaie un nouveau mélange : de la peinture rouge avec de la peinture jaune.",
+ q:"Quelle couleur obtient-on en mélangeant le ROUGE et le JAUNE ?",choices:["Orange","Vert","Bleu"],a:0,
+ indice:"C'est la couleur d'une orange ou d'une citrouille !",
+ etapes:["Rouge + Jaune = Orange.","Comme le fruit orange !"]},
+
+{id:"g4e10",w:4,titre:"Le mélange rouge et bleu",type:"qcm",gros:1,
+ histoire:"Le peintre mélange maintenant sa peinture rouge avec de la peinture bleue.",
+ q:"Quelle couleur obtient-on en mélangeant le ROUGE et le BLEU ?",choices:["Violet","Jaune","Vert"],a:0,
+ indice:"C'est la couleur d'une aubergine ou du raisin !",
+ etapes:["Rouge + Bleu = Violet.","Une belle couleur de magicien !"]},
+
+{id:"g4e11",w:4,titre:"L'objet orange",type:"qcm",gros:1,
+ histoire:"Bientôt Halloween ! Un légume tout orange trône sur l'étal du marchand.",
+ q:"Touche l'objet ORANGE :",choices:["🎃","🍆","🫐"],a:0,
+ indice:"C'est le légume qu'on sculpte pour Halloween !",
+ etapes:["La citrouille 🎃 est orange.","L'aubergine est violette, la myrtille est bleue.","C'était la citrouille !"]},
+
+{id:"g4e12",w:4,titre:"La couleur de l'aubergine",type:"qcm",gros:1,
+ histoire:"Le marchand te montre fièrement sa plus belle aubergine, bien brillante.",
+ q:"Quelle couleur est une aubergine ?",choices:["Violette","Rouge","Jaune"],a:0,
+ indice:"C'est la même couleur que le raisin.",
+ etapes:["L'aubergine est violette.","La bonne réponse est Violette !"]},
+
+{id:"g4e13",w:4,titre:"Le fruit qui ne va pas avec les autres",type:"qcm",gros:1,
+ histoire:"Le marchand a rangé trois fruits ensemble, mais un intrus s'est glissé dans le tas !",
+ q:"Trouve le fruit qui n'est PAS de la même couleur que les autres :",choices:["🍎","🍒","🍐"],a:2,
+ indice:"Deux fruits sont rouges. Lequel ne l'est pas ?",
+ etapes:["La pomme 🍎 et la cerise 🍒 sont rouges.","La poire 🍐 est verte : c'est l'intrus !"]},
+
+{id:"g4e14",w:4,titre:"Le drapeau français",type:"qcm",gros:1,
+ histoire:"Sur la mairie, à côté du marché, flotte le grand drapeau français.",
+ q:"Le drapeau français a 3 couleurs : bleu, blanc et…",choices:["Rouge","Jaune","Vert"],a:0,
+ indice:"C'est la couleur d'une pomme ou d'une fraise.",
+ etapes:["Le drapeau français est bleu, blanc, rouge.","La bonne réponse est Rouge !"]},
+
+{id:"g4e15",w:4,titre:"L'arc-en-ciel",type:"qcm",gros:1,
+ histoire:"Après la pluie, un magnifique arc de toutes les couleurs apparaît dans le ciel au-dessus du marché.",
+ q:"Touche l'arc-en-ciel :",choices:["🌈","⚫","⬜"],a:0,
+ indice:"C'est celui qui a plein de couleurs différentes !",
+ etapes:["L'arc-en-ciel 🌈 a toutes les couleurs.","Les autres sont juste noir et blanc."]},
+
+{id:"g4e16",w:4,titre:"⭐ Le rangement du marchand",type:"qcm",gros:1,
+ histoire:"Pour finir la journée, le marchand range ses ballons dans cet ordre : rouge, jaune, rouge, jaune…",
+ q:"Quelle couleur vient après le rouge ?",choices:["Jaune","Rouge","Vert"],a:0,
+ indice:"Rouge, jaune, rouge, jaune… le motif se répète toujours pareil.",
+ etapes:["Le motif est : rouge puis jaune, rouge puis jaune.","Après le rouge vient toujours le jaune !","Bravo, tu as terminé le Marché aux Couleurs ! 🎨"]}
+);
+
+/* ---- GS Monde 5 · Le Cirque des Grands Nombres ---- */
+EXOS_GS.push(
+{id:"g5e1",w:5,titre:"Les étoiles du chapiteau",type:"qcm",gros:1,
+ histoire:"Le grand chapiteau du cirque scintille de mille étoiles ce soir.",
+ q:"Compte les étoiles : ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐",choices:["10","11","12"],a:1,
+ indice:"Compte bien avec ton doigt, une étoile après l'autre, sans te presser.",
+ etapes:["Un, deux… dix, onze.","Il y a 11 étoiles !"]},
+
+{id:"g5e2",w:5,titre:"Les ballons du clown",type:"qcm",gros:1,
+ histoire:"Le clown du cirque tient une grappe de ballons multicolores.",
+ q:"Compte les ballons : 🎈 🎈 🎈 🎈 🎈 🎈 🎈 🎈 🎈 🎈 🎈 🎈",choices:["11","12","13"],a:1,
+ indice:"Compte lentement, un ballon à la fois.",
+ etapes:["Un, deux… onze, douze.","Il y a 12 ballons !"]},
+
+{id:"g5e3",w:5,titre:"Les confettis de la parade",type:"qcm",gros:1,
+ histoire:"Après le spectacle, des confettis colorés retombent partout sur la piste.",
+ q:"Compte les confettis : 🎊 🎊 🎊 🎊 🎊 🎊 🎊 🎊 🎊 🎊 🎊 🎊 🎊",choices:["12","13","14"],a:1,
+ indice:"Prends ton temps, compte chaque confetti.",
+ etapes:["Un, deux… douze, treize.","Il y a 13 confettis !"]},
+
+{id:"g5e4",w:5,titre:"Le sac de bonbons",type:"qcm",gros:1,
+ histoire:"Le vendeur du cirque a préparé un énorme sac de bonbons pour les spectateurs.",
+ q:"Compte les bonbons : 🍬 🍬 🍬 🍬 🍬 🍬 🍬 🍬 🍬 🍬 🍬 🍬 🍬 🍬",choices:["13","14","15"],a:1,
+ indice:"Ça en fait beaucoup ! Compte bien jusqu'au bout.",
+ etapes:["Un, deux… treize, quatorze.","Il y a 14 bonbons !"]},
+
+{id:"g5e5",w:5,titre:"Les petits drapeaux",type:"qcm",gros:1,
+ histoire:"Autour de la piste, de petits drapeaux colorés flottent dans le vent.",
+ q:"Compte les drapeaux : 🚩 🚩 🚩 🚩 🚩 🚩 🚩 🚩 🚩 🚩 🚩 🚩 🚩 🚩 🚩",choices:["14","15","16"],a:1,
+ indice:"Compte bien, un drapeau après l'autre.",
+ etapes:["Un, deux… quatorze, quinze.","Il y a 15 drapeaux !"]},
+
+{id:"g5e6",w:5,titre:"Les fleurs du bouquet géant",type:"qcm",gros:1,
+ histoire:"Pour la dompteuse, on a préparé un bouquet de fleurs immense.",
+ q:"Compte les fleurs : 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸 🌸",choices:["15","16","17"],a:1,
+ indice:"Compte avec ton doigt, sans en oublier une seule.",
+ etapes:["Un, deux… quinze, seize.","Il y a 16 fleurs !"]},
+
+{id:"g5e7",w:5,titre:"Le nuage de papillons",type:"qcm",gros:1,
+ histoire:"À la fin du spectacle, un nuage de papillons colorés s'envole au-dessus de la piste.",
+ q:"Compte les papillons : 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋 🦋",choices:["16","17","18"],a:1,
+ indice:"Ça en fait beaucoup ! Compte bien jusqu'au bout, sans te presser.",
+ etapes:["Un, deux… seize, dix-sept.","Il y a 17 papillons !"]},
+
+{id:"g5e8",w:5,titre:"Les coccinelles porte-bonheur",type:"qcm",gros:1,
+ histoire:"Sur le tapis rouge du cirque, une ribambelle de coccinelles porte-bonheur s'est installée.",
+ q:"Compte les coccinelles : 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞 🐞",choices:["17","18","19"],a:1,
+ indice:"Prends ton temps, compte chaque coccinelle une par une.",
+ etapes:["Un, deux… dix-sept, dix-huit.","Il y a 18 coccinelles !"]},
+
+{id:"g5e9",w:5,titre:"Le chapeau du magicien",type:"qcm",gros:1,
+ histoire:"Le magicien du cirque a déjà fait apparaître 12 lapins de son chapeau. D'un coup de baguette, il en fait apparaître un de plus !",
+ q:"Combien de lapins a-t-il maintenant ?",choices:["12","13","14"],a:1,
+ indice:"Il y en avait 12, et un de plus apparaît. Compte : douze… treize !",
+ etapes:["12 lapins + 1 lapin.","Après 12 vient 13 : il y a 13 lapins !"]},
+
+{id:"g5e10",w:5,titre:"Les anneaux de l'écuyère",type:"qcm",gros:1,
+ histoire:"L'écuyère jongle avec 15 anneaux brillants. Patatras, elle en laisse tomber un !",
+ q:"Combien d'anneaux lui reste-t-il ?",choices:["13","14","15"],a:1,
+ indice:"Il y en avait 15, un est tombé. Compte à l'envers : quinze… quatorze !",
+ etapes:["15 anneaux, moins 1 qui tombe.","Il en reste 14 !"]},
+
+{id:"g5e11",w:5,titre:"Les rubans du dompteur",type:"qcm",gros:1,
+ histoire:"Le dompteur a 17 rubans colorés autour de la taille. Il en offre 2 à des enfants du public.",
+ q:"Combien de rubans lui reste-t-il ?",choices:["14","15","16"],a:1,
+ indice:"Il y en avait 17, il en donne 2. Compte à l'envers deux fois : dix-sept… seize… quinze !",
+ etapes:["17 rubans, moins 2 offerts.","17 → 16 → 15 : il lui reste 15 rubans."]},
+
+{id:"g5e12",w:5,titre:"Le grand final",type:"qcm",gros:1,
+ histoire:"Pour le grand final, 10 acrobates entrent en piste. Puis 9 autres acrobates les rejoignent en cascade !",
+ q:"Combien d'acrobates en tout sur la piste ?",choices:["18","19","20"],a:1,
+ indice:"10 acrobates, et 9 de plus. Continue à compter à partir de 10 : onze, douze…",
+ etapes:["10 + 9 : on continue à compter à partir de 10.","11, 12, 13… jusqu'à 19.","Il y a 19 acrobates en tout !"]},
+
+{id:"g5e13",w:5,titre:"Le concours de billes",type:"qcm",gros:1,
+ histoire:"Au grand jeu du cirque, Léa a gagné 18 billes, et Noa en a gagné 15.",
+ q:"Qui a LE PLUS de billes ?",choices:["Léa","Noa","Elles ont pareil"],a:0,
+ indice:"18 et 15… lequel de ces deux nombres est le plus grand ?",
+ etapes:["18 est plus grand que 15.","Léa a donc le plus de billes !"]},
+
+{id:"g5e14",w:5,titre:"Les sucettes du stand",type:"qcm",gros:1,
+ histoire:"Le stand de friandises du cirque déborde de délicieuses sucettes multicolores.",
+ q:"Compte les sucettes : 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭 🍭",choices:["18","19","20"],a:1,
+ indice:"Compte bien jusqu'au bout, une sucette à la fois.",
+ etapes:["Un, deux… dix-huit, dix-neuf.","Il y a 19 sucettes !"]},
+
+{id:"g5e15",w:5,titre:"Les feux d'artifice",type:"qcm",gros:1,
+ histoire:"Pour fêter la fin du spectacle, un magnifique feu d'artifice explose dans le ciel du cirque.",
+ q:"Compte les explosions : 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆 🎆",choices:["19","20","21"],a:1,
+ indice:"C'est le plus grand compte de tout le cirque ! Vas-y doucement.",
+ etapes:["Un, deux… dix-neuf, vingt.","Il y a 20 explosions ! Le plus grand nombre du Cirque."]},
+
+{id:"g5e16",w:5,titre:"⭐ Le rangement des animaux",type:"qcm",gros:1,
+ histoire:"Défi final du Cirque ! Le dresseur compte ses 20 animaux avant le spectacle, mais 3 sont partis se reposer tranquillement dans leur loge.",
+ q:"Combien d'animaux reste-t-il sur la piste ?",choices:["16","17","18"],a:1,
+ indice:"Il y en avait 20, 3 sont partis. Compte à l'envers trois fois : vingt… dix-neuf… dix-huit…",
+ etapes:["20 animaux, moins 3 qui se reposent.","20 → 19 → 18 → 17.","Il reste 17 animaux sur la piste. Bravo, tu as dompté le Cirque des Grands Nombres ! 🎪"]}
+);
+
+/* ---- GS Monde 6 · La Plage des Tailles ---- */
+EXOS_GS.push(
+{id:"g6e1",w:6,titre:"La baleine et le poisson",type:"qcm",gros:1,
+ histoire:"Au large de la plage, une baleine et un petit poisson nagent côte à côte.",
+ q:"Lequel est le PLUS GRAND ?",choices:["🐋","🐠"],a:0,
+ indice:"L'un des deux est aussi grand qu'un bus !",
+ etapes:["La baleine 🐋 est immense.","Le poisson 🐠 est tout petit.","La baleine est la plus grande !"]},
+
+{id:"g6e2",w:6,titre:"La fourmi et l'éléphant",type:"qcm",gros:1,
+ histoire:"Sur le sable, une fourmi croise le chemin d'un énorme éléphant venu se baigner.",
+ q:"Lequel est le PLUS PETIT ?",choices:["🐜","🐘"],a:0,
+ indice:"L'un des deux tient facilement sous ton pouce !",
+ etapes:["La fourmi 🐜 est minuscule.","L'éléphant 🐘 est immense.","La fourmi est la plus petite !"]},
+
+{id:"g6e3",w:6,titre:"Le bateau et le canard",type:"qcm",gros:1,
+ histoire:"Sur l'eau, un grand bateau et un petit canard flottent tous les deux.",
+ q:"Lequel est le PLUS GRAND ?",choices:["⛵","🦆"],a:0,
+ indice:"L'un des deux peut transporter plein de passagers !",
+ etapes:["Le bateau ⛵ est grand.","Le canard 🦆 est petit.","Le bateau est le plus grand !"]},
+
+{id:"g6e4",w:6,titre:"La pierre et la plume",type:"qcm",gros:1,
+ histoire:"Sur la plage, tu ramasses une pierre bien dure et une plume toute légère.",
+ q:"Laquelle est la PLUS LOURDE ?",choices:["🪨","🪶"],a:0,
+ indice:"L'une des deux tombe très vite quand on la lâche, l'autre flotte dans l'air !",
+ etapes:["La pierre 🪨 est lourde.","La plume 🪶 est très légère.","La pierre est la plus lourde !"]},
+
+{id:"g6e5",w:6,titre:"La valise et le ballon",type:"qcm",gros:1,
+ histoire:"Pour partir à la plage, tu dois porter une grosse valise et un ballon gonflable.",
+ q:"Lequel est le PLUS LOURD ?",choices:["🧳","🎈"],a:0,
+ indice:"L'un des deux est rempli de vêtements, l'autre est rempli d'air !",
+ etapes:["La valise 🧳 est pleine et lourde.","Le ballon 🎈 est plein d'air, très léger.","La valise est la plus lourde !"]},
+
+{id:"g6e6",w:6,titre:"La girafe et la tortue",type:"qcm",gros:1,
+ histoire:"Au zoo près de la plage, une girafe et une tortue lèvent la tête en même temps.",
+ q:"Laquelle a le cou le PLUS LONG ?",choices:["🦒","🐢"],a:0,
+ indice:"L'une des deux peut atteindre les feuilles tout en haut des arbres !",
+ etapes:["La girafe 🦒 a un très long cou.","La tortue 🐢 a un tout petit cou.","La girafe a le cou le plus long !"]},
+
+{id:"g6e7",w:6,titre:"Le serpent et l'escargot",type:"qcm",gros:1,
+ histoire:"Dans les dunes, un long serpent glisse à côté d'un petit escargot.",
+ q:"Lequel est le PLUS LONG ?",choices:["🐍","🐌"],a:0,
+ indice:"L'un des deux s'étire sur toute la longueur du sentier !",
+ etapes:["Le serpent 🐍 est long.","L'escargot 🐌 est tout petit, avec sa coquille ronde.","Le serpent est le plus long !"]},
+
+{id:"g6e8",w:6,titre:"Le camion et le vélo",type:"qcm",gros:1,
+ histoire:"Sur le parking de la plage, un camion et un vélo sont garés côte à côte.",
+ q:"Lequel est le PLUS GRAND ?",choices:["🚚","🚲"],a:0,
+ indice:"L'un des deux transporte plein de bagages, l'autre se pédale !",
+ etapes:["Le camion 🚚 est grand.","Le vélo 🚲 est petit.","Le camion est le plus grand !"]},
+
+{id:"g6e9",w:6,titre:"Le requin et la crevette",type:"qcm",gros:1,
+ histoire:"Sous l'eau, un requin et une petite crevette se croisent près des rochers.",
+ q:"Lequel est le PLUS GRAND ?",choices:["🦈","🦐"],a:0,
+ indice:"L'un des deux fait peur aux nageurs, l'autre tient dans le creux de la main !",
+ etapes:["Le requin 🦈 est grand et impressionnant.","La crevette 🦐 est toute petite.","Le requin est le plus grand !"]},
+
+{id:"g6e10",w:6,titre:"La pastèque et la fraise",type:"qcm",gros:1,
+ histoire:"Pour le pique-nique sur la plage, tu as apporté une pastèque et une fraise.",
+ q:"Laquelle est la PLUS GROSSE ?",choices:["🍉","🍓"],a:0,
+ indice:"L'une des deux se coupe en plein de tranches pour toute la famille !",
+ etapes:["La pastèque 🍉 est énorme.","La fraise 🍓 est petite.","La pastèque est la plus grosse !"]},
+
+{id:"g6e11",w:6,titre:"Le parasol et le coquillage",type:"qcm",gros:1,
+ histoire:"Sur le sable, un grand parasol protège ta serviette, à côté d'un petit coquillage.",
+ q:"Lequel est le PLUS GRAND ?",choices:["⛱️","🐚"],a:0,
+ indice:"L'un des deux te fait de l'ombre, l'autre tient dans ta main !",
+ etapes:["Le parasol ⛱️ est grand.","Le coquillage 🐚 est petit.","Le parasol est le plus grand !"]},
+
+{id:"g6e12",w:6,titre:"Le rocher et la bulle",type:"qcm",gros:1,
+ histoire:"Sur la plage, un gros rocher est posé à côté d'une bulle de savon qui flotte.",
+ q:"Laquelle est la PLUS LÉGÈRE ?",choices:["🪨","🫧"],a:1,
+ indice:"L'une des deux s'envole au moindre souffle de vent !",
+ etapes:["Le rocher 🪨 est lourd, il ne bouge pas.","La bulle 🫧 est toute légère, elle s'envole.","La bulle est la plus légère !"]},
+
+{id:"g6e13",w:6,titre:"La montagne et le caillou",type:"qcm",gros:1,
+ histoire:"Au loin derrière la plage, une immense montagne se dresse à côté d'un petit caillou posé sur le sable.",
+ q:"Laquelle est la PLUS HAUTE ?",choices:["🏔️","🪨"],a:0,
+ indice:"L'une des deux touche presque les nuages !",
+ etapes:["La montagne 🏔️ est immense.","Le caillou 🪨 est tout petit.","La montagne est la plus haute !"]},
+
+{id:"g6e14",w:6,titre:"L'autobus et la trottinette",type:"qcm",gros:1,
+ histoire:"Devant la plage, un grand autobus et une petite trottinette sont garés l'un à côté de l'autre.",
+ q:"Lequel est le PLUS GRAND ?",choices:["🚌","🛴"],a:0,
+ indice:"L'un des deux transporte plein de passagers assis !",
+ etapes:["L'autobus 🚌 est grand.","La trottinette 🛴 est petite.","L'autobus est le plus grand !"]},
+
+{id:"g6e15",w:6,titre:"La plume et le marteau",type:"qcm",gros:1,
+ histoire:"Dans la boîte à outils du papa, une plume s'est glissée à côté d'un marteau.",
+ q:"Lequel est le PLUS LOURD ?",choices:["🪶","🔨"],a:1,
+ indice:"L'un des deux sert à planter des clous bien fort !",
+ etapes:["La plume 🪶 est très légère.","Le marteau 🔨 est lourd et solide.","Le marteau est le plus lourd !"]},
+
+{id:"g6e16",w:6,titre:"⭐ Le trio de la plage",type:"qcm",gros:1,
+ histoire:"Défi final de la Plage ! Trois amis se comparent sur le sable : la fourmi, le chien et l'éléphant.",
+ q:"Qui est le PLUS GRAND des trois ?",choices:["🐜","🐕","🐘"],a:2,
+ indice:"Un seul de ces trois animaux est assez grand pour porter les deux autres sur son dos !",
+ etapes:["La fourmi est minuscule, le chien est moyen.","L'éléphant est immense : c'est le plus grand des trois !","Bravo, tu maîtrises toutes les tailles de la Plage ! 🏖️"]}
+);
+
+/* ---- GS Monde 7 · Le Zoo des Familles ---- */
+EXOS_GS.push(
+{id:"g7e1",w:7,titre:"L'animal de la ferme",type:"qcm",gros:1,
+ histoire:"Au Zoo des Familles, chaque animal doit retrouver sa maison. Certains vivent à la ferme.",
+ q:"Quel animal vit à la FERME ?",choices:["🐄","🦁","🐘"],a:0,
+ indice:"C'est celui qui donne du lait et qui broute dans le pré du fermier.",
+ etapes:["La vache 🐄 vit à la ferme.","Le lion et l'éléphant vivent plutôt dans la savane.","La vache est la bonne réponse !"]},
+
+{id:"g7e2",w:7,titre:"L'animal sauvage",type:"qcm",gros:1,
+ histoire:"D'autres animaux du Zoo vivent loin de la ferme, en pleine nature sauvage.",
+ q:"Quel animal vit dans la JUNGLE (animal sauvage) ?",choices:["🐖","🐓","🦒"],a:2,
+ indice:"C'est celui qui a un très long cou pour manger les feuilles des arbres.",
+ etapes:["Le cochon et la poule vivent à la ferme.","La girafe 🦒 vit dans la savane sauvage.","La girafe est la bonne réponse !"]},
+
+{id:"g7e3",w:7,titre:"Qui n'habite pas à la ferme ?",type:"qcm",gros:1,
+ histoire:"Trois animaux sont mélangés dans l'enclos du fermier, mais l'un d'eux s'est trompé de maison !",
+ q:"Trouve l'animal qui n'habite PAS à la ferme :",choices:["🐄","🐖","🦁"],a:2,
+ indice:"Deux de ces animaux vivent avec le fermier. Lequel préfère la savane ?",
+ etapes:["La vache et le cochon vivent à la ferme.","Le lion 🦁 vit dans la savane : c'est l'intrus !"]},
+
+{id:"g7e4",w:7,titre:"Qui fait Meuh ?",type:"qcm",gros:1,
+ histoire:"Dans la ferme du Zoo, chaque animal a son cri bien à lui.",
+ q:"Quel animal fait « Meuh » ?",choices:["🐄","🐑","🐖"],a:0,
+ indice:"C'est celui qui donne du lait blanc chaque matin.",
+ etapes:["La vache 🐄 fait « Meuh ».","Le mouton fait « Bêêê », le cochon fait « Groin groin ».","C'était la vache !"]},
+
+{id:"g7e5",w:7,titre:"Qui fait Bêêê ?",type:"qcm",gros:1,
+ histoire:"Un autre animal de la ferme a un cri tout doux, un peu tremblotant.",
+ q:"Quel animal fait « Bêêê » ?",choices:["🐑","🐄","🐓"],a:0,
+ indice:"C'est celui qui a une belle laine toute frisée.",
+ etapes:["Le mouton 🐑 fait « Bêêê ».","La vache fait « Meuh », la poule fait « Cot cot ».","C'était le mouton !"]},
+
+{id:"g7e6",w:7,titre:"Qui fait Cocorico ?",type:"qcm",gros:1,
+ histoire:"Chaque matin très tôt, un animal de la ferme réveille tout le monde avec un grand cri.",
+ q:"Quel animal fait « Cocorico » ?",choices:["🐓","🐷","🐐"],a:0,
+ indice:"C'est celui qui a une crête rouge sur la tête et qui chante au lever du soleil.",
+ etapes:["Le coq 🐓 fait « Cocorico » chaque matin.","Le cochon et la chèvre font d'autres bruits.","C'était le coq !"]},
+
+{id:"g7e7",w:7,titre:"Qui vit dans l'océan ?",type:"qcm",gros:1,
+ histoire:"Certains animaux du Zoo des Familles ne vivent ni à la ferme, ni dans la jungle, mais dans l'eau !",
+ q:"Quel animal vit dans l'OCÉAN ?",choices:["🐋","🦁","🐴"],a:0,
+ indice:"C'est le plus grand animal du monde, et il nage tout le temps !",
+ etapes:["La baleine 🐋 vit dans l'océan.","Le lion et le cheval vivent sur la terre.","La baleine est la bonne réponse !"]},
+
+{id:"g7e8",w:7,titre:"Qui sait voler ?",type:"qcm",gros:1,
+ histoire:"Au Zoo des Familles, un seul de ces trois animaux peut s'envoler dans le ciel.",
+ q:"Quel animal peut VOLER ?",choices:["🐦","🐟","🐢"],a:0,
+ indice:"C'est celui qui a des ailes et un petit bec.",
+ etapes:["L'oiseau 🐦 peut voler grâce à ses ailes.","Le poisson nage, la tortue marche lentement.","C'était l'oiseau !"]},
+
+{id:"g7e9",w:7,titre:"Qui vit dans le froid ?",type:"qcm",gros:1,
+ histoire:"Tout au bout du Zoo, un enclos glacé abrite un animal habitué au froid polaire.",
+ q:"Quel animal vit à la BANQUISE, là où il fait très froid ?",choices:["🐧","🦒","🐫"],a:0,
+ indice:"C'est celui qui porte un smoking noir et blanc, et qui glisse sur la glace !",
+ etapes:["Le manchot 🐧 vit à la banquise, dans le froid.","La girafe et le chameau préfèrent la chaleur.","C'était le manchot !"]},
+
+{id:"g7e10",w:7,titre:"Qui vit dans le désert ?",type:"qcm",gros:1,
+ histoire:"À l'autre bout du Zoo, un enclos plein de sable chaud abrite un animal du désert.",
+ q:"Quel animal vit dans le DÉSERT ?",choices:["🐫","🐧","🐬"],a:0,
+ indice:"C'est celui qui a des bosses sur le dos pour garder de l'eau !",
+ etapes:["Le chameau 🐫 vit dans le désert.","Le manchot vit dans le froid, le dauphin vit dans l'eau.","C'était le chameau !"]},
+
+{id:"g7e11",w:7,titre:"Qui ne vole pas ?",type:"qcm",gros:1,
+ histoire:"Dans le jardin du Zoo, trois petites bêtes se promènent, mais une seule reste toujours au sol.",
+ q:"Trouve celui qui ne peut PAS voler :",choices:["🐦","🦋","🐌"],a:2,
+ indice:"Deux de ces trois petites bêtes ont des ailes. Laquelle porte une coquille sur son dos ?",
+ etapes:["L'oiseau et le papillon ont des ailes, ils volent.","L'escargot 🐌 n'a pas d'ailes : il rampe tout doucement !"]},
+
+{id:"g7e12",w:7,titre:"Le bébé du chat",type:"qcm",gros:1,
+ histoire:"À la maison, ton chat vient d'avoir un tout petit bébé, tout doux et tout mignon.",
+ q:"Comment s'appelle le bébé du chat ?",choices:["Le chaton","Le chiot","Le poussin"],a:0,
+ indice:"Il miaule tout doucement, comme sa maman.",
+ etapes:["Le bébé du chat s'appelle le chaton.","Le chiot est le bébé du chien, le poussin celui de la poule.","C'était le chaton !"]},
+
+{id:"g7e13",w:7,titre:"Le bébé de la poule",type:"qcm",gros:1,
+ histoire:"Dans le poulailler de la ferme, un petit œuf vient d'éclore.",
+ q:"Comment s'appelle le bébé de la poule ?",choices:["Le poussin","Le chaton","L'agneau"],a:0,
+ indice:"C'est une toute petite boule de duvet jaune qui fait « piou piou ».",
+ etapes:["Le bébé de la poule s'appelle le poussin.","Le chaton est le bébé du chat, l'agneau celui du mouton.","C'était le poussin !"]},
+
+{id:"g7e14",w:7,titre:"Le bébé du mouton",type:"qcm",gros:1,
+ histoire:"Dans le pré, un mouton tout laineux surveille son tout petit bébé qui gambade.",
+ q:"Comment s'appelle le bébé du mouton ?",choices:["L'agneau","Le poussin","Le veau"],a:0,
+ indice:"Il a une petite laine toute douce, comme sa maman.",
+ etapes:["Le bébé du mouton s'appelle l'agneau.","Le poussin est le bébé de la poule, le veau celui de la vache.","C'était l'agneau !"]},
+
+{id:"g7e15",w:7,titre:"Le bébé de la vache",type:"qcm",gros:1,
+ histoire:"Dans l'étable, une vache lèche tendrement son tout jeune bébé.",
+ q:"Comment s'appelle le bébé de la vache ?",choices:["Le veau","L'agneau","Le chiot"],a:0,
+ indice:"C'est un petit animal aux longues pattes, qui boit le lait de sa maman.",
+ etapes:["Le bébé de la vache s'appelle le veau.","L'agneau est le bébé du mouton, le chiot celui du chien.","C'était le veau !"]},
+
+{id:"g7e16",w:7,titre:"⭐ Le bébé du roi de la jungle",type:"qcm",gros:1,
+ histoire:"Défi final du Zoo ! Un tout petit lionceau joue près de sa maman, dans l'enclos des grands fauves.",
+ q:"Le lionceau est le bébé de quel animal ?",choices:["Le lion","Le chat","Le chien"],a:0,
+ indice:"« Lionceau » ressemble beaucoup au mot « lion »…",
+ etapes:["Le lionceau est le petit du lion, le roi de la jungle.","Chaque famille d'animaux a son nom de bébé bien à elle.","Bravo, tu connais toutes les familles du Zoo ! 🦁"]}
+);
+
+/* ---- GS Monde 8 · La Fête des Rythmes ---- */
+EXOS_GS.push(
+{id:"g8e1",w:8,titre:"Le motif rouge-jaune-bleu",type:"qcm",gros:1,
+ histoire:"Les guirlandes de la Fête clignotent toujours dans le même ordre : 🔴 🟡 🔵 🔴 🟡 🔵 🔴",
+ q:"Quelle couleur vient après ?",choices:["🔴","🟡","🔵"],a:1,
+ indice:"Dis la suite à voix haute : rouge, jaune, bleu, rouge, jaune, bleu, rouge… et après ?",
+ etapes:["Le motif se répète : rouge, jaune, bleu.","Après le rouge vient toujours le jaune 🟡 !"]},
+
+{id:"g8e2",w:8,titre:"La chanson qui se répète",type:"qcm",gros:1,
+ histoire:"Le musicien de la Fête joue toujours la même petite mélodie : 🎵 🎶 🎵 🎶 🎵",
+ q:"Quelle note vient après ?",choices:["🎵","🎶"],a:1,
+ indice:"Note, note-croche, note, note-croche… et après ?",
+ etapes:["Le motif se répète : 🎵 puis 🎶.","Après 🎵 vient toujours 🎶 !"]},
+
+{id:"g8e3",w:8,titre:"La danse des étoiles",type:"qcm",gros:1,
+ histoire:"Dans le ciel de la Fête, les lumières dansent toujours dans le même ordre : ⭐ 🌙 ⭐ 🌙 ⭐ 🌙 ⭐",
+ q:"Quelle lumière vient après ?",choices:["⭐","🌙"],a:1,
+ indice:"Étoile, lune, étoile, lune, étoile, lune, étoile… et après ?",
+ etapes:["Le motif se répète : étoile puis lune.","Après l'étoile vient toujours la lune 🌙 !"]},
+
+{id:"g8e4",w:8,titre:"Le petit orchestre",type:"qcm",gros:1,
+ histoire:"Le tambour et la trompette jouent toujours dans le même ordre : 🥁 🥁 🎺 🥁 🥁 🎺 🥁 🥁",
+ q:"Quel instrument joue après ?",choices:["🥁","🎺"],a:1,
+ indice:"Regarde bien : deux tambours, puis une trompette, deux tambours, puis une trompette…",
+ etapes:["Le motif qui se répète : 🥁 🥁 🎺 (deux tambours, une trompette).","La suite se termine par deux tambours : la trompette 🎺 arrive maintenant !"]},
+
+{id:"g8e5",w:8,titre:"Les confettis verts et violets",type:"qcm",gros:1,
+ histoire:"Les confettis tombent toujours dans le même ordre : 🟢 🟢 🟣 🟢 🟢 🟣 🟢 🟢",
+ q:"Quelle couleur vient après ?",choices:["🟢","🟣"],a:1,
+ indice:"Deux verts, puis un violet, deux verts, puis un violet… où en est-on ?",
+ etapes:["Le motif qui se répète : 🟢 🟢 🟣.","La suite se termine par deux verts : le violet 🟣 arrive maintenant !"]},
+
+{id:"g8e6",w:8,titre:"Les danseurs de la fête",type:"qcm",gros:1,
+ histoire:"Sur la piste de danse, les danseurs alternent toujours dans le même ordre : 💃 🕺 💃 🕺 💃 🕺 💃",
+ q:"Qui danse après ?",choices:["💃","🕺"],a:1,
+ indice:"Une danseuse, un danseur, une danseuse, un danseur… et après ?",
+ etapes:["Le motif se répète : danseuse puis danseur.","Après la danseuse vient toujours le danseur 🕺 !"]},
+
+{id:"g8e7",w:8,titre:"Les triangles et le rond",type:"qcm",gros:1,
+ histoire:"La guirlande de formes de la Fête suit toujours le même motif : 🔺 🔺 🔵 🔺 🔺 🔵 🔺 🔺",
+ q:"Quelle forme vient après ?",choices:["🔺","🔵"],a:1,
+ indice:"Deux triangles, puis un rond, deux triangles, puis un rond… où en est-on ?",
+ etapes:["Le motif qui se répète : 🔺 🔺 🔵.","La suite se termine par deux triangles : le rond 🔵 arrive maintenant !"]},
+
+{id:"g8e8",w:8,titre:"Le grand motif à 3 couleurs",type:"qcm",gros:1,
+ histoire:"Les lumières de la Fête suivent un motif à 3 couleurs qui se répète sans arrêt : 🟥 🟨 🟩 🟥 🟨 🟩 🟥 🟨",
+ q:"Quelle couleur vient après ?",choices:["🟥","🟨","🟩"],a:2,
+ indice:"Rouge, jaune, vert, rouge, jaune, vert… la suite vient de s'arrêter juste après le jaune.",
+ etapes:["Le motif qui se répète : rouge, jaune, vert.","La suite se termine par « rouge, jaune » : le vert 🟩 arrive maintenant !"]},
+
+{id:"g8e9",w:8,titre:"La corbeille de fruits qui tourne",type:"qcm",gros:1,
+ histoire:"Sur la table du buffet, les fruits sont disposés toujours dans le même ordre : 🍎 🍌 🍇 🍎 🍌 🍇 🍎 🍌",
+ q:"Quel fruit vient après ?",choices:["🍎","🍌","🍇"],a:2,
+ indice:"Pomme, banane, raisin, pomme, banane, raisin… la suite vient de s'arrêter juste après la banane.",
+ etapes:["Le motif qui se répète : pomme, banane, raisin.","La suite se termine par « pomme, banane » : le raisin 🍇 arrive maintenant !"]},
+
+{id:"g8e10",w:8,titre:"Les étincelles magiques",type:"qcm",gros:1,
+ histoire:"La baguette magique de la Fête laisse échapper des étincelles dans un ordre bien précis : ⭐ ⭐ ✨ ⭐ ⭐ ✨ ⭐",
+ q:"Quelle étincelle vient après ?",choices:["⭐","✨"],a:0,
+ indice:"Deux grandes étoiles, puis une petite étincelle, deux grandes étoiles… où en est-on ?",
+ etapes:["Le motif qui se répète : ⭐ ⭐ ✨.","La suite se termine par une seule étoile : la deuxième grande étoile ⭐ arrive maintenant !"]},
+
+{id:"g8e11",w:8,titre:"Le jeu des ballons",type:"qcm",gros:1,
+ histoire:"Les ballons de la Fête sont accrochés en alternance : 🔵 🔴 🔵 🔴 🔵 🔴 🔵",
+ q:"Quel ballon vient après ?",choices:["🔵","🔴"],a:1,
+ indice:"Bleu, rouge, bleu, rouge, bleu, rouge, bleu… et après ?",
+ etapes:["Le motif se répète : bleu puis rouge.","Après le bleu vient toujours le rouge 🔴 !"]},
+
+{id:"g8e12",w:8,titre:"Le groupe de musique",type:"qcm",gros:1,
+ histoire:"Les trois musiciens de la Fête jouent toujours dans le même ordre : 🎸 🎹 🥁 🎸 🎹 🥁 🎸 🎹",
+ q:"Quel instrument joue après ?",choices:["🎸","🎹","🥁"],a:2,
+ indice:"Guitare, piano, tambour, guitare, piano, tambour… la suite vient de s'arrêter juste après le piano.",
+ etapes:["Le motif qui se répète : guitare, piano, tambour.","La suite se termine par « guitare, piano » : le tambour 🥁 arrive maintenant !"]},
+
+{id:"g8e13",w:8,titre:"Le rythme des mains",type:"qcm",gros:1,
+ histoire:"À la Fête, tout le monde tape des mains en suivant ce rythme : Fort, Fort, Doux, Fort, Fort, Doux, Fort, Fort…",
+ q:"Le prochain tape est-il FORT ou DOUX ?",choices:["Fort","Doux"],a:1,
+ indice:"Fort, fort, doux, fort, fort, doux… la suite vient de s'arrêter après deux « fort ».",
+ etapes:["Le motif qui se répète : fort, fort, doux.","Après « fort, fort » vient toujours « doux » !"]},
+
+{id:"g8e14",w:8,titre:"Le bruit des pas",type:"qcm",gros:1,
+ histoire:"Le clown de la Fête marche en faisant toujours ce bruit avec ses grandes chaussures : Toc, toc, tac, toc, toc, tac, toc, toc…",
+ q:"Le prochain bruit est-il TOC ou TAC ?",choices:["Toc","Tac"],a:1,
+ indice:"Toc, toc, tac, toc, toc, tac… la suite vient de s'arrêter après deux « toc ».",
+ etapes:["Le motif qui se répète : toc, toc, tac.","Après « toc, toc » vient toujours « tac » !"]},
+
+{id:"g8e15",w:8,titre:"Le tapis de fleurs",type:"qcm",gros:1,
+ histoire:"L'allée de la Fête est décorée d'un tapis de fleurs qui alterne toujours pareil : 🌷 🌼 🌷 🌼 🌷 🌼 🌷",
+ q:"Quelle fleur vient après ?",choices:["🌷","🌼"],a:1,
+ indice:"Tulipe, marguerite, tulipe, marguerite, tulipe, marguerite, tulipe… et après ?",
+ etapes:["Le motif se répète : tulipe puis marguerite.","Après la tulipe vient toujours la marguerite 🌼 !"]},
+
+{id:"g8e16",w:8,titre:"⭐ Le grand final en musique",type:"qcm",gros:1,
+ histoire:"Défi final de la Fête ! Pour le grand final, trois petites bêtes dansent toujours dans le même ordre sur la piste : 🦋 🐝 🐞 🦋 🐝 🐞 🦋 🐝",
+ q:"Quelle petite bête danse après ?",choices:["🦋","🐝","🐞"],a:2,
+ indice:"Papillon, abeille, coccinelle, papillon, abeille, coccinelle… la suite vient de s'arrêter juste après l'abeille.",
+ etapes:["Le motif qui se répète : papillon, abeille, coccinelle.","La suite se termine par « papillon, abeille » : la coccinelle 🐞 arrive maintenant !","Bravo, tu as trouvé tous les rythmes de la Fête ! 🎵"]}
+);
+
+/* ---- GS Monde 9 · Le Jardin des Additions ---- */
+EXOS_GS.push(
+{id:"g9e1",w:9,titre:"Les tulipes du jardinier",type:"qcm",gros:1,
+ histoire:"Le jardinier a planté 3 tulipes rouges 🌷 🌷 🌷, puis 2 tulipes de plus 🌷 🌷",
+ q:"Combien de tulipes en tout ?",choices:["4","5","6"],a:1,
+ indice:"3 tulipes, et 2 de plus. Compte : trois… quatre… cinq !",
+ etapes:["3 + 2 : on continue à compter à partir de 3.","4, 5.","Il y a 5 tulipes en tout !"]},
+
+{id:"g9e2",w:9,titre:"Les tomates du potager",type:"qcm",gros:1,
+ histoire:"Dans le potager, il y a 4 tomates bien rouges 🍅 🍅 🍅 🍅, et 3 tomates de plus 🍅 🍅 🍅",
+ q:"Combien de tomates en tout ?",choices:["6","7","8"],a:1,
+ indice:"4 tomates, et 3 de plus. Compte : quatre… cinq… six… sept !",
+ etapes:["4 + 3 : on continue à compter à partir de 4.","5, 6, 7.","Il y a 7 tomates en tout !"]},
+
+{id:"g9e3",w:9,titre:"Les carottes du lapin",type:"qcm",gros:1,
+ histoire:"Le lapin du jardin a trouvé 2 carottes 🥕 🥕, puis encore 6 carottes 🥕 🥕 🥕 🥕 🥕 🥕",
+ q:"Combien de carottes en tout ?",choices:["7","8","9"],a:1,
+ indice:"2 carottes, et 6 de plus. Compte bien à partir de 2.",
+ etapes:["2 + 6 : on continue à compter à partir de 2.","3, 4, 5, 6, 7, 8.","Il y a 8 carottes en tout !"]},
+
+{id:"g9e4",w:9,titre:"Les fraises du panier",type:"qcm",gros:1,
+ histoire:"Dans le panier, il y a 5 fraises 🍓 🍓 🍓 🍓 🍓, et 4 fraises de plus 🍓 🍓 🍓 🍓",
+ q:"Combien de fraises en tout ?",choices:["8","9","10"],a:1,
+ indice:"5 fraises, et 4 de plus. Compte bien à partir de 5.",
+ etapes:["5 + 4 : on continue à compter à partir de 5.","6, 7, 8, 9.","Il y a 9 fraises en tout !"]},
+
+{id:"g9e5",w:9,titre:"Les citrouilles d'automne",type:"qcm",gros:1,
+ histoire:"Le jardinier a récolté 6 citrouilles 🎃 🎃 🎃 🎃 🎃 🎃, et 4 citrouilles de plus 🎃 🎃 🎃 🎃",
+ q:"Combien de citrouilles en tout ?",choices:["9","10","11"],a:1,
+ indice:"6 citrouilles, et 4 de plus. Compte bien à partir de 6.",
+ etapes:["6 + 4 : on continue à compter à partir de 6.","7, 8, 9, 10.","Il y a 10 citrouilles en tout !"]},
+
+{id:"g9e6",w:9,titre:"Les pommes du verger",type:"qcm",gros:1,
+ histoire:"Le jardinier cueille 7 pommes bien rouges. Il en trouve 3 de plus sur un autre arbre.",
+ q:"Combien de pommes a-t-il en tout ?",choices:["9","10","11"],a:1,
+ indice:"7 pommes, et 3 de plus. Compte : sept… huit… neuf… dix !",
+ etapes:["7 + 3 : on continue à compter à partir de 7.","8, 9, 10.","Il a 10 pommes en tout !"]},
+
+{id:"g9e7",w:9,titre:"Les poires de la brouette",type:"qcm",gros:1,
+ histoire:"Dans la brouette, il y a déjà 8 poires. Le jardinier en ajoute 5 de plus.",
+ q:"Combien de poires y a-t-il maintenant ?",choices:["12","13","14"],a:1,
+ indice:"8 poires, et 5 de plus. Compte bien à partir de 8.",
+ etapes:["8 + 5 : on continue à compter à partir de 8.","9, 10, 11, 12, 13.","Il y a 13 poires maintenant !"]},
+
+{id:"g9e8",w:9,titre:"Les abeilles butineuses",type:"qcm",gros:1,
+ histoire:"4 abeilles butinent les fleurs 🐝 🐝 🐝 🐝, puis 5 abeilles de plus arrivent 🐝 🐝 🐝 🐝 🐝",
+ q:"Combien d'abeilles en tout ?",choices:["8","9","10"],a:1,
+ indice:"4 abeilles, et 5 de plus. Compte bien à partir de 4.",
+ etapes:["4 + 5 : on continue à compter à partir de 4.","5, 6, 7, 8, 9.","Il y a 9 abeilles en tout !"]},
+
+{id:"g9e9",w:9,titre:"Le double d'escargots",type:"qcm",gros:1,
+ histoire:"Après la pluie, 6 escargots sortent d'un côté du jardin 🐌 🐌 🐌 🐌 🐌 🐌, et 6 escargots de l'autre côté 🐌 🐌 🐌 🐌 🐌 🐌",
+ q:"Combien d'escargots en tout ?",choices:["11","12","13"],a:1,
+ indice:"6 et encore 6, c'est le double de 6 ! Compte bien à partir de 6.",
+ etapes:["6 + 6 : on continue à compter à partir de 6.","7, 8, 9, 10, 11, 12.","Il y a 12 escargots en tout !"]},
+
+{id:"g9e10",w:9,titre:"Le bouquet du jardinier",type:"qcm",gros:1,
+ histoire:"Le jardinier a cueilli 9 fleurs rouges et 6 fleurs jaunes pour son bouquet.",
+ q:"Combien de fleurs en tout dans le bouquet ?",choices:["14","15","16"],a:1,
+ indice:"9 fleurs, et 6 de plus. Compte bien à partir de 9.",
+ etapes:["9 + 6 : on continue à compter à partir de 9.","10, 11, 12, 13, 14, 15.","Il y a 15 fleurs en tout !"]},
+
+{id:"g9e11",w:9,titre:"Les melons du potager",type:"qcm",gros:1,
+ histoire:"Le potager a donné 5 melons ronds 🍈 🍈 🍈 🍈 🍈, et 7 melons de plus 🍈 🍈 🍈 🍈 🍈 🍈 🍈",
+ q:"Combien de melons en tout ?",choices:["11","12","13"],a:1,
+ indice:"5 melons, et 7 de plus. Compte bien à partir de 5.",
+ etapes:["5 + 7 : on continue à compter à partir de 5.","6, 7, 8, 9, 10, 11, 12.","Il y a 12 melons en tout !"]},
+
+{id:"g9e12",w:9,titre:"Les aubergines du carré",type:"qcm",gros:1,
+ histoire:"Le carré de légumes compte déjà 10 aubergines bien violettes. Le jardinier en plante 2 nouvelles.",
+ q:"Combien d'aubergines y a-t-il maintenant ?",choices:["11","12","13"],a:1,
+ indice:"10 aubergines, et 2 de plus. Compte : dix… onze… douze !",
+ etapes:["10 + 2 : on continue à compter à partir de 10.","11, 12.","Il y a 12 aubergines maintenant !"]},
+
+{id:"g9e13",w:9,titre:"Les champignons de la forêt",type:"qcm",gros:1,
+ histoire:"Dans le petit bois à côté du jardin, on trouve 7 champignons 🍄 🍄 🍄 🍄 🍄 🍄 🍄, et 8 champignons de plus 🍄 🍄 🍄 🍄 🍄 🍄 🍄 🍄",
+ q:"Combien de champignons en tout ?",choices:["14","15","16"],a:1,
+ indice:"7 champignons, et 8 de plus. Compte bien à partir de 7.",
+ etapes:["7 + 8 : on continue à compter à partir de 7.","8, 9, 10, 11, 12, 13, 14, 15.","Il y a 15 champignons en tout !"]},
+
+{id:"g9e14",w:9,titre:"Les cerises des deux amis",type:"qcm",gros:1,
+ histoire:"Léa a cueilli 6 cerises dans le cerisier du jardin, et Noé en a cueilli 5.",
+ q:"Combien ont-ils cueilli de cerises à eux deux ?",choices:["10","11","12"],a:1,
+ indice:"6 cerises, et 5 de plus. Compte bien à partir de 6.",
+ etapes:["6 + 5 : on continue à compter à partir de 6.","7, 8, 9, 10, 11.","Ils ont cueilli 11 cerises à eux deux !"]},
+
+{id:"g9e15",w:9,titre:"Les haricots du rang",type:"qcm",gros:1,
+ histoire:"Le premier rang du jardin donne 9 haricots verts 🫘 🫘 🫘 🫘 🫘 🫘 🫘 🫘 🫘, et le deuxième rang en donne 6 de plus 🫘 🫘 🫘 🫘 🫘 🫘",
+ q:"Combien de haricots en tout ?",choices:["14","15","16"],a:1,
+ indice:"9 haricots, et 6 de plus. Compte bien à partir de 9.",
+ etapes:["9 + 6 : on continue à compter à partir de 9.","10, 11, 12, 13, 14, 15.","Il y a 15 haricots en tout !"]},
+
+{id:"g9e16",w:9,titre:"⭐ Le grand champ de tournesols",type:"qcm",gros:1,
+ histoire:"Défi final du Jardin ! Le grand champ compte 8 tournesols dans une première rangée, et 9 tournesols dans une deuxième rangée.",
+ q:"Combien de tournesols en tout dans le champ ?",choices:["16","17","18"],a:1,
+ indice:"8 tournesols, et 9 de plus. Compte bien, un peu plus loin que d'habitude !",
+ etapes:["8 + 9 : on continue à compter à partir de 8.","9, 10, 11, 12, 13, 14, 15, 16, 17.","Il y a 17 tournesols en tout ! Bravo, tu es un champion de l'addition ! 🌻"]}
+);
+
+/* ---- GS Monde 10 · La Forêt des Contraires ---- */
+EXOS_GS.push(
+{id:"g10e1",w:10,titre:"Le contraire de grand",type:"qcm",gros:1,
+ histoire:"Le hibou sage de la Forêt des Contraires te pose sa première devinette.",
+ q:"Le contraire de GRAND, c'est…",choices:["Petit","Rond","Rouge"],a:0,
+ indice:"Pense à une souris à côté d'un éléphant.",
+ etapes:["Le contraire de grand, c'est petit.","La bonne réponse est Petit !"]},
+
+{id:"g10e2",w:10,titre:"Le contraire de chaud",type:"qcm",gros:1,
+ histoire:"Le hibou frissonne en posant sa deuxième devinette.",
+ q:"Le contraire de CHAUD, c'est…",choices:["Froid","Lourd","Doux"],a:0,
+ indice:"Pense à un glaçon tout juste sorti du congélateur.",
+ etapes:["Le contraire de chaud, c'est froid.","La bonne réponse est Froid !"]},
+
+{id:"g10e3",w:10,titre:"Le contraire de plein",type:"qcm",gros:1,
+ histoire:"Le hibou te montre un verre d'eau bien rempli.",
+ q:"Le contraire de PLEIN, c'est…",choices:["Vide","Grand","Fort"],a:0,
+ indice:"Pense à un verre qui n'a plus une seule goutte d'eau dedans.",
+ etapes:["Le contraire de plein, c'est vide.","La bonne réponse est Vide !"]},
+
+{id:"g10e4",w:10,titre:"Le contraire de jour",type:"qcm",gros:1,
+ histoire:"Le hibou vit surtout quand le soleil se couche.",
+ q:"Le contraire de JOUR, c'est…",choices:["Nuit","Matin","Soleil"],a:0,
+ indice:"C'est le moment où les étoiles et la lune apparaissent dans le ciel.",
+ etapes:["Le contraire de jour, c'est nuit.","La bonne réponse est Nuit !"]},
+
+{id:"g10e5",w:10,titre:"Le contraire d'ouvert",type:"qcm",gros:1,
+ histoire:"Le hibou te montre une porte de la Forêt.",
+ q:"Le contraire d'OUVERT, c'est…",choices:["Fermé","Cassé","Propre"],a:0,
+ indice:"Pense à une porte qu'on ne peut plus traverser.",
+ etapes:["Le contraire d'ouvert, c'est fermé.","La bonne réponse est Fermé !"]},
+
+{id:"g10e6",w:10,titre:"Le contraire de rapide",type:"qcm",gros:1,
+ histoire:"Le hibou regarde une tortue traverser le chemin de la Forêt.",
+ q:"Le contraire de RAPIDE, c'est…",choices:["Lent","Petit","Silencieux"],a:0,
+ indice:"Pense à un escargot qui prend tout son temps.",
+ etapes:["Le contraire de rapide, c'est lent.","La bonne réponse est Lent !"]},
+
+{id:"g10e7",w:10,titre:"Le contraire de propre",type:"qcm",gros:1,
+ histoire:"Le hibou a marché dans une grosse flaque de boue.",
+ q:"Le contraire de PROPRE, c'est…",choices:["Sale","Beau","Froid"],a:0,
+ indice:"Pense à des mains pleines de boue après avoir joué dehors.",
+ etapes:["Le contraire de propre, c'est sale.","La bonne réponse est Sale !"]},
+
+{id:"g10e8",w:10,titre:"Le contraire de dessus",type:"qcm",gros:1,
+ histoire:"Le hibou est perché tout en haut de son arbre.",
+ q:"Le contraire de DESSUS, c'est…",choices:["Dessous","À côté","Loin"],a:0,
+ indice:"Si le hibou est en haut de l'arbre, où est le sol ?",
+ etapes:["Le contraire de dessus, c'est dessous.","La bonne réponse est Dessous !"]},
+
+{id:"g10e9",w:10,titre:"Le contraire de dedans",type:"qcm",gros:1,
+ histoire:"Le hibou se cache bien au chaud dans le creux de son arbre.",
+ q:"Le contraire de DEDANS, c'est…",choices:["Dehors","En haut","Devant"],a:0,
+ indice:"Si le hibou est dans le trou de l'arbre, où est la pluie ?",
+ etapes:["Le contraire de dedans, c'est dehors.","La bonne réponse est Dehors !"]},
+
+{id:"g10e10",w:10,titre:"Le contraire de lourd",type:"qcm",gros:1,
+ histoire:"Le hibou essaie de soulever une grosse pierre de la Forêt.",
+ q:"Le contraire de LOURD, c'est…",choices:["Léger","Petit","Doux"],a:0,
+ indice:"Pense à une plume qui vole dans le vent.",
+ etapes:["Le contraire de lourd, c'est léger.","La bonne réponse est Léger !"]},
+
+{id:"g10e11",w:10,titre:"Le contraire de triste",type:"qcm",gros:1,
+ histoire:"Le hibou a le sourire aujourd'hui : il a retrouvé tous ses amis de la Forêt.",
+ q:"Le contraire de TRISTE, c'est…",choices:["Joyeux","Fatigué","Calme"],a:0,
+ indice:"C'est ce que tu ressens le jour de ton anniversaire !",
+ etapes:["Le contraire de triste, c'est joyeux.","La bonne réponse est Joyeux !"]},
+
+{id:"g10e12",w:10,titre:"Le contraire de fort (le son)",type:"qcm",gros:1,
+ histoire:"Le hibou n'aime pas les bruits qui font trop mal aux oreilles.",
+ q:"Le contraire de FORT (un bruit), c'est…",choices:["Doux","Rapide","Grand"],a:0,
+ indice:"Pense à un murmure tout léger, presque un chuchotement.",
+ etapes:["Le contraire de fort, c'est doux.","La bonne réponse est Doux !"]},
+
+{id:"g10e13",w:10,titre:"Le contraire de devant",type:"qcm",gros:1,
+ histoire:"Le hibou vole en tête du groupe d'oiseaux de la Forêt.",
+ q:"Le contraire de DEVANT, c'est…",choices:["Derrière","À côté","En bas"],a:0,
+ indice:"Si le hibou est le premier, où sont les autres oiseaux ?",
+ etapes:["Le contraire de devant, c'est derrière.","La bonne réponse est Derrière !"]},
+
+{id:"g10e14",w:10,titre:"Le contraire de commencer",type:"qcm",gros:1,
+ histoire:"Le hibou raconte une longue histoire aux animaux de la Forêt, du début jusqu'à la fin.",
+ q:"Le contraire de COMMENCER, c'est…",choices:["Finir","Jouer","Courir"],a:0,
+ indice:"C'est ce qu'on dit à la toute dernière page d'un livre.",
+ etapes:["Le contraire de commencer, c'est finir.","La bonne réponse est Finir !"]},
+
+{id:"g10e15",w:10,titre:"Le contraire de mouillé",type:"qcm",gros:1,
+ histoire:"Le hibou est tombé dans la rivière, ses plumes sont trempées !",
+ q:"Le contraire de MOUILLÉ, c'est…",choices:["Sec","Doux","Chaud"],a:0,
+ indice:"C'est comment sont tes vêtements avant d'aller sous la pluie.",
+ etapes:["Le contraire de mouillé, c'est sec.","La bonne réponse est Sec !"]},
+
+{id:"g10e16",w:10,titre:"⭐ Le contraire d'ami",type:"qcm",gros:1,
+ histoire:"Défi final de la Forêt ! Le hibou sage te donne sa toute dernière devinette avant de te laisser passer.",
+ q:"Le contraire d'AMI, c'est…",choices:["Ennemi","Copain","Frère"],a:0,
+ indice:"C'est quelqu'un avec qui on ne s'entend pas du tout, tout le contraire d'un copain.",
+ etapes:["Le contraire d'ami, c'est ennemi.","La bonne réponse est Ennemi !","Bravo, tu connais tous les contraires de la Forêt ! 🌳"]}
+);
+
+/* ---- GS Monde 11 · Le Château des Nombres Amis ---- */
+EXOS_GS.push(
+{id:"g11e1",w:11,titre:"Le complément à 5 (1)",type:"qcm",gros:1,
+ histoire:"Au Château, deux nombres qui font 5 ensemble sont toujours de grands amis.",
+ q:"Combien manque-t-il à 3 pour faire 5 ?",choices:["1","2","3"],a:1,
+ indice:"3 et combien font 5 ? Compte sur tes doigts : trois… quatre… cinq !",
+ etapes:["3 + 2 = 5.","Il manque 2 !"]},
+
+{id:"g11e2",w:11,titre:"Le complément à 5 (2)",type:"qcm",gros:1,
+ histoire:"Le roi du Château cherche l'ami du nombre 4.",
+ q:"Combien manque-t-il à 4 pour faire 5 ?",choices:["0","1","2"],a:1,
+ indice:"4 et combien font 5 ? Compte : quatre… cinq !",
+ etapes:["4 + 1 = 5.","Il manque 1 !"]},
+
+{id:"g11e3",w:11,titre:"Le complément à 5 (3)",type:"qcm",gros:1,
+ histoire:"Le roi cherche maintenant l'ami du nombre 2.",
+ q:"Combien manque-t-il à 2 pour faire 5 ?",choices:["2","3","4"],a:1,
+ indice:"2 et combien font 5 ? Compte : deux… trois… quatre… cinq !",
+ etapes:["2 + 3 = 5.","Il manque 3 !"]},
+
+{id:"g11e4",w:11,titre:"Le complément à 10 (1)",type:"qcm",gros:1,
+ histoire:"Au sommet du Château, les nombres amis les plus forts sont ceux qui font 10 ensemble.",
+ q:"Combien manque-t-il à 7 pour faire 10 ?",choices:["2","3","4"],a:1,
+ indice:"7 et combien font 10 ? Compte sur tes doigts : sept… huit… neuf… dix !",
+ etapes:["7 + 3 = 10.","Il manque 3 !"]},
+
+{id:"g11e5",w:11,titre:"Le complément à 10 (2)",type:"qcm",gros:1,
+ histoire:"Le roi cherche l'ami du nombre 6 qui, ensemble, font 10.",
+ q:"Combien manque-t-il à 6 pour faire 10 ?",choices:["3","4","5"],a:1,
+ indice:"6 et combien font 10 ? Compte : six… sept… huit… neuf… dix !",
+ etapes:["6 + 4 = 10.","Il manque 4 !"]},
+
+{id:"g11e6",w:11,titre:"Le complément à 10 (3)",type:"qcm",gros:1,
+ histoire:"Le roi cherche l'ami du nombre 8.",
+ q:"Combien manque-t-il à 8 pour faire 10 ?",choices:["1","2","3"],a:1,
+ indice:"8 et combien font 10 ? Compte : huit… neuf… dix !",
+ etapes:["8 + 2 = 10.","Il manque 2 !"]},
+
+{id:"g11e7",w:11,titre:"Le complément à 10 (4)",type:"qcm",gros:1,
+ histoire:"Le roi cherche l'ami du nombre 4 qui, ensemble, font 10.",
+ q:"Combien manque-t-il à 4 pour faire 10 ?",choices:["5","6","7"],a:1,
+ indice:"4 et combien font 10 ? Compte bien sur tes doigts, depuis 4 jusqu'à 10.",
+ etapes:["4 + 6 = 10.","Il manque 6 !"]},
+
+{id:"g11e8",w:11,titre:"Le double de 2",type:"qcm",gros:1,
+ histoire:"Le roi du Château adore les nombres qui se doublent, comme un reflet dans un miroir.",
+ q:"Quel est le double de 2 ?",choices:["3","4","5"],a:1,
+ indice:"Le double, c'est deux fois pareil : 2 + 2.",
+ etapes:["2 + 2 = 4.","Le double de 2, c'est 4 !"]},
+
+{id:"g11e9",w:11,titre:"Le double de 3",type:"qcm",gros:1,
+ histoire:"Le roi cherche maintenant le double du nombre 3.",
+ q:"Quel est le double de 3 ?",choices:["5","6","7"],a:1,
+ indice:"Le double, c'est deux fois pareil : 3 + 3.",
+ etapes:["3 + 3 = 6.","Le double de 3, c'est 6 !"]},
+
+{id:"g11e10",w:11,titre:"Le double de 4",type:"qcm",gros:1,
+ histoire:"Le roi cherche maintenant le double du nombre 4.",
+ q:"Quel est le double de 4 ?",choices:["7","8","9"],a:1,
+ indice:"Le double, c'est deux fois pareil : 4 + 4.",
+ etapes:["4 + 4 = 8.","Le double de 4, c'est 8 !"]},
+
+{id:"g11e11",w:11,titre:"Le double de 5",type:"qcm",gros:1,
+ histoire:"Le roi cherche le double du nombre 5, un des nombres préférés du Château.",
+ q:"Quel est le double de 5 ?",choices:["9","10","11"],a:1,
+ indice:"Le double, c'est deux fois pareil : 5 + 5.",
+ etapes:["5 + 5 = 10.","Le double de 5, c'est 10 !"]},
+
+{id:"g11e12",w:11,titre:"Les places de la table du roi",type:"qcm",gros:1,
+ histoire:"Le roi a préparé 5 places à sa table. 3 chevaliers sont déjà assis.",
+ q:"Combien de chevaliers peuvent encore s'asseoir ?",choices:["1","2","3"],a:1,
+ indice:"3 chevaliers, et combien pour arriver à 5 places ? Compte : trois… quatre… cinq !",
+ etapes:["3 + 2 = 5.","Il reste 2 places pour 2 chevaliers de plus !"]},
+
+{id:"g11e13",w:11,titre:"Les fenêtres du Château",type:"qcm",gros:1,
+ histoire:"Le Château a 10 fenêtres. Le soir venu, 6 sont déjà allumées.",
+ q:"Combien de fenêtres restent éteintes ?",choices:["3","4","5"],a:1,
+ indice:"6 fenêtres allumées, et combien pour arriver à 10 ? Compte : six… sept… huit… neuf… dix !",
+ etapes:["6 + 4 = 10.","Il reste 4 fenêtres éteintes."]},
+
+{id:"g11e14",w:11,titre:"Le cadeau de la reine",type:"qcm",gros:1,
+ histoire:"Le chevalier a 3 pièces d'or dans sa bourse. La reine, généreuse, lui offre le double de ce qu'il a déjà !",
+ q:"Combien de pièces la reine lui offre-t-elle ?",choices:["5","6","7"],a:1,
+ indice:"Le double de 3, c'est 3 + 3.",
+ etapes:["3 + 3 = 6.","La reine lui offre 6 pièces d'or !"]},
+
+{id:"g11e15",w:11,titre:"Le dernier complément à 10",type:"qcm",gros:1,
+ histoire:"Le roi cherche l'ami du nombre 9, presque déjà à 10.",
+ q:"Combien manque-t-il à 9 pour faire 10 ?",choices:["0","1","2"],a:1,
+ indice:"9 et combien font 10 ? Il en manque tout juste un peu !",
+ etapes:["9 + 1 = 10.","Il manque seulement 1 !"]},
+
+{id:"g11e16",w:11,titre:"⭐ Le grand défi du roi",type:"qcm",gros:1,
+ histoire:"Défi final du Château ! Le roi pense à deux nombres amis qui, ensemble, font exactement 10. Le premier est 7.",
+ q:"Quel est le deuxième nombre ami ?",choices:["2","3","4"],a:1,
+ indice:"7 et combien font 10 ? Compte : sept… huit… neuf… dix !",
+ etapes:["7 + 3 = 10.","Le deuxième nombre ami est 3 !","Bravo, tu as réuni tous les nombres amis du Château ! Tu as terminé les 8 nouveaux mondes ! 🏯"]}
+);
+
 /* ================== ÉTAT MULTI-PROFILS & SAUVEGARDE ================== */
 const CLE="atlas6e_v2",CLE_V1="atlas6e_v1";
 const PROFIL_DEFAUT=()=>({nom:"",genre:"f",cheveux:0,peau:0,coiffure:"longue",acc:"aucun",
@@ -3190,13 +4008,33 @@ function rNouveauProfil(){
 }
 
 /* ================== CARTE D'ATLAS (SVG dessinée par la progression) ================== */
-function carteSVG(mondeNeuf){
-  const p=P(),ms=pc().mondes;
-  const POS={
+/* Positions des îles sur l'Atlas. Dispositions dessinées à la main pour 3/4/6 mondes
+   (inchangées) ; au-delà, un serpentin générique calculé pour n'importe quel nombre
+   de mondes, en continuant le tracé rangée par rangée (gauche→droite puis droite→gauche). */
+function positionsIles(n){
+  const PRESET={
     3:[[70,182],[200,168],[320,88]],
     4:[[62,182],[175,196],[292,155],[330,75]],
     6:[[58,185],[148,202],[238,178],[318,126],[228,80],[112,54]]
-  }[ms.length];
+  }[n];
+  if(PRESET)return PRESET;
+  const cols=n<=8?3:4;
+  const rows=Math.ceil(n/cols);
+  const marginX=58,marginY=52,largeur=390-2*marginX,hauteurTotale=232-2*marginY-10;
+  const pos=[];
+  for(let i=0;i<n;i++){
+    const r=Math.floor(i/cols),debutRangee=r*cols,nbRangee=Math.min(cols,n-debutRangee);
+    let c=i-debutRangee;
+    if(r%2===1)c=nbRangee-1-c;
+    const xFrac=nbRangee>1?c/(nbRangee-1):0.5,yFrac=rows>1?r/(rows-1):0.5;
+    const jitter=(c%2===0)?-8:8;
+    pos.push([Math.round(marginX+xFrac*largeur),Math.round(232-marginY-yFrac*hauteurTotale+jitter)]);
+  }
+  return pos;
+}
+function carteSVG(mondeNeuf){
+  const p=P(),ms=pc().mondes;
+  const POS=positionsIles(ms.length);
   let chemin="M"+POS[0][0]+" "+POS[0][1];
   for(let i=1;i<POS.length;i++){
     const x0=POS[i-1][0],y0=POS[i-1][1],x1=POS[i][0],y1=POS[i][1];
