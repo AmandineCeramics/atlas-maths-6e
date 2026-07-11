@@ -2888,7 +2888,12 @@ document.addEventListener("click",e=>{
     if(mondeNeufEnAttente){const w=mondeNeufEnAttente;mondeNeufEnAttente=0;rCarte(w);}
     else rMonde(EX.w);
   }
-  else if(act==="revoir"){voile.classList.remove("actif");}
+  else if(act==="revoir"){
+    voile.classList.remove("actif");
+    const barre=document.querySelector(".barre-exo");
+    if(barre)barre.innerHTML='<button class="btn vert large" data-act="suivant">Continuer →</button>';
+    document.getElementById("zoneSolution").scrollIntoView({behavior:"smooth",block:"nearest"});
+  }
   else if(act==="suivant")exoSuivant();
   else if(act==="reset"){
     if(el.dataset.confirme){
