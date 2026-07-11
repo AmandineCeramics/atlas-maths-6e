@@ -121,6 +121,20 @@ header{
 .bandeau-defi .em{font-size:30px}
 .bandeau-defi b{font-size:15px;display:block}
 .bandeau-defi small{color:var(--gris);font-size:13px}
+.bandeau-duel{
+  display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#EFEBFF,#FFE3EC);
+  border-radius:var(--r);padding:14px 16px;box-shadow:var(--ombre);margin-bottom:16px;cursor:pointer;
+  border:2px dashed var(--violet);max-width:640px;margin-left:auto;margin-right:auto;
+}
+.bandeau-duel .em{font-size:28px}
+.bandeau-duel b{font-size:15px;display:block}
+.bandeau-duel small{color:var(--gris);font-size:13px}
+.bandeau-duel .fleche{font-size:20px;color:var(--violet)}
+.btn-fratrie{
+  margin-top:6px;width:min(440px,92vw);border:none;border-radius:18px;padding:14px;
+  background:linear-gradient(135deg,var(--violet),var(--rose));color:#fff;font-weight:800;
+  font-size:15px;font-family:inherit;cursor:pointer;box-shadow:0 6px 18px rgba(108,92,231,.3);
+}
 .grille-mondes{display:grid;grid-template-columns:1fr;gap:14px;max-width:640px;margin:0 auto}
 @media(min-width:700px){.grille-mondes{grid-template-columns:1fr 1fr}}
 .carte-monde{
@@ -281,6 +295,25 @@ header{
 .badge b{font-size:12.5px;display:block;line-height:1.3}
 .badge small{font-size:11px;color:var(--gris);line-height:1.25;display:block;margin-top:3px}
 .badge.gris{opacity:.45;filter:grayscale(1)}
+
+/* ===== Défi Fratrie ===== */
+.duel-podium{display:flex;flex-direction:column;gap:12px}
+.duel-rang{
+  display:flex;align-items:center;gap:12px;background:var(--carte);border-radius:var(--r);
+  padding:12px 14px;box-shadow:var(--ombre);border:3px solid transparent;
+}
+.duel-rang.premier{border-color:var(--or);background:linear-gradient(135deg,#FFF8E1,#FFFFFF)}
+.duel-medaille{font-size:26px;min-width:32px;text-align:center;flex-shrink:0}
+.duel-infos{flex:1;min-width:0}
+.duel-infos b{font-size:16.5px;display:block}
+.duel-stats{display:flex;gap:6px;flex-wrap:wrap;font-size:11.5px;color:var(--gris);margin-top:5px;font-weight:800}
+.duel-stats span{background:var(--brume);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.duel-defi-jour{
+  text-align:center;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:800;
+  white-space:nowrap;flex-shrink:0;
+}
+.duel-defi-jour.fait{background:#E7FBF4;color:var(--menthe-d)}
+.duel-defi-jour.pas{background:#FFF8E1;color:#b8860b}
 .rang-accessoires{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .acc-btn{
   border:3px solid transparent;background:var(--carte);border-radius:16px;padding:6px 10px 8px;
@@ -3071,6 +3104,7 @@ function rProfils(){
       +'<span class="infos-p"><b>'+echap(p.nom)+'</b><small>'+pk.em+" "+pk.nom+" · "+pk.cible+" · Niveau "+niveau(p.xp)+" · ⭐ "+totalEtoiles(p)+'</small></span>'
       +'<span class="fleche">→</span></button>';}).join("")
    +'<button class="carte-profil nouveau" data-act="nouveau-profil">＋ Nouvel explorateur</button>'
+   +(ids.length>=2?'<button class="btn-fratrie" data-act="defi-fratrie">⚔️ Défi Fratrie</button>':"")
    +'</div></div></div>';
 }
 
@@ -3203,6 +3237,8 @@ function rCarte(mondeNeuf){
    +(defi?'<div class="bandeau-defi'+(defiFait?" fait":"")+'" data-act="defi" data-id="'+defi.id+'">'
      +'<span class="em">'+(defiFait?"✅":"🎯")+'</span><div style="flex:1"><b>Défi du jour '+(defiFait?"— réussi !":"(XP ×2 !)")+'</b>'
      +'<small>'+echap(defi.titre)+" · "+pc().mondes[defi.w-1].nom+'</small></div></div>':"")
+   +(Object.keys(S.profils).length>=2?'<div class="bandeau-duel" data-act="defi-fratrie" data-de="carte">'
+     +'<span class="em">⚔️</span><div style="flex:1"><b>Défi Fratrie</b><small>Compare ta progression avec les autres explorateurs !</small></div><span class="fleche">→</span></div>':"")
    +'<div class="grille-mondes">'
    +pc().mondes.map(m=>{
      const ouvert=mondeOuvert(m.id),f=faits(P(),m.id),n=exosDuMonde(m.id).length,
@@ -3222,6 +3258,45 @@ function messagePlume(){
   if(p.serie.count>=3)return p.serie.count+" jours d'affilée, quel"+g("le exploratrice"," explorateur")+" ! Ta régularité est ta plus grande force.";
   if(n>=5)return "Niveau "+n+" ! Ce parcours n'a presque plus de secrets pour toi. Continue !";
   return "Tu as déjà réussi "+tot+" exercice"+(tot>1?"s":"")+" sur "+nb+". Chaque énigme résolue redessine un bout de la carte !";
+}
+
+/* ================== ÉCRAN : DÉFI FRATRIE (comparaison entre profils) ================== */
+function statsProfil(id){
+  const avant=S.actif;S.actif=id;
+  const p=P(),pk=pc(),total=pk.exos.length;
+  const pct=total?Math.round(100*exosReussis(p)/total):0;
+  const defi=defiDuJour();
+  const defiFaitAuj=defi&&p.defiFait===dateJour();
+  S.actif=avant;
+  return {id,p,pk,pct,defiFaitAuj};
+}
+let venuDeCarteFratrie=false;
+function rDefiFratrie(depuisCarte){
+  venuDeCarteFratrie=!!depuisCarte;
+  const lignes=Object.keys(S.profils).map(statsProfil)
+   .sort((a,b)=>b.pct-a.pct||totalEtoiles(b.p)-totalEtoiles(a.p));
+  const MEDAILLES=["🥇","🥈","🥉","🏅"];
+  const nbFaitAuj=lignes.filter(l=>l.defiFaitAuj).length;
+  let motPlume;
+  if(nbFaitAuj===0)motPlume="Personne n'a encore fait son défi du jour… à vos marques !";
+  else if(nbFaitAuj===lignes.length)motPlume="Bravo à tous : chacun a déjà réussi son défi du jour aujourd'hui ! 🎉";
+  else motPlume=lignes.filter(l=>l.defiFaitAuj).map(l=>l.p.nom).join(" et ")+" "+(nbFaitAuj>1?"ont":"a")+" déjà fait "+(nbFaitAuj>1?"leur":"son")+" défi du jour — qui les rejoint ?";
+  app.innerHTML='<div class="ecran actif"><header>'
+   +'<button class="btn-rond" data-act="retour-fratrie">←</button>'
+   +'<div class="h-titre">⚔️ Défi Fratrie</div></header>'
+   +'<div class="defile"><div style="max-width:560px;margin:0 auto">'
+   +'<div class="bulle-plume" style="margin:0 auto 16px">'+CHOUETTE+'<p><b>Plume :</b> « '+motPlume+' »</p></div>'
+   +'<div class="duel-podium">'
+   +lignes.map((l,i)=>'<div class="duel-rang'+(i===0?" premier":"")+'">'
+     +'<span class="duel-medaille">'+(MEDAILLES[i]||"🏅")+'</span>'
+     +avatarSVG(52,l.p)
+     +'<div class="duel-infos"><b>'+echap(l.p.nom)+'</b>'
+     +'<div class="duel-stats"><span>'+l.pk.em+" "+l.pk.nom+'</span><span>🗺️ '+l.pct+'%</span><span>⭐ '+totalEtoiles(l.p)+'</span><span>🔥 '+l.p.serie.count+'</span></div></div>'
+     +'<span class="duel-defi-jour '+(l.defiFaitAuj?"fait":"pas")+'">'+(l.defiFaitAuj?"✅ Fait !":"🎯 À faire")+'</span>'
+     +'</div>').join("")
+   +'</div>'
+   +'<p class="sous-titre" style="margin-top:18px">Le classement se base sur le % de l\'Atlas redessiné — juste, même entre parcours différents !</p>'
+   +'</div></div></div>';
 }
 
 /* ================== ÉCRAN : UN MONDE ================== */
@@ -3588,6 +3663,8 @@ document.addEventListener("click",e=>{
   else if(act==="renommer")rProfil(true);
   else if(act==="valider-nom")validerRenommage();
   else if(act==="vers-profils"||act==="retour-profils"){arreteParole();rProfils();}
+  else if(act==="defi-fratrie"){arreteParole();rDefiFratrie(el.dataset.de==="carte");}
+  else if(act==="retour-fratrie"){if(venuDeCarteFratrie&&S.actif)rCarte();else rProfils();}
   else if(act==="nouveau-profil"){arreteParole();rNouveauProfil();}
   else if(act==="monde"){const w=+el.dataset.w;if(mondeOuvert(w)){arreteParole();rMonde(w);}else son("ko");}
   else if(act==="exo")rExo(el.dataset.id);
