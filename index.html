@@ -2929,7 +2929,8 @@ const CHAPEAUX=[
  {id:"chapeau",em:"🤠",nom:"Chapeau d'aventure",cond:{t:"niveau",v:5}},
  {id:"casque",em:"⛑️",nom:"Casque d'alpiniste",cond:{t:"defis",v:3}},
  {id:"couronne",em:"👑",nom:"Couronne",cond:{t:"niveau",v:8}},
- {id:"aureole",em:"✨",nom:"Auréole d'étoiles",cond:{t:"complet",v:1}}
+ {id:"aureole",em:"✨",nom:"Auréole d'étoiles",cond:{t:"complet",v:1}},
+ {id:"etoilefilante",em:"🌠",nom:"Étoiles filantes",cond:{t:"equipe",v:16}}
 ];
 const COMPAGNONS=[
  {id:"aucun",em:"∅",nom:"Aucun"},
@@ -2939,9 +2940,12 @@ const COMPAGNONS=[
  {id:"renard",em:"🦊",nom:"Renardeau",cond:{t:"mondes",v:1}},
  {id:"tortue",em:"🐢",nom:"Tortue futée",cond:{t:"defis",v:5}},
  {id:"dragon",em:"🐉",nom:"Dragonneau",cond:{t:"mondes",v:3}},
- {id:"licorne",em:"🦄",nom:"Licorne",cond:{t:"serie",v:7}}
+ {id:"licorne",em:"🦄",nom:"Licorne",cond:{t:"serie",v:7}},
+ {id:"dauphin",em:"🐬",nom:"Dauphin complice",cond:{t:"equipe",v:8}}
 ];
 function exosReussis(p){return Object.values(p.etoiles).filter(v=>v>0).length;}
+/* somme des défis du jour réussis par TOUTE la famille (tous profils confondus) : objets d'équipe, à débloquer ensemble */
+function sommeEquipe(){return Object.values(S.profils).reduce((s,pr)=>s+(pr.defisReussis||0),0);}
 function condOK(p,cond){
   if(!cond)return true;
   const pk=PARCOURS[p.parcours];
@@ -2953,6 +2957,7 @@ function condOK(p,cond){
     case"exos":return exosReussis(p)>=cond.v;
     case"mondes":return pk.mondes.filter(m=>pk.exos.filter(e=>e.w===m.id).every(e=>(p.etoiles[e.id]||0)>0)).length>=cond.v;
     case"complet":return pk.exos.every(e=>(p.etoiles[e.id]||0)>0);
+    case"equipe":return sommeEquipe()>=cond.v;
   }
   return false;
 }
@@ -2966,6 +2971,7 @@ function condTxt(cond){
     case"exos":return cond.v+" exercices ✅";
     case"mondes":return cond.v+(cond.v>1?" mondes finis":" monde fini");
     case"complet":return"Tout le parcours 🗺️";
+    case"equipe":return cond.v+" défis en famille 🤝";
   }
   return"";
 }
@@ -3006,17 +3012,16 @@ function avatarSVG(taille,profil,icone){
   if(coif==="herisson")cheveux='<path d="M28 42 L22 26 L34 32 L38 16 L46 27 L50 12 L54 27 L62 16 L66 32 L78 26 L72 42 Q50 28 28 42 Z" fill="'+hc+'"/>'+CAP;
   const acc=p.acc||"aucun";
   let extra="";
+  const etoile=(cx,cy,rO,rI)=>{let d="";for(let i=0;i<10;i++){const r=i%2===0?rO:rI,a=Math.PI*i/5-Math.PI/2;
+    d+=(i===0?"M":"L")+(cx+r*Math.cos(a)).toFixed(1)+" "+(cy+r*Math.sin(a)).toFixed(1)+" ";}return d+"Z";};
   if(acc==="bandana")extra='<path d="M28 34 Q50 22 72 34 L72 42 Q50 32 28 42 Z" fill="#FF7675"/><circle cx="73" cy="38" r="4" fill="#FF7675"/>';
-  if(acc==="lunettes"){
-    const etoile=(cx,cy,rO,rI)=>{let d="";for(let i=0;i<10;i++){const r=i%2===0?rO:rI,a=Math.PI*i/5-Math.PI/2;
-      d+=(i===0?"M":"L")+(cx+r*Math.cos(a)).toFixed(1)+" "+(cy+r*Math.sin(a)).toFixed(1)+" ";}return d+"Z";};
-    extra='<g fill="#FDCB6E" stroke="#e6a93c" stroke-width="1"><path d="'+etoile(41,52,10,4.2)+'"/><path d="'+etoile(59,52,10,4.2)+'"/><line x1="48" y1="52" x2="52" y2="52" stroke="#e6a93c" stroke-width="2.5"/></g>';
-  }
+  if(acc==="lunettes")extra='<g fill="#FDCB6E" stroke="#e6a93c" stroke-width="1"><path d="'+etoile(41,52,10,4.2)+'"/><path d="'+etoile(59,52,10,4.2)+'"/><line x1="48" y1="52" x2="52" y2="52" stroke="#e6a93c" stroke-width="2.5"/></g>';
   if(acc==="fleur")extra='<g><circle cx="66" cy="26" r="4.5" fill="#FD79A8"/><circle cx="73" cy="29" r="4.5" fill="#FD79A8"/><circle cx="70" cy="36" r="4.5" fill="#FD79A8"/><circle cx="63" cy="33" r="4.5" fill="#FD79A8"/><circle cx="68" cy="31" r="3.5" fill="#FDCB6E"/></g>';
   if(acc==="chapeau")extra='<ellipse cx="50" cy="32" rx="32" ry="8" fill="#b3813f"/><path d="M32 32 Q32 12 50 12 Q68 12 68 32 Q50 26 32 32 Z" fill="#c99552"/><rect x="33" y="24" width="34" height="5" rx="2.5" fill="#8a5a28"/>';
   if(acc==="casque")extra='<path d="M27 40 Q27 13 50 13 Q73 13 73 40 L73 44 L27 44 Z" fill="#e17055"/><rect x="45" y="13" width="10" height="31" fill="#fab1a0"/><rect x="25" y="40" width="50" height="6" rx="3" fill="#d63031"/>';
   if(acc==="couronne")extra='<path d="M34 30 L38 18 L46 27 L50 15 L54 27 L62 18 L66 30 Q50 24 34 30 Z" fill="#FDCB6E" stroke="#e6a93c" stroke-width="1.5"/>';
   if(acc==="aureole")extra='<ellipse cx="50" cy="11" rx="19" ry="5.5" fill="none" stroke="#FDCB6E" stroke-width="4"/><text x="24" y="14" font-size="9">✦</text><text x="70" y="12" font-size="9">✦</text>';
+  if(acc==="etoilefilante")extra='<g fill="#FDCB6E"><path d="'+etoile(70,18,7,3)+'"/><path d="'+etoile(26,24,5,2)+'"/><path d="'+etoile(56,8,4,1.6)+'"/></g><g stroke="#FDCB6E" stroke-width="2" stroke-linecap="round" opacity="0.6"><line x1="76" y1="12" x2="84" y2="6"/><line x1="20" y1="18" x2="12" y2="12"/></g>';
   const comp=COMPAGNONS.find(c=>c.id===(p.compagnon||"aucun"));
   const compagnon=(comp&&comp.id!=="aucun"&&taille>=48&&!icone)?'<text x="70" y="107" font-size="27">'+comp.em+'</text>':"";
   const contenu=torse
@@ -3296,7 +3301,26 @@ function rDefiFratrie(depuisCarte){
      +'</div>').join("")
    +'</div>'
    +'<p class="sous-titre" style="margin-top:18px">Le classement se base sur le % de l\'Atlas redessiné — juste, même entre parcours différents !</p>'
+   +rObjectifsEquipe()
    +'</div></div></div>';
+}
+function rObjectifsEquipe(){
+  const objectifs=catalogueObjets().filter(o=>o.cond&&o.cond.t==="equipe").sort((a,b)=>a.cond.v-b.cond.v);
+  if(!objectifs.length)return"";
+  const total=sommeEquipe();
+  return '<div class="carte" style="margin-top:18px"><b>🤝 Objectifs d\'équipe</b>'
+   +'<small style="color:var(--gris);display:block;margin-top:4px">Ensemble, cumulez vos défis du jour réussis — peu importe qui joue, chaque défi du jour compte pour toute la famille !</small>'
+   +'<div style="margin-top:10px;font-weight:800;color:var(--violet);font-size:15px">'+total+' défi'+(total>1?"s":"")+' cumulé'+(total>1?"s":"")+' en famille</div>'
+   +objectifs.map(o=>{
+     const ok=total>=o.cond.v,pct=Math.min(100,Math.round(100*total/o.cond.v));
+     return '<div style="margin-top:12px">'
+      +'<div style="display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;gap:8px">'
+      +'<span>'+o.em+' '+o.nom+(ok?' — débloqué pour tout le monde ! 🎉':'')+'</span>'
+      +'<span style="color:var(--gris);white-space:nowrap">'+Math.min(total,o.cond.v)+'/'+o.cond.v+'</span></div>'
+      +'<div class="barre-niveau"><div style="width:'+pct+'%;background:'+(ok?"linear-gradient(90deg,var(--menthe-d),var(--menthe))":"linear-gradient(90deg,var(--violet),var(--rose))")+'"></div></div>'
+      +'</div>';
+   }).join("")
+   +'</div>';
 }
 
 /* ================== ÉCRAN : UN MONDE ================== */
@@ -3592,7 +3616,11 @@ function rProfil(editionNom){
    +'<div class="stat-carte"><b>🔥 '+p.serie.count+'</b><small>jours d\'affilée</small></div>'
    +'<div class="stat-carte"><b>🎯 '+(p.defisReussis||0)+'</b><small>défis du jour</small></div></div>'
    +'<div class="carte" style="margin-bottom:16px"><b>🧳 Mon vestiaire</b> <small style="color:var(--gris)">('+objetsDebloques(p).length+"/"+catalogueObjets().filter(o=>o.cond).length+' objets débloqués — gagne étoiles, défis et séries pour ouvrir le reste !)</small>'
-   +'<div style="margin-top:10px"><small style="font-weight:800;color:var(--gris)">MA TÊTE</small>'
+   +'<div style="margin-top:10px"><small style="font-weight:800;color:var(--gris)">JE SUIS…</small>'
+   +'<div class="rang-genre" style="max-width:340px">'
+   +'<button class="opt-genre'+(p.genre!=="m"?" sel":"")+'" data-vest="genre:f">👧 Une fille</button>'
+   +'<button class="opt-genre'+(p.genre==="m"?" sel":"")+'" data-vest="genre:m">👦 Un garçon</button></div></div>'
+   +'<div style="margin-top:14px"><small style="font-weight:800;color:var(--gris)">MA TÊTE</small>'
    +'<div class="rang-accessoires">'
    +PEAUX.map((c,i)=>'<button class="choix-pastille'+(p.peau===i?" sel":"")+'" data-vest="peau:'+i+'" style="background:'+c+';width:44px;height:44px"></button>').join("")
    +COUL_CHEVEUX.map((c,i)=>'<button class="choix-pastille'+(p.cheveux===i?" sel":"")+'" data-vest="cheveux:'+i+'" style="background:'+c+';width:44px;height:44px;border-radius:12px"></button>').join("")
