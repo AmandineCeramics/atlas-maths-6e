@@ -2060,7 +2060,8 @@ EXOS_CE2.push(
 
 /* ================== ÉTAT MULTI-PROFILS & SAUVEGARDE ================== */
 const CLE="atlas6e_v2",CLE_V1="atlas6e_v1";
-const PROFIL_DEFAUT=()=>({nom:"",genre:"f",cheveux:0,acc:"aucun",parcours:"6e",xp:0,
+const PROFIL_DEFAUT=()=>({nom:"",genre:"f",cheveux:0,peau:0,coiffure:"longue",acc:"aucun",
+ tenue:"violet",compagnon:"aucun",objetsVus:[],parcours:"6e",xp:0,
  etoiles:{},vus:{},badges:[],serie:{last:"",count:0,record:0},defisReussis:0,defiFait:""});
 let S={profils:{},actif:null,muet:false};
 try{
@@ -2151,39 +2152,127 @@ function boucleConf(){
   animConf=parts.length?requestAnimationFrame(boucleConf):null;
 }
 
-/* ================== AVATAR & MASCOTTE ================== */
-const COUL_CHEVEUX=["#6b4226","#2d3436","#f0c060","#c0392b","#8e6cf0"];
-const ACCESSOIRES=[
- {id:"aucun",em:"🙂",nom:"Naturel",lvl:1},
- {id:"bandana",em:"🧢",nom:"Bandana",lvl:2},
- {id:"lunettes",em:"⭐",nom:"Lunettes étoile",lvl:3},
- {id:"chapeau",em:"🤠",nom:"Chapeau d'aventure",lvl:5},
- {id:"couronne",em:"👑",nom:"Couronne",lvl:8}
+/* ================== AVATAR, VESTIAIRE & MASCOTTE ================== */
+const COUL_CHEVEUX=["#6b4226","#2d3436","#f0c060","#c0392b","#8e6cf0","#4a90d9","#e84393"];
+const PEAUX=["#ffdcb8","#f1c27d","#c68642","#8d5524"];
+const COIFFURES=[
+ {id:"longue",nom:"Longue"},{id:"courte",nom:"Courte"},{id:"tresses",nom:"Tresses"},
+ {id:"chignon",nom:"Chignon"},{id:"herisson",nom:"Hérisson"}
 ];
+/* conditions de déblocage : t = niveau | etoiles | serie | defis | exos | mondes | complet */
+const TENUES=[
+ {id:"violet",nom:"Violette",c:"#6C5CE7"},
+ {id:"menthe",nom:"Menthe",c:"#00b894",cond:{t:"etoiles",v:10}},
+ {id:"corail",nom:"Corail",c:"#e84393",cond:{t:"etoiles",v:25}},
+ {id:"ciel",nom:"Ciel",c:"#0984e3",cond:{t:"serie",v:3}},
+ {id:"nuit",nom:"Nuit",c:"#2D3436",cond:{t:"niveau",v:6}},
+ {id:"or",nom:"Dorée",c:"#e6a93c",cond:{t:"etoiles",v:50}},
+ {id:"arc",nom:"Arc-en-ciel",c:"arc",cond:{t:"etoiles",v:100}}
+];
+const CHAPEAUX=[
+ {id:"aucun",em:"🙂",nom:"Naturel"},
+ {id:"bandana",em:"🧢",nom:"Bandana",cond:{t:"niveau",v:2}},
+ {id:"lunettes",em:"⭐",nom:"Lunettes étoile",cond:{t:"niveau",v:3}},
+ {id:"fleur",em:"🌸",nom:"Fleur",cond:{t:"serie",v:3}},
+ {id:"chapeau",em:"🤠",nom:"Chapeau d'aventure",cond:{t:"niveau",v:5}},
+ {id:"casque",em:"⛑️",nom:"Casque d'alpiniste",cond:{t:"defis",v:3}},
+ {id:"couronne",em:"👑",nom:"Couronne",cond:{t:"niveau",v:8}},
+ {id:"aureole",em:"✨",nom:"Auréole d'étoiles",cond:{t:"complet",v:1}}
+];
+const COMPAGNONS=[
+ {id:"aucun",em:"∅",nom:"Aucun"},
+ {id:"poussin",em:"🐤",nom:"Poussin",cond:{t:"exos",v:5}},
+ {id:"chat",em:"🐱",nom:"Chaton",cond:{t:"etoiles",v:20}},
+ {id:"hibou",em:"🦉",nom:"Bébé chouette",cond:{t:"exos",v:15}},
+ {id:"renard",em:"🦊",nom:"Renardeau",cond:{t:"mondes",v:1}},
+ {id:"tortue",em:"🐢",nom:"Tortue futée",cond:{t:"defis",v:5}},
+ {id:"dragon",em:"🐉",nom:"Dragonneau",cond:{t:"mondes",v:3}},
+ {id:"licorne",em:"🦄",nom:"Licorne",cond:{t:"serie",v:7}}
+];
+function exosReussis(p){return Object.values(p.etoiles).filter(v=>v>0).length;}
+function condOK(p,cond){
+  if(!cond)return true;
+  const pk=PARCOURS[p.parcours];
+  switch(cond.t){
+    case"niveau":return niveau(p.xp)>=cond.v;
+    case"etoiles":return totalEtoiles(p)>=cond.v;
+    case"serie":return p.serie.record>=cond.v;
+    case"defis":return (p.defisReussis||0)>=cond.v;
+    case"exos":return exosReussis(p)>=cond.v;
+    case"mondes":return pk.mondes.filter(m=>pk.exos.filter(e=>e.w===m.id).every(e=>(p.etoiles[e.id]||0)>0)).length>=cond.v;
+    case"complet":return pk.exos.every(e=>(p.etoiles[e.id]||0)>0);
+  }
+  return false;
+}
+function condTxt(cond){
+  if(!cond)return"";
+  switch(cond.t){
+    case"niveau":return"Niveau "+cond.v;
+    case"etoiles":return cond.v+" ⭐";
+    case"serie":return cond.v+" jours 🔥";
+    case"defis":return cond.v+" défis 🎯";
+    case"exos":return cond.v+" exercices ✅";
+    case"mondes":return cond.v+(cond.v>1?" mondes finis":" monde fini");
+    case"complet":return"Tout le parcours 🗺️";
+  }
+  return"";
+}
+/* catalogue à plat : cle = "t:xx" (tenue) · "c:xx" (chapeau) · "p:xx" (compagnon) */
+function catalogueObjets(){
+  return TENUES.map(o=>({cle:"t:"+o.id,em:"👕",nom:"Tenue "+o.nom.toLowerCase(),cond:o.cond}))
+   .concat(CHAPEAUX.map(o=>({cle:"c:"+o.id,em:o.em,nom:o.nom,cond:o.cond})))
+   .concat(COMPAGNONS.map(o=>({cle:"p:"+o.id,em:o.em,nom:o.nom,cond:o.cond})));
+}
+function objetsDebloques(p){return catalogueObjets().filter(o=>o.cond&&condOK(p,o.cond));}
+function normaliseProfils(){
+  for(const p of Object.values(S.profils)){
+    if(!p.coiffure)p.coiffure=(p.genre==="m"?"courte":"longue");
+    if(p.peau===undefined)p.peau=0;
+    if(!p.tenue)p.tenue="violet";
+    if(!p.compagnon)p.compagnon="aucun";
+    if(!p.objetsVus)p.objetsVus=objetsDebloques(p).map(o=>o.cle);
+  }
+}
+let avCompteur=0;
 function avatarSVG(taille,profil){
-  const p=profil||P()||{cheveux:0,acc:"aucun",genre:"f"};
-  const hc=COUL_CHEVEUX[p.cheveux%COUL_CHEVEUX.length];
+  const p=profil||P()||{cheveux:0,acc:"aucun",genre:"f",coiffure:"longue",peau:0,tenue:"violet",compagnon:"aucun"};
+  const hc=COUL_CHEVEUX[(p.cheveux||0)%COUL_CHEVEUX.length];
+  const peau=PEAUX[(p.peau||0)%PEAUX.length];
+  const tenue=TENUES.find(t=>t.id===(p.tenue||"violet"))||TENUES[0];
+  const gid="av"+(++avCompteur);
+  const torse=tenue.c==="arc"
+   ?'<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e84393"/><stop offset="0.5" stop-color="#6C5CE7"/><stop offset="1" stop-color="#00b894"/></linearGradient></defs><path d="M22 108 Q22 78 50 78 Q78 78 78 108 Z" fill="url(#'+gid+')"/>'
+   :'<path d="M22 108 Q22 78 50 78 Q78 78 78 108 Z" fill="'+tenue.c+'"/>';
+  const CAP='<path d="M24 52 Q22 24 50 24 Q78 24 76 52 Q76 34 62 32 Q70 44 60 38 Q50 32 42 38 Q34 44 38 32 Q24 34 24 52 Z" fill="'+hc+'"/>';
+  let cheveux=CAP;
+  const coif=p.coiffure||(p.genre==="m"?"courte":"longue");
+  if(coif==="longue")cheveux=CAP+'<path d="M24 50 Q18 66 26 76 Q30 64 28 52 Z" fill="'+hc+'"/><path d="M76 50 Q82 66 74 76 Q70 64 72 52 Z" fill="'+hc+'"/>';
+  if(coif==="tresses")cheveux=CAP
+   +'<circle cx="27" cy="58" r="5.5" fill="'+hc+'"/><circle cx="25.5" cy="68" r="5" fill="'+hc+'"/><circle cx="24.5" cy="77" r="4.5" fill="'+hc+'"/><circle cx="24" cy="84" r="3" fill="#FD79A8"/>'
+   +'<circle cx="73" cy="58" r="5.5" fill="'+hc+'"/><circle cx="74.5" cy="68" r="5" fill="'+hc+'"/><circle cx="75.5" cy="77" r="4.5" fill="'+hc+'"/><circle cx="76" cy="84" r="3" fill="#FD79A8"/>';
+  if(coif==="chignon")cheveux='<circle cx="50" cy="19" r="10" fill="'+hc+'"/><circle cx="50" cy="19" r="4" fill="rgba(0,0,0,.14)"/>'+CAP;
+  if(coif==="herisson")cheveux='<path d="M28 42 L22 26 L34 32 L38 16 L46 27 L50 12 L54 27 L62 16 L66 32 L78 26 L72 42 Q50 28 28 42 Z" fill="'+hc+'"/>'+CAP;
   const acc=p.acc||"aucun";
   let extra="";
   if(acc==="bandana")extra='<path d="M28 34 Q50 22 72 34 L72 42 Q50 32 28 42 Z" fill="#FF7675"/><circle cx="73" cy="38" r="4" fill="#FF7675"/>';
   if(acc==="lunettes")extra='<g><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" transform="scale(0.62) translate(22,32)"/><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" transform="scale(0.62) translate(70,32)"/></g>';
+  if(acc==="fleur")extra='<g><circle cx="66" cy="26" r="4.5" fill="#FD79A8"/><circle cx="73" cy="29" r="4.5" fill="#FD79A8"/><circle cx="70" cy="36" r="4.5" fill="#FD79A8"/><circle cx="63" cy="33" r="4.5" fill="#FD79A8"/><circle cx="68" cy="31" r="3.5" fill="#FDCB6E"/></g>';
   if(acc==="chapeau")extra='<ellipse cx="50" cy="32" rx="32" ry="8" fill="#b3813f"/><path d="M32 32 Q32 12 50 12 Q68 12 68 32 Q50 26 32 32 Z" fill="#c99552"/><rect x="33" y="24" width="34" height="5" rx="2.5" fill="#8a5a28"/>';
+  if(acc==="casque")extra='<path d="M27 40 Q27 13 50 13 Q73 13 73 40 L73 44 L27 44 Z" fill="#e17055"/><rect x="45" y="13" width="10" height="31" fill="#fab1a0"/><rect x="25" y="40" width="50" height="6" rx="3" fill="#d63031"/>';
   if(acc==="couronne")extra='<path d="M34 30 L38 18 L46 27 L50 15 L54 27 L62 18 L66 30 Q50 24 34 30 Z" fill="#FDCB6E" stroke="#e6a93c" stroke-width="1.5"/>';
-  // cheveux : longs (f) ou courts (m)
-  const cheveux=p.genre==="m"
-   ?'<path d="M24 52 Q22 24 50 24 Q78 24 76 52 Q76 34 62 32 Q70 44 60 38 Q50 32 42 38 Q34 44 38 32 Q24 34 24 52 Z" fill="'+hc+'"/>'
-   :'<path d="M24 52 Q22 24 50 24 Q78 24 76 52 Q76 34 62 32 Q70 44 60 38 Q50 32 42 38 Q34 44 38 32 Q24 34 24 52 Z" fill="'+hc+'"/>'
-    +'<path d="M24 50 Q18 66 26 76 Q30 64 28 52 Z" fill="'+hc+'"/><path d="M76 50 Q82 66 74 76 Q70 64 72 52 Z" fill="'+hc+'"/>';
+  if(acc==="aureole")extra='<ellipse cx="50" cy="11" rx="19" ry="5.5" fill="none" stroke="#FDCB6E" stroke-width="4"/><text x="24" y="14" font-size="9">✦</text><text x="70" y="12" font-size="9">✦</text>';
+  const comp=COMPAGNONS.find(c=>c.id===(p.compagnon||"aucun"));
+  const compagnon=(comp&&comp.id!=="aucun"&&taille>=48)?'<text x="70" y="107" font-size="27">'+comp.em+'</text>':"";
   return '<svg viewBox="0 0 100 110" width="'+taille+'" height="'+(taille*1.1)+'">'
-   +'<path d="M22 108 Q22 78 50 78 Q78 78 78 108 Z" fill="#6C5CE7"/>'
+   +torse
    +'<path d="M40 82 L50 92 L60 82 Q55 78 50 78 Q45 78 40 82Z" fill="#FFEAA7"/>'
-   +'<circle cx="50" cy="52" r="26" fill="#ffdcb8"/>'
+   +'<circle cx="50" cy="52" r="26" fill="'+peau+'"/>'
    +cheveux
    +'<circle cx="41" cy="52" r="3.2" fill="#2D3436"/><circle cx="59" cy="52" r="3.2" fill="#2D3436"/>'
    +'<circle cx="42.2" cy="50.8" r="1" fill="#fff"/><circle cx="60.2" cy="50.8" r="1" fill="#fff"/>'
    +'<path d="M43 63 Q50 69 57 63" stroke="#2D3436" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
    +'<circle cx="34" cy="59" r="4" fill="#FD79A8" opacity="0.4"/><circle cx="66" cy="59" r="4" fill="#FD79A8" opacity="0.4"/>'
-   +extra+'</svg>';
+   +extra+compagnon+'</svg>';
 }
 const CHOUETTE='<svg class="plume-svg" viewBox="0 0 80 80" width="54" height="54"><ellipse cx="40" cy="48" rx="24" ry="26" fill="#A29BFE"/><ellipse cx="40" cy="54" rx="15" ry="17" fill="#F4F1FB"/><circle cx="31" cy="38" r="10" fill="#fff"/><circle cx="49" cy="38" r="10" fill="#fff"/><circle cx="31" cy="38" r="4.5" fill="#2D3436"/><circle cx="49" cy="38" r="4.5" fill="#2D3436"/><circle cx="32.5" cy="36.5" r="1.5" fill="#fff"/><circle cx="50.5" cy="36.5" r="1.5" fill="#fff"/><path d="M36 46 L40 52 L44 46 Z" fill="#FDCB6E"/><path d="M22 26 L30 32 M58 26 L50 32" stroke="#A29BFE" stroke-width="5" stroke-linecap="round"/><path d="M18 50 Q10 58 16 66 M62 50 Q70 58 64 66" stroke="#8e86f5" stroke-width="6" fill="none" stroke-linecap="round"/></svg>';
 
@@ -2263,7 +2352,7 @@ function rProfils(){
 /* ================== ÉCRAN : CRÉATION DE PROFIL ================== */
 let creation=null;
 function rNouveauProfil(){
-  creation={genre:"f",cheveux:0,parcours:null};
+  creation={genre:"f",cheveux:0,peau:0,coiffure:"longue",coifChoisie:false,parcours:null};
   const retour=Object.keys(S.profils).length>0;
   app.innerHTML='<div class="ecran actif"><div class="centreur" style="justify-content:flex-start;padding-top:calc(18px + var(--safe-top))">'
    +(retour?'<button class="btn-rond" data-act="retour-profils" style="align-self:flex-start">←</button>':'')
@@ -2273,11 +2362,19 @@ function rNouveauProfil(){
    +'<div class="rang-genre">'
    +'<button class="opt-genre sel" data-genre="f">👧 Exploratrice</button>'
    +'<button class="opt-genre" data-genre="m">👦 Explorateur</button></div>'
+   +'<p class="sous-titre" style="margin:-6px 0 -10px">Ta peau :</p>'
+   +'<div class="rang-choix" id="rangPeau">'
+   +PEAUX.map((c,i)=>'<button class="choix-pastille'+(i===0?" sel":"")+'" data-peau="'+i+'" style="background:'+c+'"></button>').join("")
+   +'</div>'
    +'<p class="sous-titre" style="margin:-6px 0 -10px">Ta couleur de cheveux :</p>'
    +'<div class="rang-choix" id="rangCheveux">'
    +COUL_CHEVEUX.map((c,i)=>'<button class="choix-pastille'+(i===0?" sel":"")+'" data-i="'+i+'" style="background:'+c+'"></button>').join("")
    +'</div>'
-   +'<div id="apercuAvatar">'+avatarSVG(80,{genre:"f",cheveux:0,acc:"aucun"})+'</div>'
+   +'<p class="sous-titre" style="margin:-6px 0 -10px">Ta coiffure :</p>'
+   +'<div class="rang-choix" id="rangCoif">'
+   +COIFFURES.map(c=>'<button class="acc-btn'+(c.id==="longue"?" sel":"")+'" data-coif="'+c.id+'" style="font-size:13px;font-weight:800">'+c.nom+'</button>').join("")
+   +'</div>'
+   +'<div id="apercuAvatar">'+avatarSVG(80,{genre:"f",cheveux:0,peau:0,coiffure:"longue",acc:"aucun"})+'</div>'
    +'<p class="sous-titre" style="margin:-6px 0 -10px">Ton aventure :</p>'
    +'<div class="rang-parcours">'
    +Object.entries(PARCOURS).map(([k,pk])=>'<button class="opt-parcours" data-parcours="'+k+'">'
@@ -2286,14 +2383,21 @@ function rNouveauProfil(){
    +'</div>'
    +'<button class="btn large" id="btnDepart" style="max-width:440px">C\'est parti ! 🧭</button>'
    +'<div style="height:10px"></div></div></div>';
-  const maj=()=>{document.getElementById("apercuAvatar").innerHTML=avatarSVG(80,{genre:creation.genre,cheveux:creation.cheveux,acc:"aucun"});};
+  const maj=()=>{document.getElementById("apercuAvatar").innerHTML=avatarSVG(80,{genre:creation.genre,cheveux:creation.cheveux,peau:creation.peau,coiffure:creation.coiffure,acc:"aucun"});};
+  const majCoif=()=>{app.querySelectorAll("[data-coif]").forEach(x=>x.classList.toggle("sel",x.dataset.coif===creation.coiffure));};
   app.addEventListener("click",e=>{
     const bg=e.target.closest("[data-genre]");
     if(bg){creation.genre=bg.dataset.genre;son("clic");
-      app.querySelectorAll("[data-genre]").forEach(x=>x.classList.toggle("sel",x===bg));maj();}
+      if(!creation.coifChoisie)creation.coiffure=(creation.genre==="m"?"courte":"longue");
+      app.querySelectorAll("[data-genre]").forEach(x=>x.classList.toggle("sel",x===bg));majCoif();maj();}
+    const bpe=e.target.closest("[data-peau]");
+    if(bpe){creation.peau=+bpe.dataset.peau;son("clic");
+      document.querySelectorAll("#rangPeau .choix-pastille").forEach(x=>x.classList.toggle("sel",x===bpe));maj();}
     const bc=e.target.closest("[data-i]");
     if(bc){creation.cheveux=+bc.dataset.i;son("clic");
-      app.querySelectorAll(".choix-pastille").forEach(x=>x.classList.toggle("sel",x===bc));maj();}
+      document.querySelectorAll("#rangCheveux .choix-pastille").forEach(x=>x.classList.toggle("sel",x===bc));maj();}
+    const bco=e.target.closest("[data-coif]");
+    if(bco){creation.coiffure=bco.dataset.coif;creation.coifChoisie=true;son("clic");majCoif();maj();}
     const bp=e.target.closest("[data-parcours]");
     if(bp){creation.parcours=bp.dataset.parcours;son("clic");
       app.querySelectorAll("[data-parcours]").forEach(x=>x.classList.toggle("sel",x===bp));}
@@ -2307,6 +2411,7 @@ function rNouveauProfil(){
       setTimeout(()=>document.querySelector(".rang-parcours").style.animation="",500);return;}
     const p=PROFIL_DEFAUT();
     p.nom=nom;p.genre=creation.genre;p.cheveux=creation.cheveux;p.parcours=creation.parcours;
+    p.peau=creation.peau;p.coiffure=creation.coiffure;p.tenue="violet";p.compagnon="aucun";p.objetsVus=[];
     p.id="p"+Date.now();
     S.profils[p.id]=p;S.actif=p.id;sauve();
     son("ok");confettis(60);rCarte();
@@ -2563,8 +2668,11 @@ function reussite(){
   p.xp+=xp;majSerie();
   const nouveaux=verifBadges();
   const nivApres=niveau(p.xp);
+  // objets du vestiaire fraîchement débloqués
+  const objetsNouveaux=objetsDebloques(p).filter(o=>!p.objetsVus.includes(o.cle));
+  objetsNouveaux.forEach(o=>p.objetsVus.push(o.cle));
   sauve();
-  if(nouveaux.length)setTimeout(()=>son("badge"),650);
+  if(nouveaux.length||objetsNouveaux.length)setTimeout(()=>son("badge"),650);
   montreSolution(false);
   const MSGS=["Magnifique raisonnement !","Bravo, quel"+g("le exploratrice"," explorateur")+" !","Excellent ! La carte se redessine…","Tu as l'étoffe d'un"+g("e championne"," champion")+" !","Superbe ! Plume est impressionnée."];
   voile.innerHTML='<div class="modale">'
@@ -2574,6 +2682,7 @@ function reussite(){
    +(et<3&&deja<3?'<p class="msg">'+(indiceUtilise?"L'indice t'a coûté une étoile — la prochaine fois, tente d'abord tout seul"+g("e","")+" !":"Rejoue cet exercice un autre jour pour viser les 3 étoiles !")+'</p>':"")
    +'<div class="gain-xp">+'+xp+' XP'+(bonusDefi?" (défi ×2 ! 🎯)":"")+(nivApres>nivAvant?" · Niveau "+nivApres+" ! 🎖️":"")+'</div>'
    +nouveaux.map(b=>'<div class="nouveau-badge"><span class="em">'+b.em+'</span>Nouveau badge : <b>'+b.nom+'</b></div>').join("")
+   +objetsNouveaux.map(o=>'<div class="nouveau-badge" style="background:#EFEBFF"><span class="em">'+o.em+'</span>🎁 Débloqué : <b>'+o.nom+'</b> — file voir ton vestiaire !</div>').join("")
    +'<div style="display:flex;gap:10px;margin-top:6px">'
    +'<button class="btn doux" data-act="revoir" style="flex:1">Relire la solution</button>'
    +'<button class="btn vert" data-act="suivant" style="flex:1">Continuer →</button></div></div>';
@@ -2604,11 +2713,31 @@ function rProfil(){
    +'<div class="stat-carte"><b>✅ '+reussis+"/"+nb+'</b><small>exercices</small></div>'
    +'<div class="stat-carte"><b>🔥 '+p.serie.count+'</b><small>jours d\'affilée</small></div>'
    +'<div class="stat-carte"><b>🎯 '+(p.defisReussis||0)+'</b><small>défis du jour</small></div></div>'
-   +'<div class="carte" style="margin-bottom:16px"><b>Ma tenue</b> <small style="color:var(--gris)">(de nouveaux accessoires se débloquent en gagnant des niveaux !)</small>'
+   +'<div class="carte" style="margin-bottom:16px"><b>🧳 Mon vestiaire</b> <small style="color:var(--gris)">('+objetsDebloques(p).length+"/"+catalogueObjets().filter(o=>o.cond).length+' objets débloqués — gagne étoiles, défis et séries pour ouvrir le reste !)</small>'
+   +'<div style="margin-top:10px"><small style="font-weight:800;color:var(--gris)">MA TÊTE</small>'
    +'<div class="rang-accessoires">'
-   +ACCESSOIRES.map(a=>{const ok=n>=a.lvl;
-     return '<button class="acc-btn'+(p.acc===a.id?" sel":"")+(ok?"":" verrou")+'" data-acc="'+a.id+'" '+(ok?"":"disabled")+'>'+a.em+'<small>'+(ok?a.nom:"Niv. "+a.lvl)+'</small></button>';}).join("")
+   +PEAUX.map((c,i)=>'<button class="choix-pastille'+(p.peau===i?" sel":"")+'" data-vest="peau:'+i+'" style="background:'+c+';width:44px;height:44px"></button>').join("")
+   +COUL_CHEVEUX.map((c,i)=>'<button class="choix-pastille'+(p.cheveux===i?" sel":"")+'" data-vest="cheveux:'+i+'" style="background:'+c+';width:44px;height:44px;border-radius:12px"></button>').join("")
+   +'</div><div class="rang-accessoires">'
+   +COIFFURES.map(c=>'<button class="acc-btn'+(p.coiffure===c.id?" sel":"")+'" data-vest="coiffure:'+c.id+'" style="font-size:13px;font-weight:800">'+c.nom+'</button>').join("")
    +'</div></div>'
+   +'<div style="margin-top:14px"><small style="font-weight:800;color:var(--gris)">CHAPEAUX &amp; ACCESSOIRES</small>'
+   +'<div class="rang-accessoires">'
+   +CHAPEAUX.map(a=>{const ok=condOK(p,a.cond);
+     return '<button class="acc-btn'+(p.acc===a.id?" sel":"")+(ok?"":" verrou")+'" data-vest="acc:'+a.id+'" '+(ok?"":"disabled")+'>'+a.em+'<small>'+(ok?a.nom:"🔒 "+condTxt(a.cond))+'</small></button>';}).join("")
+   +'</div></div>'
+   +'<div style="margin-top:14px"><small style="font-weight:800;color:var(--gris)">MA TENUE</small>'
+   +'<div class="rang-accessoires">'
+   +TENUES.map(t=>{const ok=condOK(p,t.cond);
+     const fond=t.c==="arc"?"linear-gradient(135deg,#e84393,#6C5CE7,#00b894)":t.c;
+     return '<button class="acc-btn'+(p.tenue===t.id?" sel":"")+(ok?"":" verrou")+'" data-vest="tenue:'+t.id+'" '+(ok?"":"disabled")+'><span style="display:block;width:26px;height:26px;border-radius:8px;margin:0 auto;background:'+fond+'"></span><small>'+(ok?t.nom:"🔒 "+condTxt(t.cond))+'</small></button>';}).join("")
+   +'</div></div>'
+   +'<div style="margin-top:14px"><small style="font-weight:800;color:var(--gris)">MON COMPAGNON</small>'
+   +'<div class="rang-accessoires">'
+   +COMPAGNONS.map(c=>{const ok=condOK(p,c.cond);
+     return '<button class="acc-btn'+(p.compagnon===c.id?" sel":"")+(ok?"":" verrou")+'" data-vest="compagnon:'+c.id+'" '+(ok?"":"disabled")+'>'+c.em+'<small>'+(ok?c.nom:"🔒 "+condTxt(c.cond))+'</small></button>';}).join("")
+   +'</div></div>'
+   +'</div>'
    +'<div class="carte"><b>Mes badges ('+p.badges.length+'/'+badges.length+')</b>'
    +'<div class="grille-badges" style="margin-top:12px">'
    +badges.map(b=>'<div class="badge'+(p.badges.includes(b.id)?"":" gris")+'"><span class="em">'+b.em+'</span><b>'+b.nom+'</b><small>'+b.desc+'</small></div>').join("")
@@ -2616,8 +2745,12 @@ function rProfil(){
    +'<button class="btn large" data-act="vers-profils" style="margin-top:18px">👥 Changer d\'explorateur</button>'
    +'<button class="btn doux large" data-act="reset" style="margin-top:10px;color:var(--corail)">Recommencer MON aventure à zéro</button>'
    +'</div></div></div>';
-  app.querySelectorAll("[data-acc]").forEach(b=>b.addEventListener("click",()=>{
-    P().acc=b.dataset.acc;sauve();son("clic");rProfil();
+  app.querySelectorAll("[data-vest]").forEach(b=>b.addEventListener("click",()=>{
+    if(b.disabled)return;
+    const [champ,val]=b.dataset.vest.split(":");
+    const pp=P();
+    if(champ==="peau"||champ==="cheveux")pp[champ]=+val;else pp[champ]=val;
+    sauve();son("clic");rProfil();
   }));
 }
 
@@ -2650,7 +2783,8 @@ document.addEventListener("click",e=>{
       const id=S.actif,ancien=S.profils[id];
       const neuf=PROFIL_DEFAUT();
       neuf.id=id;neuf.nom=ancien.nom;neuf.genre=ancien.genre;
-      neuf.cheveux=ancien.cheveux;neuf.parcours=ancien.parcours;
+      neuf.cheveux=ancien.cheveux;neuf.peau=ancien.peau;neuf.coiffure=ancien.coiffure;
+      neuf.parcours=ancien.parcours;
       S.profils[id]=neuf;sauve();rCarte();
     }
     else{el.dataset.confirme="1";el.textContent="Sûr"+g("e","")+" ? Touche encore une fois pour tout effacer !";}
@@ -2664,6 +2798,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 
 /* ================== LANCEMENT ================== */
 (function(){
+  normaliseProfils();sauve();
   const ids=Object.keys(S.profils);
   if(!ids.length)rNouveauProfil();
   else rProfils();
