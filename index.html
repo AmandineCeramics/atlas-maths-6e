@@ -321,6 +321,21 @@ header{
 .choix-btn.gros .lettre{display:none}
 .question.grosse{font-size:24px;line-height:1.6;text-align:center}
 
+/* ===== carte d'Atlas ===== */
+.atlas-carte{padding:12px 12px 10px;margin:0 auto 16px;max-width:640px}
+.atlas-carte svg{width:100%;height:auto;display:block}
+.ile-neuve{transform-box:fill-box;transform-origin:center;animation:ilePop .9s ease-in-out 5}
+@keyframes ilePop{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.legende-atlas{text-align:center;font-size:13px;font-weight:800;color:var(--gris);margin-top:6px}
+.nouveau-monde{
+  background:linear-gradient(135deg,#FFF3D6,#FFE3B8);border:2px solid var(--or);
+  border-radius:18px;padding:14px;margin-bottom:14px;font-size:15px;font-weight:700;
+  animation:pop .5s cubic-bezier(.34,1.56,.64,1);
+}
+.nouveau-monde .em{font-size:34px;display:block;margin-bottom:4px}
+.carte-monde.neuf{animation:cartePulse 1.2s ease-in-out 4}
+@keyframes cartePulse{0%,100%{box-shadow:var(--ombre)}50%{box-shadow:0 0 0 6px rgba(253,203,110,.7),var(--ombre-h)}}
+
 /* ===== confettis & anims ===== */
 #confettis{position:fixed;inset:0;pointer-events:none;z-index:80}
 @keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
@@ -2418,14 +2433,56 @@ function rNouveauProfil(){
   });
 }
 
+/* ================== CARTE D'ATLAS (SVG dessinée par la progression) ================== */
+function carteSVG(mondeNeuf){
+  const p=P(),ms=pc().mondes;
+  const POS={
+    3:[[70,182],[200,168],[320,88]],
+    4:[[62,182],[175,196],[292,155],[330,75]],
+    6:[[58,185],[148,202],[238,178],[318,126],[228,80],[112,54]]
+  }[ms.length];
+  let chemin="M"+POS[0][0]+" "+POS[0][1];
+  for(let i=1;i<POS.length;i++){
+    const x0=POS[i-1][0],y0=POS[i-1][1],x1=POS[i][0],y1=POS[i][1];
+    chemin+=" Q"+((x0+x1)/2)+" "+(((y0+y1)/2)-20)+" "+x1+" "+y1;
+  }
+  const total=pc().exos.length,pct=Math.round(100*exosReussis(p)/total);
+  const BLOB='<path d="M-34 2 C-40 -16 -22 -29 0 -26 C22 -30 40 -16 34 4 C40 18 20 29 0 26 C-20 30 -40 18 -34 2 Z"';
+  let iles="";
+  ms.forEach((m,i)=>{
+    const x=POS[i][0],y=POS[i][1],ouvert=mondeOuvert(m.id),fini=mondeFini(p,m.id);
+    const f=faits(p,m.id),n=exosDuMonde(m.id).length;
+    if(!ouvert){
+      iles+='<g transform="translate('+x+' '+y+')" opacity="0.7">'
+       +BLOB+' fill="#d6d2c9" stroke="#b8b3a6" stroke-width="2" stroke-dasharray="5 4"/>'
+       +'<text y="8" text-anchor="middle" font-size="19">🌫️</text></g>';
+    }else{
+      iles+='<g data-act="monde" data-w="'+m.id+'" transform="translate('+x+' '+y+')" style="cursor:pointer">'
+       +'<g'+(m.id===mondeNeuf?' class="ile-neuve"':"")+'>'
+       +BLOB+' fill="'+m.cnum+'" fill-opacity="'+(fini?0.95:(0.25+0.55*f/n).toFixed(2))+'" stroke="'+m.cnum+'" stroke-width="3"/>'
+       +'<text y="5" text-anchor="middle" font-size="21">'+m.em+'</text>'
+       +'<text y="20" text-anchor="middle" font-size="9.5" font-weight="bold" fill="'+(fini?"#fff":"#2D3436")+'">'+f+"/"+n+'</text>'
+       +(fini?'<text x="24" y="-15" font-size="15">⭐</text>':"")
+       +'</g></g>';
+    }
+  });
+  return '<div class="carte atlas-carte"><svg viewBox="0 0 390 232">'
+   +'<rect x="4" y="4" width="382" height="224" rx="18" fill="#FBF3E6" stroke="#E6D5B8" stroke-width="3"/>'
+   +'<g opacity="0.5" transform="translate(352 30)"><path d="M0 -15 L4 0 L0 15 L-4 0 Z" fill="#C9A96B"/><path d="M-15 0 L0 -4 L15 0 L0 4 Z" fill="#E0CBA0"/><circle r="2.5" fill="#8a6f42"/></g>'
+   +'<path d="'+chemin+'" fill="none" stroke="#C9A96B" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round" opacity="0.8"/>'
+   +iles+'</svg>'
+   +'<div class="legende-atlas">🗺️ Atlas redessiné à '+pct+' % — chaque énigme réussie colorie un territoire !</div></div>';
+}
+
 /* ================== ÉCRAN : CARTE DES MONDES ================== */
-function rCarte(){
+function rCarte(mondeNeuf){
   const defi=defiDuJour();
   const defiFait=P().defiFait===dateJour();
   app.innerHTML='<div class="ecran actif">'+entete("Bonjour, "+echap(P().nom)+" !")
    +'<div class="defile">'
+   +carteSVG(mondeNeuf)
    +'<div class="bulle-plume" style="margin:0 auto 16px">'+CHOUETTE
-   +'<p><b>Plume :</b> « '+messagePlume()+' »</p></div>'
+   +'<p><b>Plume :</b> « '+(mondeNeuf?"Un nouveau territoire vient d'apparaître sur l'Atlas… "+pc().mondes[mondeNeuf-1].nom+" t'attend ! ✨":messagePlume())+' »</p></div>'
    +(defi?'<div class="bandeau-defi'+(defiFait?" fait":"")+'" data-act="defi" data-id="'+defi.id+'">'
      +'<span class="em">'+(defiFait?"✅":"🎯")+'</span><div style="flex:1"><b>Défi du jour '+(defiFait?"— réussi !":"(XP ×2 !)")+'</b>'
      +'<small>'+echap(defi.titre)+" · "+pc().mondes[defi.w-1].nom+'</small></div></div>':"")
@@ -2433,7 +2490,7 @@ function rCarte(){
    +pc().mondes.map(m=>{
      const ouvert=mondeOuvert(m.id),f=faits(P(),m.id),n=exosDuMonde(m.id).length,
        et=exosDuMonde(m.id).reduce((a,e)=>a+(P().etoiles[e.id]||0),0);
-     return '<div class="carte-monde'+(ouvert?"":" verrou")+'" style="background:'+m.coul+'" data-act="monde" data-w="'+m.id+'">'
+     return '<div class="carte-monde'+(ouvert?"":" verrou")+(m.id===mondeNeuf?" neuf":"")+'" style="background:'+m.coul+'" data-act="monde" data-w="'+m.id+'">'
       +'<span class="deco-monde">'+m.em+'</span>'
       +(ouvert?"":'<span class="cadenas">🔒</span>')
       +'<span class="em">'+m.em+'</span><div><h3>'+m.nom+'</h3><div class="desc">'+m.desc+'</div></div>'
@@ -2602,7 +2659,17 @@ function montreSolution(marqueVu){
    +EX.etapes.map((e,i)=>'<div class="etape-sol" style="animation-delay:'+(i*0.35)+'s"><span class="puce">'+(i+1)+'</span><span>'+e+'</span></div>').join("")
    +(marqueVu?'<button class="btn large" data-act="retour-apres-solution" style="margin-top:14px">J\'ai compris, je réessaierai ! 💪</button>':"")
    +'</div>';
-  if(marqueVu){P().vus[EX.id]=1;sauve();}
+  if(marqueVu){
+    const avant=mondesOuvertsIds();
+    P().vus[EX.id]=1;sauve();
+    const neuf=mondesOuvertsIds().find(id=>!avant.includes(id));
+    if(neuf){
+      mondeNeufEnAttente=neuf;
+      const m=pc().mondes[neuf-1];
+      zs.insertAdjacentHTML("afterbegin",'<div class="nouveau-monde"><span class="em">'+m.em+'</span>🗺️ NOUVEAU TERRITOIRE DÉCOUVERT : <b>'+m.nom+'</b> !</div>');
+      confettis(120);son("badge");
+    }
+  }
   zs.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function validerExo(){
@@ -2651,9 +2718,12 @@ function clicJustif(btn){
 }
 
 /* ----- réussite ----- */
+let mondeNeufEnAttente=0;
+function mondesOuvertsIds(){return pc().mondes.filter(m=>mondeOuvert(m.id)).map(m=>m.id);}
 function reussite(){
   resolu=1;son("ok");confettis(essais===0&&!indiceUtilise?130:80);
   const p=P();
+  const ouvertsAvant=mondesOuvertsIds();
   let et=3;if(indiceUtilise)et--;if(essais>0)et--;et=Math.max(1,et);
   const deja=p.etoiles[EX.id]||0;
   p.etoiles[EX.id]=Math.max(deja,et);
@@ -2671,13 +2741,19 @@ function reussite(){
   // objets du vestiaire fraîchement débloqués
   const objetsNouveaux=objetsDebloques(p).filter(o=>!p.objetsVus.includes(o.cle));
   objetsNouveaux.forEach(o=>p.objetsVus.push(o.cle));
+  // nouveau monde déverrouillé ?
+  const mondeNeufId=mondesOuvertsIds().find(id=>!ouvertsAvant.includes(id))||0;
+  mondeNeufEnAttente=mondeNeufId;
+  const mondeNeuf=mondeNeufId?pc().mondes[mondeNeufId-1]:null;
   sauve();
+  if(mondeNeuf){setTimeout(()=>confettis(160),400);setTimeout(()=>son("badge"),350);}
   if(nouveaux.length||objetsNouveaux.length)setTimeout(()=>son("badge"),650);
   montreSolution(false);
   const MSGS=["Magnifique raisonnement !","Bravo, quel"+g("le exploratrice"," explorateur")+" !","Excellent ! La carte se redessine…","Tu as l'étoffe d'un"+g("e championne"," champion")+" !","Superbe ! Plume est impressionnée."];
   voile.innerHTML='<div class="modale">'
    +'<div style="font-size:50px">'+(et===3?"🏆":"🎉")+'</div>'
    +'<h2>'+MSGS[Math.floor(Math.random()*MSGS.length)]+'</h2>'
+   +(mondeNeuf?'<div class="nouveau-monde"><span class="em">'+mondeNeuf.em+'</span>🗺️ NOUVEAU TERRITOIRE DÉCOUVERT !<br><b>'+mondeNeuf.nom+'</b><br><small style="font-weight:600;color:var(--gris)">Il apparaît sur ton Atlas…</small></div>':"")
    +'<div class="grosses-etoiles">'+[0,1,2].map(i=>'<span>'+(i<et?"⭐":"☆")+'</span>').join("")+'</div>'
    +(et<3&&deja<3?'<p class="msg">'+(indiceUtilise?"L'indice t'a coûté une étoile — la prochaine fois, tente d'abord tout seul"+g("e","")+" !":"Rejoue cet exercice un autre jour pour viser les 3 étoiles !")+'</p>':"")
    +'<div class="gain-xp">+'+xp+' XP'+(bonusDefi?" (défi ×2 ! 🎯)":"")+(nivApres>nivAvant?" · Niveau "+nivApres+" ! 🎖️":"")+'</div>'
@@ -2690,6 +2766,7 @@ function reussite(){
 }
 function exoSuivant(){
   voile.classList.remove("actif");
+  if(mondeNeufEnAttente){const w=mondeNeufEnAttente;mondeNeufEnAttente=0;rCarte(w);return;}
   if(estDefi){rCarte();return;}
   const liste=exosDuMonde(EX.w);
   const prochain=liste.find(e=>!(P().etoiles[e.id]>0)&&e.id!==EX.id);
@@ -2775,7 +2852,10 @@ document.addEventListener("click",e=>{
   else if(act==="indice")montreIndice();
   else if(act==="valider")validerExo();
   else if(act==="solution")montreSolution(true);
-  else if(act==="retour-apres-solution")rMonde(EX.w);
+  else if(act==="retour-apres-solution"){
+    if(mondeNeufEnAttente){const w=mondeNeufEnAttente;mondeNeufEnAttente=0;rCarte(w);}
+    else rMonde(EX.w);
+  }
   else if(act==="revoir"){voile.classList.remove("actif");}
   else if(act==="suivant")exoSuivant();
   else if(act==="reset"){
