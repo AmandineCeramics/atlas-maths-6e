@@ -844,6 +844,478 @@ const EXOS_6E=[
  etapes:["Recette : 250 × 2 = 500 €.","Bénéfice : 500 − 175 = 325 €.","Moitié pour le voyage : 325 ÷ 2 = 162,50 €. Il reste 162,50 € pour les classes.","162,50 ÷ 5 = 32,50 € par classe. Bravo, tu viens de gravir le Sommet des Champions ! 🏔️"]}
 ];
 
+/* ================== EXTENSION 6e : 12 exercices de plus par royaume ================== */
+EXOS_6E.push(
+/* ---- M1 · Archipel des Nombres (suite) ---- */
+{id:"m1e13",w:1,titre:"La cargaison du grand voilier",type:"qcm",
+ histoire:"Le grand voilier de l'Archipel transporte 302 caisses contenant chacune 9 noix de coco. Le capitaine veut une estimation rapide avant de vérifier ses registres.",
+ q:"Quel est l'ordre de grandeur du nombre de noix de coco ?",
+ choices:["Environ 270","Environ 2 700","Environ 27 000","Environ 320"],a:1,
+ indice:"302, c'est presque 300. Et 300 × 9 ?",
+ etapes:["302 est proche de 300.","300 × 9 = 2 700.","Le résultat exact est 2 718 : notre estimation était excellente !","L'ordre de grandeur sert à vérifier qu'on ne s'est pas trompé de « taille » de résultat."]},
+
+{id:"m1e14",w:1,titre:"Le marché aux poissons",type:"saisie",num:495,unit:"sardines",
+ histoire:"Au marché aux poissons, 45 caisses de 11 sardines chacune viennent d'arriver. La poissonnière calcule le total de tête, en souriant : « ×11, c'est mon astuce préférée ! »",
+ q:"Calcule astucieusement : 45 × 11 = ?",
+ indice:"11 = 10 + 1, donc 45 × 11 = 45 × 10 + 45.",
+ etapes:["45 × 11 = 45 × 10 + 45 × 1.","45 × 10 = 450.","450 + 45 = 495 sardines.","Multiplier par 11 : on multiplie par 10 et on ajoute le nombre une fois de plus."]},
+
+{id:"m1e15",w:1,titre:"Les deux bidons d'eau douce",type:"saisie",num:10,unit:"L",
+ histoire:"Pour la traversée, le mousse embarque deux bidons d'eau douce : l'un contient 7,25 litres, l'autre 2,75 litres. Le capitaine exige de connaître le total au litre près… de tête !",
+ q:"Combien de litres d'eau en tout ?",
+ indice:"Regarde les parties décimales : 0,25 + 0,75, ça tombe rond !",
+ etapes:["Parties décimales : 0,25 + 0,75 = 1.","Parties entières : 7 + 2 = 9, plus le 1 → 10.","7,25 + 2,75 = 10 litres pile.","Repérer les décimaux qui se complètent (0,25/0,75 · 0,4/0,6…) rend le calcul immédiat."]},
+
+{id:"m1e16",w:1,titre:"Les jumeaux du récif",type:"qcm",
+ histoire:"Trois poissons du récif portent des nombres sur leurs écailles : 5,08 — 5,8 — 5,080. Deux d'entre eux sont en réalité de vrais jumeaux : ils portent exactement le même nombre !",
+ q:"Quels sont les deux nombres égaux ?",
+ choices:["5,08 et 5,8","5,8 et 5,080","5,08 et 5,080","Ils sont tous différents"],a:2,
+ indice:"Ajouter un zéro tout à droite APRÈS la virgule ne change pas un nombre : 5,08 = 5,080 ?",
+ etapes:["5,080, c'est 5,08 avec un zéro inutile à la fin : même nombre !","5,8 = 5,80, c'est 80 centièmes — bien plus que les 8 centièmes de 5,08.","Les jumeaux sont 5,08 et 5,080.","Un zéro à la FIN de la partie décimale ne change rien ; au MILIEU, il change tout !"]},
+
+{id:"m1e17",w:1,titre:"Le plein du bateau-taxi",type:"saisie",num:36.5,unit:"L",
+ histoire:"Le réservoir du bateau-taxi contient 100 litres au maximum. La jauge indique qu'il reste 63,5 litres après la tournée des îles.",
+ q:"Combien de litres faut-il ajouter pour refaire le plein ?",
+ indice:"Complète : de 63,5 à 64, puis de 64 à 100.",
+ etapes:["De 63,5 à 64 : 0,5 litre.","De 64 à 100 : 36 litres.","0,5 + 36 = 36,5 litres à ajouter.","Vérification : 63,5 + 36,5 = 100 ✓"]},
+
+{id:"m1e18",w:1,titre:"La potion de la sorcière des mers",type:"vf",vfA:false,
+ histoire:"La sorcière des mers vend une potion « agrandissante » : « Multiplie n'importe quelle quantité par 0,5 et elle deviendra plus grande, c'est ma magie ! »",
+ q:"A-t-elle raison : multiplier par 0,5 rend-il un nombre plus grand ?",
+ justif:["Oui : multiplier rend toujours plus grand.","Non : multiplier par 0,5, c'est prendre la moitié — le résultat est plus petit !"],justifA:1,
+ indice:"Teste avec 10 : combien font 10 × 0,5 ?",
+ etapes:["10 × 0,5 = 5 : le résultat est plus PETIT que 10.","Multiplier par 0,5, c'est multiplier par 1/2, donc prendre la moitié.","Multiplier par un nombre plus petit que 1 diminue toujours la quantité.","La « magie » de la sorcière est une arnaque mathématique !"]},
+
+{id:"m1e19",w:1,titre:"Les coquillages du collectionneur",type:"saisie",num:300,unit:"coquillages",
+ histoire:"Le collectionneur de l'île range ses coquillages dans 12 coffrets de 25 coquillages chacun. Il aime calculer son trésor de tête, avec élégance.",
+ q:"Calcule astucieusement : 12 × 25 = ?",
+ indice:"4 × 25 = 100… et 12, c'est 3 × 4 !",
+ etapes:["12 = 3 × 4, donc 12 × 25 = 3 × (4 × 25).","4 × 25 = 100.","3 × 100 = 300 coquillages.","Chercher les paquets de 25 qui font 100 : une astuce en or."]},
+
+{id:"m1e20",w:1,titre:"Les œufs du marché flottant",type:"qcm",
+ histoire:"La fermière de l'île apporte 72 œufs au marché flottant. Elle les vend en boîtes de 6 œufs, et veut préparer juste le bon nombre de boîtes.",
+ q:"Combien de boîtes doit-elle préparer ?",
+ choices:["6 boîtes","12 boîtes","66 boîtes","432 boîtes"],a:1,
+ indice:"On cherche combien de fois 6 rentre dans 72 : c'est une division.",
+ etapes:["On cherche 72 ÷ 6.","72 = 60 + 12, donc 72 ÷ 6 = 10 + 2 = 12.","Il faut 12 boîtes.","Vérification : 12 × 6 = 72 ✓ La division répond à « combien de paquets ? »"]},
+
+{id:"m1e21",w:1,titre:"Le record de l'île",type:"saisie",num:742,
+ histoire:"Le jeu du festival : former le PLUS GRAND nombre possible avec trois cartes tirées au sort. Tu tires les cartes 4, 7 et 2 !",
+ q:"Quel est le plus grand nombre à trois chiffres possible avec 4, 7 et 2 ?",
+ indice:"Place le plus grand chiffre à la position qui vaut le plus cher : les centaines.",
+ etapes:["La position des centaines « pèse » le plus : on y met le 7.","Puis le 4 aux dizaines, et le 2 aux unités.","Le record : 742 !","Dans un nombre, la valeur d'un chiffre dépend de sa position — c'est toute la magie de notre écriture des nombres."]},
+
+{id:"m1e22",w:1,titre:"La technique du vieux comptable",type:"ordre",
+ histoire:"Le comptable du port doit calculer 99 × 6 pour payer les dockers. Il pose sa plume et sourit : « Pas besoin de poser l'opération ! » Remets sa méthode dans l'ordre.",
+ q:"Remets les étapes du calcul de 99 × 6 dans l'ordre :",
+ ordre:["Je remarque que 99 = 100 − 1.","Je calcule 100 × 6 = 600.","J'enlève les 6 de trop : 600 − 6 = 594.","Donc 99 × 6 = 594."],
+ indice:"Il remplace 99 par un nombre tout rond, puis corrige.",
+ etapes:["99 × 6 = (100 − 1) × 6 = 100 × 6 − 1 × 6.","600 − 6 = 594.","Cette astuce transforme un calcul pénible en calcul immédiat."]},
+
+{id:"m1e23",w:1,titre:"Les trousses de l'école de voile",type:"saisie",num:35,unit:"crayons",
+ histoire:"L'école de voile prépare 5 trousses identiques pour ses nouveaux élèves. Dans chaque trousse : 3 crayons bleus et 4 crayons rouges.",
+ q:"Combien de crayons faut-il en tout ?",
+ indice:"Compte d'abord les crayons d'UNE trousse, puis multiplie.",
+ etapes:["Une trousse : 3 + 4 = 7 crayons.","5 trousses : 5 × 7 = 35 crayons.","On peut aussi calculer 5 × 3 + 5 × 4 = 15 + 20 = 35 : les deux chemins mènent au même port !"]},
+
+{id:"m1e24",w:1,titre:"Le second nombre mystère du volcan",type:"saisie",num:9,
+ histoire:"La voix du volcan gronde à nouveau : « Tu es revenu(e), petit(e) maligne… Cette fois : je pense à un nombre, je le TRIPLE, j'enlève 7, et j'obtiens 20. »",
+ q:"Quel est le nombre mystère ?",
+ indice:"Remonte à l'envers : avant d'enlever 7, combien y avait-il ? Et avant de tripler ?",
+ etapes:["Avant d'enlever 7 : 20 + 7 = 27.","Avant de tripler : 27 ÷ 3 = 9.","Vérification : 9 × 3 = 27, puis 27 − 7 = 20 ✓","Le nombre mystère est 9. Remonter un programme de calcul à l'envers, c'est déjà de l'algèbre !"]},
+
+/* ---- M2 · Vallée des Partages (suite) ---- */
+{id:"m2e13",w:2,titre:"La pause du berger",type:"qcm",
+ histoire:"Le berger de la Vallée fait une pause de 20 minutes à l'ombre du grand chêne. Son chien le regarde, l'air de dire : « Ça fait quelle fraction d'une heure, ça ? »",
+ q:"20 minutes, c'est quelle fraction d'une heure ?",
+ choices:["1/2","1/3","1/4","1/20"],a:1,
+ indice:"Une heure = 60 minutes. Combien de fois 20 minutes rentrent dans 60 ?",
+ etapes:["1 heure = 60 minutes.","60 ÷ 20 = 3 : il y a trois « paquets » de 20 minutes dans une heure.","20 minutes = 1/3 d'heure.","1/4 d'heure = 15 min, 1/3 d'heure = 20 min, 1/2 heure = 30 min : le trio à connaître !"]},
+
+{id:"m2e14",w:2,titre:"Les graines du potager",type:"saisie",num:12,unit:"graines",
+ histoire:"La jardinière de la Vallée a un sachet de 30 graines de tournesol. Elle décide d'en planter les 2/5 aujourd'hui, avant la pluie.",
+ q:"Combien de graines plante-t-elle ? (Calcule 2/5 de 30.)",
+ indice:"Divise 30 en 5 parts, puis prends 2 parts.",
+ etapes:["1/5 de 30 = 30 ÷ 5 = 6.","2/5, c'est 2 fois plus : 2 × 6 = 12 graines.","« Je divise par le bas, je multiplie par le haut » — la méthode marche toujours !"]},
+
+{id:"m2e15",w:2,titre:"La tarte du philosophe",type:"vf",vfA:true,
+ histoire:"Le philosophe de la Vallée coupe sa tarte en 3 parts et les mange toutes les trois. Il déclare : « J'ai mangé 3/3 de tarte, c'est-à-dire… la tarte entière ! »",
+ q:"A-t-il raison : 3/3, est-ce bien un entier ?",
+ justif:["Oui : 3 parts sur 3 parts, c'est tout — 3/3 = 1 tarte entière.","Non : 3/3 c'est trois morceaux, donc moins qu'une tarte entière."],justifA:0,
+ indice:"S'il prend TOUTES les parts qu'il a coupées, que reste-t-il sur le plat ?",
+ etapes:["La tarte est coupée en 3 parts ; il mange les 3.","3 parts sur 3 = toute la tarte : 3/3 = 1.","De même 4/4 = 1, 8/8 = 1, 100/100 = 1.","Quand le haut égale le bas, la fraction vaut exactement 1 entier."]},
+
+{id:"m2e16",w:2,titre:"Le champ de lavande",type:"saisie",num:25,unit:"pieds",
+ histoire:"La Vallée compte un champ de 100 pieds de lavande. Un quart du champ doit être récolté aujourd'hui pour préparer les savons du marché.",
+ q:"Combien de pieds de lavande faut-il récolter ? (1/4 de 100.)",
+ indice:"Un quart, c'est diviser par 4.",
+ etapes:["1/4 de 100 = 100 ÷ 4 = 25.","Il faut récolter 25 pieds de lavande.","Retiens : 1/4 de 100 = 25 — c'est aussi pour ça que 25 % veut dire « un quart » !"]},
+
+{id:"m2e17",w:2,titre:"Le duel des pizzas",type:"qcm",
+ histoire:"Au concours de gourmandise, Lou mange les 2/3 d'une pizza et Sam les 3/4 d'une pizza identique. Le jury doit départager le plus gros mangeur !",
+ q:"Qui a mangé le plus de pizza ?",
+ choices:["Lou (2/3)","Sam (3/4)","Ils sont à égalité","Impossible à comparer"],a:1,
+ indice:"Regarde plutôt ce qu'il RESTE à chacun : 1/3 pour Lou, 1/4 pour Sam. Quel reste est le plus petit ?",
+ etapes:["Astuce : comparons les restes. Lou laisse 1/3, Sam laisse 1/4.","1/4 < 1/3 : Sam laisse moins… donc il a mangé plus !","En douzièmes : 2/3 = 8/12 et 3/4 = 9/12 → Sam gagne, confirmé.","Comparer les restes est souvent plus rapide que tout convertir."]},
+
+{id:"m2e18",w:2,titre:"La photo de classe",type:"saisie",acc:["4/10","2/5"],
+ histoire:"Sur la photo de la classe de la Vallée, il y a 10 élèves : 6 filles et le reste de garçons. Le photographe note les proportions dans son carnet.",
+ q:"Quelle fraction de la classe représentent les garçons ? (Réponds en fraction, par exemple 3/10.)",
+ indice:"Combien de garçons sur combien d'élèves en tout ?",
+ etapes:["Garçons : 10 − 6 = 4.","Ils représentent 4 élèves sur 10 : 4/10 de la classe.","4/10 se simplifie en 2/5 (on divise haut et bas par 2).","Les deux écritures sont justes : 4/10 = 2/5 !"]},
+
+{id:"m2e19",w:2,titre:"Les deux moitiés du verger",type:"saisie",acc:["8/8","1","1 tarte","une tarte"],
+ histoire:"Mamie Vallée assemble sa célèbre tarte aux deux vergers : 3/8 de pommes d'un côté, 5/8 de poires de l'autre. Son petit-fils regarde le plat, intrigué.",
+ q:"Quelle fraction de tarte cela fait-il en tout ? (3/8 + 5/8)",
+ indice:"Les parts sont toutes des huitièmes : additionne simplement les numérateurs.",
+ etapes:["3 huitièmes + 5 huitièmes = 8 huitièmes.","3/8 + 5/8 = 8/8… c'est-à-dire la tarte ENTIÈRE !","Quand les dénominateurs sont les mêmes, on additionne juste les numérateurs.","8/8 = 1 : la tarte est complète, sans trou ni rab."]},
+
+{id:"m2e20",w:2,titre:"La sieste du chat",type:"qcm",
+ histoire:"Le chat de la Vallée dort une demi-heure sur le canapé, puis encore un quart d'heure au soleil. Sa maîtresse calcule son temps total de sieste (record personnel à battre).",
+ q:"1/2 heure + 1/4 d'heure, ça fait combien de minutes ?",
+ choices:["35 minutes","40 minutes","45 minutes","60 minutes"],a:2,
+ indice:"Convertis en minutes : 1/2 h = 30 min, 1/4 h = 15 min.",
+ etapes:["1/2 heure = 30 minutes.","1/4 d'heure = 15 minutes.","30 + 15 = 45 minutes de sieste.","En fractions : 1/2 + 1/4 = 2/4 + 1/4 = 3/4 d'heure = 45 min. Tout concorde !"]},
+
+{id:"m2e21",w:2,titre:"La guirlande de la fête",type:"saisie",num:1.2,unit:"m",
+ histoire:"Pour la fête de la Vallée, on déroule une guirlande de 3,6 mètres. Le tiers de la guirlande doit décorer la porte d'entrée, le reste ira sur la scène.",
+ q:"Quelle longueur pour la porte, en mètres ? (1/3 de 3,6 m.)",
+ indice:"3,6 c'est 36 dixièmes. Et 36 ÷ 3 ?",
+ etapes:["1/3 de 3,6 = 3,6 ÷ 3.","36 dixièmes ÷ 3 = 12 dixièmes = 1,2.","Il faut 1,2 m pour la porte.","Vérification : 1,2 × 3 = 3,6 ✓ Les fractions s'entendent très bien avec les décimaux."]},
+
+{id:"m2e22",w:2,titre:"Le tribunal des fractions",type:"ordre",
+ histoire:"Au tribunal de la Vallée, 2/3 et 3/4 se disputent le titre de « plus grande fraction ». La juge chouette rend son verdict en quatre étapes… mélangées par un courant d'air !",
+ q:"Remets le raisonnement de la juge dans l'ordre :",
+ ordre:["Je cherche un dénominateur commun : 12 convient pour 3 et 4.","Je convertis : 2/3 = 8/12.","Je convertis : 3/4 = 9/12.","9/12 > 8/12 : la plus grande fraction est 3/4 !"],
+ indice:"Pour comparer des fractions, on les écrit d'abord avec le même dénominateur.",
+ etapes:["On ne compare bien que des parts de même taille : d'où le dénominateur commun 12.","2/3 = 8/12 et 3/4 = 9/12.","9 douzièmes > 8 douzièmes : 3/4 l'emporte.","Même dénominateur = même « taille de part » : la comparaison devient évidente."]},
+
+{id:"m2e23",w:2,titre:"Le pari du goûter",type:"vf",vfA:true,
+ histoire:"Au goûter, Nino affirme : « 1/4 de mes 8 biscuits, c'est exactement autant que 1/2 des 4 biscuits de ma sœur ! » Sa sœur fronce les sourcils, prête à recompter.",
+ q:"Nino a-t-il raison ?",
+ justif:["Oui : 1/4 de 8 = 2 et 1/2 de 4 = 2. Deux biscuits chacun !","Non : 1/2 est plus grand que 1/4, donc sa sœur en a forcément plus."],justifA:0,
+ indice:"Calcule chaque part : 8 ÷ 4 = ? et 4 ÷ 2 = ?",
+ etapes:["1/4 de 8 = 8 ÷ 4 = 2 biscuits.","1/2 de 4 = 4 ÷ 2 = 2 biscuits.","Égalité parfaite : Nino a raison !","Une petite fraction d'un grand nombre peut égaler une grande fraction d'un petit nombre."]},
+
+{id:"m2e24",w:2,titre:"La gourde de l'exploratrice",type:"saisie",num:80,unit:"cl",
+ histoire:"Dernière énigme de la Vallée ! Ta gourde est remplie aux 3/4 et contient exactement 60 cl de jus de fruits de la Vallée.",
+ q:"Quelle est la contenance totale de la gourde, en centilitres ?",
+ indice:"Si 3/4 valent 60 cl, que vaut 1/4 ? Et donc 4/4 ?",
+ etapes:["3/4 = 60 cl, donc 1/4 = 60 ÷ 3 = 20 cl.","La gourde entière (4/4) = 4 × 20 = 80 cl.","Vérification : 3/4 de 80 = 60 ✓","Remonter de la fraction vers le tout : le raisonnement des grands explorateurs !"]},
+
+/* ---- M3 · Grand Marché (suite) ---- */
+{id:"m3e13",w:3,titre:"La rentrée des cahiers",type:"saisie",num:17.5,unit:"€",
+ histoire:"Au stand de papeterie du Grand Marché : « 4 cahiers pour 10 € ». Pour la rentrée, il te faut exactement 7 cahiers.",
+ q:"Combien vont coûter les 7 cahiers ?",
+ indice:"Trouve d'abord le prix d'UN cahier : 10 ÷ 4.",
+ etapes:["Prix d'un cahier : 10 ÷ 4 = 2,50 €.","Prix de 7 cahiers : 7 × 2,50 = 17,50 €.","Astuce : 7 × 2,50 = 7 × 2 + 7 × 0,50 = 14 + 3,50 = 17,50."]},
+
+{id:"m3e14",w:3,titre:"Le plan du Grand Marché",type:"qcm",
+ histoire:"Le plan affiché à l'entrée indique : « Échelle 1/1 000 » — 1 cm sur le plan représente 1 000 cm en vrai. La fontaine est à 5 cm de l'entrée sur le plan.",
+ q:"À quelle distance réelle se trouve la fontaine ?",
+ choices:["5 m","50 m","500 m","5 km"],a:1,
+ indice:"5 cm × 1 000 = 5 000 cm. Convertis en mètres (1 m = 100 cm).",
+ etapes:["Distance réelle : 5 × 1 000 = 5 000 cm.","5 000 cm = 5 000 ÷ 100 = 50 m.","La fontaine est à 50 mètres.","Une échelle, c'est une multiplication… suivie souvent d'une conversion d'unités !"]},
+
+{id:"m3e15",w:3,titre:"Le pourboire du livreur",type:"saisie",num:9,unit:"€",
+ histoire:"La marchande de tapis est ravie : sa recette du jour est de 45 €. Elle décide d'en donner 20 % à son jeune livreur qui a pédalé toute la journée.",
+ q:"Combien le livreur reçoit-il ? (20 % de 45 €.)",
+ indice:"Calcule d'abord 10 % (facile : ÷ 10), puis double.",
+ etapes:["10 % de 45 = 4,50 €.","20 %, c'est le double : 2 × 4,50 = 9 €.","Le livreur reçoit 9 €.","La méthode des 10 % permet de calculer presque tous les pourcentages de tête !"]},
+
+{id:"m3e16",w:3,titre:"Le chêne du bout du marché",type:"vf",vfA:false,
+ histoire:"Le rémouleur affirme : « Ce chêne mesurait 2 m à 10 ans. Il a 50 ans aujourd'hui, donc il mesure 5 fois plus : 10 mètres ! C'est proportionnel, jeune fille ! »",
+ q:"Son raisonnement est-il correct ?",
+ justif:["Oui : 5 fois plus vieux, donc 5 fois plus haut.","Non : la croissance d'un arbre ralentit avec l'âge — la hauteur n'est pas proportionnelle au temps."],justifA:1,
+ indice:"Et à 500 ans, il mesurerait 100 m ? Plus haut que la tour Eiffel n'est large… euh, crédible ?",
+ etapes:["Si c'était proportionnel, à 500 ans le chêne mesurerait 100 m — aucun chêne n'atteint ça !","Les arbres grandissent vite jeunes, puis de moins en moins.","Le raisonnement proportionnel ne s'applique pas à la croissance.","Toujours se demander : « est-ce que doubler l'un double vraiment l'autre ? »"]},
+
+{id:"m3e17",w:3,titre:"La diligence express",type:"saisie",num:45,unit:"km",
+ histoire:"La diligence express relie les marchés à la vitesse constante de 90 km/h sur la grande route. Le prochain marché n'est qu'à une demi-heure de route.",
+ q:"Quelle distance la diligence parcourt-elle en 1/2 heure ?",
+ indice:"En 1 heure : 90 km. En une demi-heure : la moitié.",
+ etapes:["À 90 km/h, on parcourt 90 km en 1 heure.","En 1/2 heure : 90 ÷ 2 = 45 km.","Vitesse constante = proportionnalité entre temps et distance."]},
+
+{id:"m3e18",w:3,titre:"La bataille des œufs",type:"qcm",
+ histoire:"Deux fermières s'affrontent au Grand Marché. Ferme du Levant : « 6 œufs pour 1,80 € ». Ferme du Couchant : « 10 œufs pour 2,80 € ». À toi de conseiller les clients !",
+ q:"Quelle offre est la plus avantageuse ?",
+ choices:["6 œufs à 1,80 €","10 œufs à 2,80 €","Les deux se valent","On ne peut pas comparer"],a:1,
+ indice:"Calcule le prix d'UN œuf dans chaque ferme.",
+ etapes:["Levant : 1,80 ÷ 6 = 0,30 € l'œuf.","Couchant : 2,80 ÷ 10 = 0,28 € l'œuf.","0,28 < 0,30 : la ferme du Couchant est la moins chère.","Le prix à l'unité est l'arme secrète du consommateur malin."]},
+
+{id:"m3e19",w:3,titre:"La crêperie du marché",type:"saisie",num:5,unit:"œufs",
+ histoire:"La recette affichée à la crêperie : « Pour 8 crêpes : 2 œufs ». Aujourd'hui jour de fête, le crêpier doit préparer 20 crêpes d'un coup !",
+ q:"Combien d'œufs lui faut-il pour 20 crêpes ?",
+ indice:"Passe par 4 crêpes (moitié de 8)… ou remarque que 20 = 8 + 8 + 4.",
+ etapes:["Pour 8 crêpes : 2 œufs → pour 4 crêpes : 1 œuf.","20 crêpes = 8 + 8 + 4 → 2 + 2 + 1 = 5 œufs.","Découper en morceaux simples (moitiés, doubles) évite bien des calculs !"]},
+
+{id:"m3e20",w:3,titre:"La taxe du pont",type:"saisie",num:10,unit:"€",
+ histoire:"Pour entrer au Grand Marché, les charrettes paient une taxe de 5 % de la valeur de leur cargaison. Ta charrette transporte pour 200 € de marchandises.",
+ q:"Combien vas-tu payer de taxe ? (5 % de 200 €.)",
+ indice:"10 % de 200 = 20. Et 5 %, c'est la moitié de 10 %.",
+ etapes:["10 % de 200 € = 20 €.","5 % = la moitié de 10 % : 20 ÷ 2 = 10 €.","La taxe est de 10 €.","10 % puis moitié : le combo qui calcule les 5 % en deux secondes."]},
+
+{id:"m3e21",w:3,titre:"Le fournil du boulanger",type:"ordre",
+ histoire:"Le boulanger du Grand Marché vend 7 baguettes pour 8,40 €. Une cliente n'en veut que 4. Il t'explique son calcul, mais la farine a recouvert l'ordre de ses étapes !",
+ q:"Remets le calcul du boulanger dans l'ordre :",
+ ordre:["Je cherche le prix d'UNE baguette.","Je calcule 8,40 ÷ 7 = 1,20 €.","Je multiplie par 4 : 1,20 × 4 = 4,80 €.","Les 4 baguettes coûtent 4,80 €."],
+ indice:"Le passage par l'unité : diviser d'abord, multiplier ensuite.",
+ etapes:["On ne passe pas directement de 7 à 4 : on passe par 1 baguette.","8,40 ÷ 7 = 1,20 €, puis 1,20 × 4 = 4,80 €.","La règle de trois, encore elle — la meilleure amie des marchés !"]},
+
+{id:"m3e22",w:3,titre:"L'affiche des soldes",type:"qcm",
+ histoire:"Sur la grande affiche du Marché : « SOLDES : 75 % du stock déjà vendu ! » Le vendeur te demande, taquin : « Sais-tu quelle fraction ça représente ? »",
+ q:"75 %, c'est quelle fraction ?",
+ choices:["1/2","2/3","3/4","7/5"],a:2,
+ indice:"75 % = 75/100. Simplifie cette fraction (divise par 25).",
+ etapes:["75 % = 75/100.","75 ÷ 25 = 3 et 100 ÷ 25 = 4 : donc 75/100 = 3/4.","75 % = 3/4. À mémoriser avec 50 % = 1/2 et 25 % = 1/4 !"]},
+
+{id:"m3e23",w:3,titre:"Le voyage du colporteur",type:"saisie",num:7,unit:"cm",
+ histoire:"Le colporteur prépare sa route sur une carte à l'échelle « 1 cm = 5 km ». Le prochain village est à 35 km de marche.",
+ q:"Quelle distance cela représente-t-il sur la carte, en cm ?",
+ indice:"Cette fois on va du réel vers la carte : combien de fois 5 km dans 35 km ?",
+ etapes:["Chaque cm représente 5 km.","35 ÷ 5 = 7 : il faut 7 cm sur la carte.","C'est le sens inverse de d'habitude : on DIVISE au lieu de multiplier. Toujours vérifier le sens !"]},
+
+{id:"m3e24",w:3,titre:"Le manteau du grand soir",type:"saisie",num:63,unit:"€",
+ histoire:"Dernier défi du Grand Marché : le somptueux manteau du grand soir coûte 90 €. Le tailleur, ému par ton parcours, t'accorde une remise exceptionnelle de 30 %.",
+ q:"Combien vas-tu payer le manteau ?",
+ indice:"Étape 1 : 10 % de 90. Étape 2 : la remise (× 3). Étape 3 : le prix payé.",
+ etapes:["10 % de 90 € = 9 €.","30 % = 3 × 9 = 27 € de remise.","Prix payé : 90 − 27 = 63 €.","Et hop : un calcul de pourcentage complet, sans calculatrice. Le Marché s'incline !"]},
+
+/* ---- M4 · Cités Géométriques (suite) ---- */
+{id:"m4e13",w:4,titre:"Le potager carré du roi",type:"saisie",num:36,unit:"m²",
+ histoire:"Le roi des Cités fait aménager un potager parfaitement carré de 6 mètres de côté. Le jardinier royal doit commander la bonne quantité de terreau, au m² près.",
+ q:"Quelle est l'aire du potager, en m² ?",
+ indice:"L'aire d'un carré = côté × côté.",
+ etapes:["Aire du carré = côté × côté.","6 × 6 = 36 m².","À ne pas confondre avec le périmètre (4 × 6 = 24 m) : l'aire remplit, le périmètre entoure !"]},
+
+{id:"m4e14",w:4,titre:"Le squelette du cube",type:"qcm",
+ histoire:"Le sculpteur des Cités fabrique un cube géant avec des tiges de métal : une tige pour chaque arête. Il doit passer commande à la forge, sans en oublier une seule.",
+ q:"Combien d'arêtes possède un cube ?",
+ choices:["6","8","12","24"],a:2,
+ indice:"Compte sur un dé ou une boîte : les arêtes du dessus, celles du dessous, et les verticales.",
+ etapes:["Face du dessus : 4 arêtes. Face du dessous : 4 arêtes.","Il reste les 4 arêtes verticales qui relient les deux faces.","4 + 4 + 4 = 12 arêtes.","À retenir : un cube a 6 faces, 8 sommets et 12 arêtes."]},
+
+{id:"m4e15",w:4,titre:"Le cadre d'or du musée",type:"saisie",num:5,unit:"cm... euh m",
+ histoire:"Le musée des Cités reçoit un tableau rectangulaire. Son cadre fait 28 m de tour complet, et le tableau mesure 9 m de longueur. La conservatrice cherche la largeur pour préparer le mur.",
+ q:"Quelle est la largeur du tableau, en mètres ?",
+ indice:"Périmètre = (longueur + largeur) × 2. Donc longueur + largeur = 28 ÷ 2.",
+ etapes:["Le demi-périmètre : 28 ÷ 2 = 14 m = longueur + largeur.","Largeur = 14 − 9 = 5 m.","Vérification : (9 + 5) × 2 = 28 ✓","Un problème « à rebours » : on connaît le résultat, on cherche l'ingrédient."]},
+
+{id:"m4e16",w:4,titre:"Le carrefour parfait",type:"vf",vfA:true,
+ histoire:"Aux Cités, deux avenues se croisent en formant des angles parfaitement droits. L'urbaniste déclare : « À ce carrefour, il y a exactement 4 angles droits. »",
+ q:"A-t-elle raison : deux droites perpendiculaires forment-elles 4 angles droits ?",
+ justif:["Oui : le croisement crée 4 coins, et tous mesurent 90°.","Non : il n'y a que 2 angles droits, les 2 autres sont différents."],justifA:0,
+ indice:"Dessine une croix « + » : compte les coins autour du centre.",
+ etapes:["Autour du point de croisement, il y a 4 secteurs.","Si l'un mesure 90°, les autres aussi (le tour complet fait 360° = 4 × 90°).","Perpendiculaires = 4 angles droits, pas un de moins !"]},
+
+{id:"m4e17",w:4,titre:"L'enseigne lumineuse",type:"qcm",
+ histoire:"L'enseigne du théâtre des Cités affiche des chiffres lumineux. Le décorateur ne garde que les chiffres qui ont un axe de symétrie — pliés en deux, les moitiés se superposent.",
+ q:"Parmi ces chiffres, lequel a un axe de symétrie ?",
+ choices:["8","7","4","2"],a:0,
+ indice:"Imagine chaque chiffre plié en deux, verticalement OU horizontalement.",
+ etapes:["Le 8 est formé de deux boucles : plié verticalement (et même horizontalement), ses moitiés coïncident.","7, 4 et 2 n'ont aucun axe de symétrie.","Le 0 et le 3 (axe horizontal) sont d'autres chiffres symétriques.","La symétrie se teste toujours par le pliage mental !"]},
+
+{id:"m4e18",w:4,titre:"Le vitrail triangulaire",type:"saisie",num:9,unit:"dm",
+ histoire:"Le maître verrier des Cités crée un vitrail en triangle équilatéral — trois côtés parfaitement égaux. Il utilise exactement 27 dm de baguette de plomb pour le tour.",
+ q:"Quelle est la longueur d'un côté du vitrail, en dm ?",
+ indice:"Équilatéral = 3 côtés égaux. Le tour fait 27 dm…",
+ etapes:["Triangle équilatéral : 3 côtés identiques.","27 ÷ 3 = 9 dm par côté.","Vérification : 9 + 9 + 9 = 27 ✓","« Équi-latéral » = côtés égaux : le nom dit tout !"]},
+
+{id:"m4e19",w:4,titre:"Le jardin en triangle",type:"saisie",num:24,unit:"m²",
+ histoire:"Un jardin des Cités a la forme d'un triangle rectangle : ses deux côtés qui forment l'angle droit mesurent 6 m et 8 m. Le paysagiste te souffle : « Imagine le rectangle complet… »",
+ q:"Quelle est l'aire de ce jardin, en m² ?",
+ indice:"Un triangle rectangle, c'est exactement la MOITIÉ d'un rectangle de 6 m × 8 m.",
+ etapes:["Le rectangle complet 6 × 8 aurait une aire de 48 m².","Le triangle rectangle en est la moitié : 48 ÷ 2 = 24 m².","Voilà pourquoi l'aire du triangle rectangle = (côté × côté) ÷ 2.","Découper et compléter les figures : le grand pouvoir des géomètres."]},
+
+{id:"m4e20",w:4,titre:"Le patron du coffre cubique",type:"qcm",
+ histoire:"Le menuisier des Cités dessine le patron d'un coffre cubique : le dessin à plat qui, une fois plié, formera le cube entier, sans trou ni double épaisseur.",
+ q:"De combien de carrés son patron doit-il être composé ?",
+ choices:["4 carrés","6 carrés","8 carrés","12 carrés"],a:1,
+ indice:"Chaque carré du patron deviendra une face du cube. Combien de faces a un cube ?",
+ etapes:["Un cube a 6 faces carrées.","Le patron doit donc compter exactement 6 carrés — bien disposés pour se replier sans se chevaucher.","La fameuse « croix » de 6 carrés est le patron de cube le plus connu… mais il en existe 11 différents !"]},
+
+{id:"m4e21",w:4,titre:"La place agrandie",type:"saisie",num:24,unit:"m",
+ histoire:"La petite place carrée des Cités mesure 3 m de côté. Le conseil décide de la reconstruire en DOUBLANT son côté. Le maçon doit prévoir la bordure de pierre qui en fera le tour.",
+ q:"Quel sera le périmètre de la nouvelle place, en mètres ?",
+ indice:"Nouveau côté : 3 × 2 = 6 m. Et le périmètre d'un carré ?",
+ etapes:["Nouveau côté : 6 m.","Périmètre : 4 × 6 = 24 m.","L'ancien périmètre était 12 m : doubler le côté a doublé le périmètre.","(Mais attention : l'aire, elle, est passée de 9 à 36 m² — multipliée par 4 !)"]},
+
+{id:"m4e22",w:4,titre:"La rosace de la cathédrale",type:"ordre",
+ histoire:"L'architecte de la cathédrale doit tracer un cercle parfait de 4 cm de rayon pour sa rosace. Ses instructions au compas sont tombées de l'échafaudage — remets-les dans l'ordre !",
+ q:"Remets les étapes du tracé dans l'ordre :",
+ ordre:["Je place un point O : ce sera le centre du cercle.","J'écarte mon compas de 4 cm, mesurés sur la règle.","Je pique la pointe sèche en O et je fais tourner le compas d'un tour complet.","J'obtiens un cercle de centre O et de rayon 4 cm."],
+ indice:"D'abord le centre, puis l'écartement, puis le tracé.",
+ etapes:["Le centre d'abord : tout le cercle dépend de lui.","L'écartement du compas = le rayon.","Un tour complet, sans changer l'écartement : le cercle est parfait.","Tous les points du cercle sont à exactement 4 cm de O — c'est sa définition !"]},
+
+{id:"m4e23",w:4,titre:"Le pari de l'apprenti maçon",type:"vf",vfA:false,
+ histoire:"L'apprenti maçon affirme : « Si on double le côté d'un carrelage carré, son aire double aussi. C'est logique, tout double ! »",
+ q:"A-t-il raison ?",
+ justif:["Oui : quand le côté double, tout double.","Non : l'aire est multipliée par 4 ! Un carré de 2 cm fait 4 cm², un carré de 4 cm fait 16 cm²."],justifA:1,
+ indice:"Teste : carré de 2 cm de côté → aire ? Carré de 4 cm → aire ? Compare.",
+ etapes:["Carré de côté 2 : aire = 2 × 2 = 4 cm².","Carré de côté 4 : aire = 4 × 4 = 16 cm².","16 = 4 × 4 : l'aire a été multipliée par 4, pas par 2 !","L'aire grandit « au carré » : doubler le côté quadruple la surface. Piège très classique déjoué !"]},
+
+{id:"m4e24",w:4,titre:"La salle de bal à repeindre",type:"saisie",num:4,unit:"pots",
+ histoire:"Dernier chantier des Cités : repeindre le plafond de la salle de bal, un rectangle de 5 m sur 4 m. Un pot de peinture dorée couvre exactement 5 m². Le peintre attend ta commande.",
+ q:"Combien de pots faut-il commander ?",
+ indice:"D'abord l'aire du plafond, ensuite le nombre de pots.",
+ etapes:["Aire du plafond : 5 × 4 = 20 m².","Nombre de pots : 20 ÷ 5 = 4 pots.","Aire puis division : un problème à deux étages, comme un vrai chantier."]},
+
+/* ---- M5 · Forêt des Énigmes (suite) ---- */
+{id:"m5e13",w:5,titre:"Les pierres du torrent",type:"saisie",num:25,
+ histoire:"Pour traverser le torrent, tu sautes de pierre en pierre. Elles portent les nombres 1, 4, 9, 16… La suivante est cachée sous l'écume. Le castor te souffle : « Pense aux multiplications d'un nombre par lui-même… »",
+ q:"Quel nombre porte la pierre suivante ?",
+ indice:"1 = 1×1, 4 = 2×2, 9 = 3×3, 16 = 4×4… et ensuite ?",
+ etapes:["Ce sont les « carrés » : 1×1, 2×2, 3×3, 4×4…","Le suivant est 5 × 5 = 25.","On les appelle nombres carrés car on peut les dessiner en carrés de points !"]},
+
+{id:"m5e14",w:5,titre:"Le poulailler magique",type:"saisie",num:6,unit:"œufs",
+ histoire:"Dans la clairière, 3 poules pondent ensemble 3 œufs en 3 jours (oui, ce sont des poules très synchronisées). Le fermier vient d'agrandir son poulailler : il a maintenant 6 poules.",
+ q:"Combien d'œufs ses 6 poules pondent-elles en 3 jours ?",
+ indice:"Si 3 poules donnent 3 œufs en 3 jours… le double de poules, sur la même durée, donne… ?",
+ etapes:["3 poules → 3 œufs en 3 jours.","6 poules, c'est 2 fois plus de poules, sur la MÊME durée : 2 × 3 = 6 œufs.","Le piège était de répondre trop vite « 6 œufs en 6 jours » ou autre confusion : seule la quantité de poules a changé !"]},
+
+{id:"m5e15",w:5,titre:"Le calendrier du druide",type:"qcm",
+ histoire:"Le druide de la Forêt parle par énigmes : « Rejoins-moi le lendemain de la veille de mardi. » Le hibou lève les yeux au ciel : encore une de ses devinettes…",
+ q:"Quel jour le druide te donne-t-il rendez-vous ?",
+ choices:["Lundi","Mardi","Mercredi","Dimanche"],a:1,
+ indice:"Décompose : la veille de mardi, c'est lundi. Et le lendemain de lundi ?",
+ etapes:["La veille de mardi = lundi.","Le lendemain de lundi = mardi.","« Le lendemain de la veille », c'est revenir au point de départ : mardi !","Décomposer les phrases compliquées morceau par morceau : la clé des énigmes."]},
+
+{id:"m5e16",w:5,titre:"Le tiroir aux chaussettes",type:"saisie",num:3,unit:"chaussettes",
+ histoire:"Dans la cabane plongée dans le noir, un tiroir contient des chaussettes rouges et des chaussettes vertes, toutes mélangées. Impossible de voir les couleurs ! Tu veux être SÛRE de sortir deux chaussettes de la même couleur.",
+ q:"Combien de chaussettes dois-tu prendre, au minimum, pour être certaine d'avoir une paire assortie ?",
+ indice:"Imagine le pire des hasards : les deux premières chaussettes sont de couleurs différentes. Et la troisième ?",
+ etapes:["Avec 2 chaussettes, pas de garantie : une rouge et une verte, raté.","Prends-en 3 : il n'y a que 2 couleurs, donc au moins deux des trois sont forcément pareilles !","C'est le fameux « principe des tiroirs » : 3 chaussettes pour 2 couleurs → une couleur en double, garanti.","Raisonner sur le PIRE cas : la signature des vrais logiciens."]},
+
+{id:"m5e17",w:5,titre:"Les mois du grand chêne",type:"vf",vfA:true,
+ histoire:"Le grand chêne parlant, qui a vu passer des siècles, affirme : « Dans une année, exactement 7 mois comptent 31 jours. »",
+ q:"Le grand chêne dit-il vrai ?",
+ justif:["Oui : janvier, mars, mai, juillet, août, octobre et décembre — 7 mois de 31 jours.","Non : les mois de 31 jours alternent un sur deux, il y en a 6."],justifA:0,
+ indice:"Compte sur tes phalanges : les « bosses » sont les mois de 31 jours… et juillet-août se suivent !",
+ etapes:["Mois de 31 jours : janvier, mars, mai, juillet, AOÛT, octobre, décembre.","Ça fait bien 7 mois (juillet et août se suivent, d'où la surprise).","Les autres : 4 mois de 30 jours, et février (28 ou 29).","L'astuce des phalanges de la main permet de tous les retrouver !"]},
+
+{id:"m5e18",w:5,titre:"Les âges des sœurs renardes",type:"saisie",num:12,unit:"ans",
+ histoire:"Deux sœurs renardes gardent le pont de la Forêt. L'aînée annonce : « À nous deux, nous avons 20 ans. Et j'ai exactement 4 ans de plus que ma sœur. » Elle te fixe : « Quel est MON âge ? »",
+ q:"Quel est l'âge de l'aînée ?",
+ indice:"Essaie des paires qui font 20 avec 4 d'écart : 11 et 9 ? 12 et 8 ?",
+ etapes:["Testons : 12 + 8 = 20, et 12 − 8 = 4 d'écart. ✓","L'aînée a 12 ans, sa sœur 8 ans.","Autre chemin : enlève l'écart (20 − 4 = 16), partage (8), rends l'écart à l'aînée (8 + 4 = 12).","Somme et différence : un grand classique des énigmes… et des équations à venir en 6e !"]},
+
+{id:"m5e19",w:5,titre:"La course des trois lièvres",type:"qcm",
+ histoire:"Trois lièvres — Aro, Bali et Cambo — terminent leur grande course de la Forêt. Tu apprends que : Bali est arrivé devant Aro. Et Cambo est arrivé derrière Aro.",
+ q:"Qui est arrivé deuxième ?",
+ choices:["Aro","Bali","Cambo","Impossible à savoir"],a:0,
+ indice:"Range-les : Bali devant Aro, et Aro devant Cambo…",
+ etapes:["Bali est devant Aro : Bali … Aro.","Cambo est derrière Aro : Bali, Aro, Cambo.","L'ordre complet : Bali 1er, Aro 2e, Cambo 3e.","Dessiner la file sur un brouillon rend ces énigmes évidentes !"]},
+
+{id:"m5e20",w:5,titre:"Le nénuphar géant",type:"saisie",num:9,unit:"jours",
+ histoire:"Sur l'étang de la Forêt pousse un nénuphar magique : chaque jour, sa surface DOUBLE. En 10 jours exactement, il recouvre tout l'étang. La grenouille te pose LA question piège…",
+ q:"Au bout de combien de jours le nénuphar couvrait-il la MOITIÉ de l'étang ?",
+ indice:"Raisonne à l'envers : la veille du jour 10, quelle surface couvrait-il ?",
+ etapes:["Chaque jour, la surface double.","Donc la veille du jour 10, il couvrait la moitié de l'étang : jour 9 !","Le réflexe « 10 ÷ 2 = 5 » est le piège : la croissance n'est pas régulière, elle double.","Réponse : 9 jours. Une des énigmes les plus célèbres du monde — bravo !"]},
+
+{id:"m5e21",w:5,titre:"La mosaïque de la clairière",type:"saisie",num:5,unit:"carrés",
+ histoire:"Au centre de la clairière, une mosaïque : un grand carré partagé en 4 petits carreaux (2 rangées de 2). Le lutin ricane : « Tout le monde croit voir 4 carrés… mais combien y en a-t-il VRAIMENT ? »",
+ q:"Combien de carrés peut-on compter en tout dans cette mosaïque ?",
+ svg:'<svg viewBox="0 0 150 150" width="140"><g fill="#F3F0FF" stroke="#6C5CE7" stroke-width="3"><rect x="15" y="15" width="60" height="60"/><rect x="75" y="15" width="60" height="60"/><rect x="15" y="75" width="60" height="60"/><rect x="75" y="75" width="60" height="60"/></g><rect x="15" y="15" width="120" height="120" fill="none" stroke="#e84393" stroke-width="4"/></svg>',
+ indice:"Il y a les 4 petits carreaux… mais n'oublie pas le GRAND carré qui les contient tous !",
+ etapes:["Les 4 petits carreaux : 4 carrés.","Mais le contour complet est AUSSI un carré : le grand, formé des 4 petits.","4 + 1 = 5 carrés en tout.","Les figures cachées dans les figures : ouvre l'œil, la géométrie adore ce jeu !"]},
+
+{id:"m5e22",w:5,titre:"Le grimoire des nombres",type:"vf",vfA:true,
+ histoire:"Le grimoire de la Forêt affirme, page 124 : « Additionne n'importe quel nombre pair avec n'importe quel nombre impair : le résultat sera TOUJOURS impair. »",
+ q:"Le grimoire dit-il vrai ?",
+ justif:["Oui : le pair se range par paires, l'impair laisse toujours 1 tout seul — la somme laisse donc 1 tout seul : elle est impaire.","Non : parfois pair + impair donne un nombre pair, ça dépend des nombres."],justifA:0,
+ indice:"Teste plusieurs fois : 4+3 ? 10+7 ? 2+9 ? Vois-tu une exception ?",
+ etapes:["Essais : 4+3=7, 10+7=17, 2+9=11… toujours impair !","Pourquoi : un nombre pair se range parfaitement par 2 ; un impair laisse 1 isolé.","En les réunissant, le 1 isolé reste isolé : la somme est impaire, toujours.","Tester PUIS expliquer pourquoi : c'est exactement ça, faire des maths."]},
+
+{id:"m5e23",w:5,titre:"Les chats de Plume",type:"qcm",
+ histoire:"Plume la chouette possède plusieurs chats, et elle est formelle : « TOUS mes chats sont noirs. » Au détour d'un sentier, tu croises un animal blanc comme neige.",
+ q:"Que peux-tu en conclure avec certitude ?",
+ choices:["Ce n'est pas un des chats de Plume.","C'est forcément un chien.","Plume a menti.","Les chats blancs n'existent pas."],a:0,
+ indice:"Si tous ses chats sont noirs, un animal PAS noir peut-il être l'un de ses chats ?",
+ etapes:["« Tous les chats de Plume sont noirs » : être chat de Plume → être noir.","L'animal croisé est blanc, donc il ne peut PAS être un chat de Plume.","Mais rien ne dit ce qu'il est : chien, chat d'un autre, lapin…","Tu viens d'utiliser la « contraposée » — un raisonnement de grand logicien !"]},
+
+{id:"m5e24",w:5,titre:"Les trois crayons du sphinx",type:"saisie",num:2,unit:"€",
+ histoire:"Le sphinx de la Forêt garde la dernière porte : « Trois crayons coûtent 7 € en tout. Le rouge coûte 1 € de PLUS que le bleu. Le vert coûte EXACTEMENT autant que le bleu. Donne-moi le prix du bleu, et passe. »",
+ q:"Combien coûte le crayon bleu ?",
+ indice:"Si le bleu coûtait 2 €, le rouge en coûterait 3 et le vert 2. Fais le total…",
+ etapes:["Appelons B le prix du bleu : rouge = B + 1, vert = B.","Total : B + (B + 1) + B = 7, donc 3 × B = 6.","B = 2 € : bleu 2 €, rouge 3 €, vert 2 €.","Vérification : 2 + 3 + 2 = 7 ✓ Le sphinx s'écarte, impressionné !"]},
+
+/* ---- M6 · Sommet des Champions (suite) ---- */
+{id:"m6e13",w:6,titre:"La soirée cinéma du refuge",type:"saisie",num:31,unit:"€",
+ histoire:"Le refuge du Sommet organise une soirée cinéma. Ta cordée achète 2 places adultes à 8 € et 3 places enfants à 5 €. Le caissier attend le compte exact.",
+ q:"Combien la cordée paie-t-elle en tout ?",
+ indice:"Deux calculs, puis une addition : adultes d'abord, enfants ensuite.",
+ etapes:["Adultes : 2 × 8 = 16 €.","Enfants : 3 × 5 = 15 €.","Total : 16 + 15 = 31 €.","Bien séparer les catégories avant d'additionner : la base des problèmes de la vie courante."]},
+
+{id:"m6e14",w:6,titre:"Le téléphérique du glacier",type:"saisie",acc:["12h15","12:15","12 h 15"],
+ histoire:"Le téléphérique du glacier part de la vallée à 9 h 45. La montée, majestueuse, dure exactement 2 h 30 — le temps d'admirer trois glaciers et un aigle royal.",
+ q:"À quelle heure arrive-t-il au sommet ? (Écris par exemple 11h30.)",
+ indice:"Ajoute d'abord les 2 heures, puis les 30 minutes (attention au passage de l'heure).",
+ etapes:["9 h 45 + 2 h = 11 h 45.","11 h 45 + 15 min = 12 h 00, et il reste 15 min à ajouter.","12 h 00 + 15 min = 12 h 15.","Les minutes se comptent jusqu'à 60 : on découpe pour passer l'heure pile sans se tromper."]},
+
+{id:"m6e15",w:6,titre:"La tour de l'observatoire",type:"saisie",num:90,unit:"marches",
+ histoire:"L'escalier de l'observatoire du Sommet est parfaitement régulier : pour monter 2 étages, on gravit 36 marches. L'astronome, elle, grimpe chaque nuit jusqu'au 5e étage.",
+ q:"Combien de marches gravit-elle pour monter les 5 étages ?",
+ indice:"Trouve d'abord le nombre de marches d'UN étage.",
+ etapes:["Un étage : 36 ÷ 2 = 18 marches.","Cinq étages : 5 × 18 = 90 marches.","Passage par l'unité, encore : c'est LE réflexe de la proportionnalité."]},
+
+{id:"m6e16",w:6,titre:"Le duel des enclos, le retour",type:"vf",vfA:true,
+ histoire:"Les deux bergers du Sommet ont retenu la leçon… Le premier construit un enclos carré de 4 m de côté. Le second, un enclos rectangulaire de 6 m sur 2 m. Le premier déclare : « Cette fois, nos deux enclos ont le MÊME périmètre ! »",
+ q:"A-t-il raison ?",
+ justif:["Oui : carré 4 × 4 = 16 m de tour, rectangle (6 + 2) × 2 = 16 m aussi. Égalité !","Non : un carré et un rectangle ne peuvent jamais avoir le même périmètre."],justifA:0,
+ indice:"Calcule chaque périmètre : 4 côtés de 4 m d'un côté ; (6 + 2) × 2 de l'autre.",
+ etapes:["Carré : 4 × 4 = 16 m.","Rectangle : (6 + 2) × 2 = 16 m.","Mêmes périmètres ! (Mais pas mêmes aires : 16 m² contre 12 m² — les moutons du premier ont plus d'herbe.)","Des formes différentes peuvent avoir le même tour : périmètre et forme sont indépendants."]},
+
+{id:"m6e17",w:6,titre:"Le roman de l'alpiniste",type:"saisie",num:12,unit:"jours",
+ histoire:"Dans la bibliothèque du refuge, l'alpiniste dévore un roman d'aventure de 180 pages. Elle s'impose un rythme strict : exactement 15 pages chaque soir, au coin du feu.",
+ q:"En combien de jours finira-t-elle son roman ?",
+ indice:"Combien de fois 15 pages dans 180 pages ?",
+ etapes:["On cherche 180 ÷ 15.","15 × 10 = 150, et il reste 30 = 15 × 2 : donc 180 ÷ 15 = 12.","Elle finira en 12 jours.","Diviser en s'appuyant sur × 10 : rapide et sans douleur."]},
+
+{id:"m6e18",w:6,titre:"La citerne du refuge",type:"saisie",num:750,unit:"L",
+ histoire:"La citerne d'eau du refuge est remplie aux 2/5, et la jauge indique précisément 300 litres. Le gardien doit déclarer la contenance TOTALE de la citerne au syndicat des refuges.",
+ q:"Quelle est la contenance totale de la citerne, en litres ?",
+ indice:"Si 2/5 = 300 L, combien vaut 1/5 ? Puis 5/5 ?",
+ etapes:["2/5 = 300 L, donc 1/5 = 300 ÷ 2 = 150 L.","La citerne entière (5/5) : 5 × 150 = 750 L.","Vérification : 2/5 de 750 = 300 ✓","Fraction → tout : le raisonnement en deux bonds, comme un chamois."]},
+
+{id:"m6e19",w:6,titre:"La navette du col",type:"qcm",
+ histoire:"La navette du col passe toutes les 15 minutes, depuis le premier départ à 15 h 00 pile. Tu arrives à l'arrêt, essoufflée, à 15 h 40 exactement.",
+ q:"À quelle heure passe la prochaine navette ?",
+ choices:["15 h 40","15 h 45","15 h 55","16 h 00"],a:1,
+ indice:"Liste les passages : 15 h 00, 15 h 15, 15 h 30… et ensuite ?",
+ etapes:["Passages : 15 h 00, 15 h 15, 15 h 30, 15 h 45, 16 h 00…","Il est 15 h 40 : la navette de 15 h 30 est passée.","La prochaine est à 15 h 45 — plus que 5 minutes d'attente !","Lister les multiples de 15 : un petit tableau vaut mieux qu'un long calcul."]},
+
+{id:"m6e20",w:6,titre:"Le budget de la fête du Sommet",type:"saisie",num:30,unit:"€",
+ histoire:"Pour la fête du Sommet, tu disposes d'un budget de 60 €. Tu dépenses d'abord 1/3 du budget pour le gâteau géant. Puis tu dépenses 25 % de ce qui RESTE pour les ballons.",
+ q:"Combien d'argent te reste-t-il à la fin ?",
+ indice:"Trois étapes : le gâteau (1/3 de 60), le reste, puis les ballons (25 % de ce reste).",
+ etapes:["Gâteau : 1/3 de 60 = 20 €. Il reste 60 − 20 = 40 €.","Ballons : 25 % de 40 = 40 ÷ 4 = 10 €.","Il reste : 40 − 10 = 30 €.","Le piège : les 25 % portaient sur les 40 € restants, pas sur les 60 € du début !"]},
+
+{id:"m6e21",w:6,titre:"Le train des cimes",type:"saisie",num:80,unit:"km/h",
+ histoire:"Le train des cimes a parcouru 240 km en exactement 3 heures, à vitesse constante, entre les gares de Val-d'Aube et Roche-Perchée.",
+ q:"Quelle est sa vitesse, en kilomètres par heure ?",
+ indice:"La vitesse, c'est la distance parcourue en UNE heure : 240 ÷ 3.",
+ etapes:["En 3 h : 240 km. En 1 h : 240 ÷ 3 = 80 km.","Sa vitesse est de 80 km/h.","« km/h » se lit « kilomètres PAR heure » : c'est littéralement une division !"]},
+
+{id:"m6e22",w:6,titre:"Les minibus de la cordée",type:"ordre",
+ histoire:"27 élèves de l'école d'alpinisme partent au Sommet. Chaque minibus ne peut emmener que 8 passagers. Le moniteur raisonne à voix haute — remets ses phrases dans l'ordre !",
+ q:"Remets le raisonnement dans l'ordre :",
+ ordre:["Avec 3 minibus, j'emmène 3 × 8 = 24 élèves.","Je compare : 24 < 27, il reste 27 − 24 = 3 élèves sur le parking.","Ces 3 élèves ont besoin d'un minibus de plus, même incomplet.","Il faut donc réserver 4 minibus."],
+ indice:"On teste d'abord 3 minibus, on voit que ça déborde, on conclut.",
+ etapes:["3 minibus = 24 places : insuffisant pour 27.","Les 3 élèves restants imposent un 4e minibus.","Dans la vraie vie, une division qui ne tombe pas juste s'arrondit AU-DESSUS quand il faut transporter tout le monde !"]},
+
+{id:"m6e23",w:6,titre:"La tirelire à doublement",type:"saisie",num:16,unit:"€",
+ histoire:"L'écureuil du Sommet économise d'une façon étrange : chaque mois, il met de côté le DOUBLE du mois précédent. En janvier : 2 €. En février : 4 €. En mars : 8 €…",
+ q:"Combien mettra-t-il de côté en avril ?",
+ indice:"Continue le doublement : 2, 4, 8…",
+ etapes:["Chaque mois double le précédent : 2, 4, 8, …","Avril : 8 × 2 = 16 €.","Ces suites qui doublent grandissent très vite : en décembre, il devrait mettre 4 096 € — bon courage l'écureuil !"]},
+
+{id:"m6e24",w:6,titre:"⭐ L'ultime marché du champion",type:"saisie",num:6.5,unit:"€",
+ histoire:"Tout en haut du Sommet t'attend le marché des champions. Tu achètes 3 kg de pommes d'or à 2,50 € le kilo, et 1,5 kg de poires d'argent à 4 € le kilo. Tu tends un billet de 20 € au marchand, qui te regarde avec un sourire : « Le compte de la monnaie, c'est toi qui le fais. »",
+ q:"Combien doit-il te rendre, en euros ?",
+ indice:"Trois étapes : prix des pommes, prix des poires, puis la monnaie sur 20 €.",
+ etapes:["Pommes : 3 × 2,50 = 7,50 €.","Poires : 1,5 × 4 = 6 €.","Total : 7,50 + 6 = 13,50 €. Monnaie : 20 − 13,50 = 6,50 €.","Multiplications décimales, addition, soustraction : tu viens de TOUT combiner. Le Sommet est à toi ! 🏔️"]}
+);
+
 /* ================== PARCOURS CE2 : LES 4 CONTRÉES ================== */
 const MONDES_CE2=[
  {id:1,nom:"La Montagne des Calculs",em:"⛰️",coul:"linear-gradient(135deg,#74B9FF,#0984e3)",cnum:"#0984e3",
@@ -1322,6 +1794,270 @@ const PARCOURS={
    pitch:"Problèmes à étapes, fractions, proportionnalité et grands défis."}
 };
 
+/* ================== EXTENSION CE2 : 10 exercices de plus par contrée ================== */
+EXOS_CE2.push(
+/* ---- CE2 M1 · Montagne des Calculs (suite) ---- */
+{id:"c1e11",w:1,titre:"Le triple saut de l'écureuil",type:"saisie",num:18,unit:"noisettes",
+ histoire:"L'écureuil de la Montagne a trouvé un noisetier magique : il lui donne le TRIPLE de ce qu'il apporte. Il arrive avec 6 noisettes dans les pattes.",
+ q:"Combien de noisettes repart-il ? (Le triple de 6.)",
+ indice:"Le triple, c'est 3 fois : 6 + 6 + 6.",
+ etapes:["Le triple de 6 = 6 + 6 + 6.","6 + 6 = 12, et 12 + 6 = 18.","C'est aussi 3 × 6 = 18. Double = ×2, triple = ×3 !"]},
+
+{id:"c1e12",w:1,titre:"Le refuge des chamois",type:"qcm",
+ histoire:"Au refuge, 14 chamois dorment déjà quand 9 nouveaux chamois arrivent, couverts de neige. Le gardien compte vite les couvertures nécessaires.",
+ q:"Combien de chamois y a-t-il maintenant ? (14 + 9)",
+ choices:["21","22","23","24"],a:2,
+ indice:"Astuce : 9 c'est presque 10. Calcule 14 + 10 puis enlève 1.",
+ etapes:["14 + 10 = 24.","On a ajouté 1 de trop : 24 − 1 = 23.","14 + 9 = 23 chamois au chaud !"]},
+
+{id:"c1e13",w:1,titre:"Le télésiège",type:"saisie",num:35,unit:"places",
+ histoire:"Le télésiège de la Montagne compte 60 places en tout. Ce matin, 25 places sont déjà occupées par des skieurs pressés.",
+ q:"Combien de places restent libres ?",
+ indice:"60 − 25 : enlève d'abord 20, puis encore 5.",
+ etapes:["60 − 20 = 40.","40 − 5 = 35.","Il reste 35 places libres. Soustraire en deux temps, c'est plus sûr !"]},
+
+{id:"c1e14",w:1,titre:"La forêt de sapins",type:"saisie",num:40,unit:"sapins",
+ histoire:"Le garde forestier plante une nouvelle forêt : 8 rangées bien droites de 5 sapins chacune, pour protéger le village des avalanches.",
+ q:"Combien de sapins plante-t-il en tout ?",
+ indice:"8 rangées de 5 : c'est 8 × 5, ou compte de 5 en 5 : 5, 10, 15…",
+ etapes:["8 × 5 : compte de 5 en 5 : 5, 10, 15, 20, 25, 30, 35, 40.","8 × 5 = 40 sapins.","La table de 5 finit toujours par 0 ou 5 : facile à vérifier !"]},
+
+{id:"c1e15",w:1,titre:"La vantardise de la marmotte",type:"vf",vfA:false,
+ histoire:"Une marmotte vantarde déclare : « J'ai 15 noisettes, et mon cousin en a le double : il en a 35 ! »",
+ q:"Le calcul de la marmotte est-il juste ?",
+ justif:["Oui : le double de 15 est bien 35.","Non : le double de 15, c'est 15 + 15 = 30, pas 35 !"],justifA:1,
+ indice:"Le double de 15, c'est 15 + 15. Calcule !",
+ etapes:["Le double de 15 = 15 + 15.","15 + 15 = 30.","Le cousin a 30 noisettes, pas 35 : la marmotte s'est trompée de 5 !","Vérifier un calcul avant de le croire : réflexe de champion."]},
+
+{id:"c1e16",w:1,titre:"Les deux troupeaux",type:"saisie",num:70,unit:"moutons",
+ histoire:"Deux troupeaux se rejoignent au col : celui du berger compte 47 moutons, celui de la bergère en compte 23. Ils redescendent ensemble vers le village.",
+ q:"Combien de moutons descendent au village ?",
+ indice:"47 + 23 : ajoute 3 d'abord pour arriver à 50, puis le reste.",
+ etapes:["47 + 3 = 50 (on prend 3 dans le 23).","50 + 20 = 70.","47 + 23 = 70 moutons. Passer par le nombre rond, c'est le raccourci du berger malin !"]},
+
+{id:"c1e17",w:1,titre:"Le partage du chocolat chaud",type:"qcm",
+ histoire:"Le refuge a préparé un bidon de 50 cl de chocolat chaud. Deux randonneurs gelés se le partagent en deux parts exactement égales.",
+ q:"Combien chacun reçoit-il ? (La moitié de 50.)",
+ choices:["20 cl","25 cl","30 cl","45 cl"],a:1,
+ indice:"Quel nombre, ajouté à lui-même, donne 50 ?",
+ etapes:["La moitié de 50 : on cherche ? + ? = 50.","25 + 25 = 50.","Chacun reçoit 25 cl de chocolat chaud bien mérité !"]},
+
+{id:"c1e18",w:1,titre:"Les boîtes d'œufs de la ferme",type:"saisie",num:24,unit:"œufs",
+ histoire:"La ferme de la Montagne prépare sa livraison : 4 boîtes contenant chacune 6 œufs frais du matin.",
+ q:"Combien d'œufs partent en livraison ?",
+ indice:"4 boîtes de 6 : c'est 6 + 6 + 6 + 6, ou 4 × 6.",
+ etapes:["4 × 6 = 6 + 6 + 6 + 6.","6 + 6 = 12, et 12 + 12 = 24.","24 œufs en livraison. Les doubles aident à calculer les multiplications !"]},
+
+{id:"c1e19",w:1,titre:"La revanche du vieux guide",type:"ordre",
+ histoire:"Le vieux guide revient avec une nouvelle astuce, pour les soustractions cette fois : 63 − 19. « Regarde bien, petit ! » Mais ses fiches s'envolent encore… Remets-les dans l'ordre !",
+ q:"Remets les étapes de 63 − 19 dans l'ordre :",
+ ordre:["Je remarque que 19, c'est presque 20.","Je calcule 63 − 20 = 43.","J'ai enlevé 1 de trop, alors je le rends : 43 + 1 = 44.","Donc 63 − 19 = 44."],
+ indice:"Comme pour l'addition : on passe par 20… mais cette fois on REND le 1.",
+ etapes:["Enlever 19, c'est enlever 20 puis rendre 1.","63 − 20 = 43, puis 43 + 1 = 44.","Attention au sens : pour une addition on enlève le surplus, pour une soustraction on le rend !"]},
+
+{id:"c1e20",w:1,titre:"La machine du sommet",type:"saisie",num:20,
+ histoire:"Au sommet de la Montagne trône une machine à nombres. Tu y glisses le nombre 12. La machine le DOUBLE, puis elle ENLÈVE 4, et affiche le résultat dans un nuage de vapeur.",
+ q:"Quel nombre la machine affiche-t-elle ?",
+ indice:"Étape 1 : le double de 12. Étape 2 : enlève 4 au résultat.",
+ etapes:["Le double de 12 : 12 + 12 = 24.","24 − 4 = 20.","La machine affiche 20 ! Suivre les étapes dans l'ordre, sans en sauter : c'est la clé."]},
+
+/* ---- CE2 M2 · Port des Nombres (suite) ---- */
+{id:"c2e11",w:2,titre:"Le colis mystère",type:"qcm",
+ histoire:"Un colis arrive au Port avec une étiquette codée : « 400 + 20 + 6 ». Le facteur doit trouver le numéro de quai correspondant.",
+ q:"Quel nombre se cache derrière 400 + 20 + 6 ?",
+ choices:["4 206","426","462","246"],a:1,
+ indice:"4 centaines, 2 dizaines, 6 unités : assemble-les dans l'ordre.",
+ etapes:["400 + 20 + 6 : 4 centaines, 2 dizaines, 6 unités.","Cela s'écrit 426.","Attention au piège 4 206 : il ne faut pas coller les nombres, mais additionner leurs valeurs !"]},
+
+{id:"c2e12",w:2,titre:"Le centième voyage",type:"saisie",num:458,
+ histoire:"Le vieux remorqueur du Port a déjà fait 358 voyages. Son capitaine rêve du moment où le compteur affichera 100 voyages de plus.",
+ q:"Combien affichera le compteur après 100 voyages de plus ? (358 + 100)",
+ indice:"Ajouter 100, c'est ajouter 1 centaine : seul le chiffre des centaines change.",
+ etapes:["358 + 100 : le 3 des centaines devient 4.","358 + 100 = 458.","Ajouter 100 ne touche ni aux dizaines ni aux unités : c'est le calcul le plus rapide du port !"]},
+
+{id:"c2e13",w:2,titre:"L'écluse des centaines",type:"qcm",
+ histoire:"Le bateau numéro 672 doit passer l'écluse. Le gardien range les bateaux par tranches de cent : « Toi, tu es entre… voyons voir… »",
+ q:"Le nombre 672 est compris entre :",
+ choices:["500 et 600","600 et 700","700 et 800","60 et 70"],a:1,
+ indice:"Regarde le chiffre des centaines : 6. Donc entre 6 centaines et…",
+ etapes:["672 commence par 6 centaines.","Il est donc entre 600 et 700.","Encadrer à la centaine : repérer la centaine du dessous et celle du dessus."]},
+
+{id:"c2e14",w:2,titre:"Les casiers à homards",type:"saisie",num:100,
+ histoire:"Les casiers à homards du Port sont numérotés de 5 en 5 le long du quai : 85, 90, 95… Le prochain numéro est effacé par le sel de mer.",
+ q:"Quel est le numéro du casier suivant ?",
+ indice:"On avance de 5 en 5 : 95 + 5 = ?",
+ etapes:["La suite avance de 5 en 5.","95 + 5 = 100.","Le casier suivant est le numéro 100 — un joli passage de centaine !"]},
+
+{id:"c2e15",w:2,titre:"Le pari des mousses",type:"vf",vfA:false,
+ histoire:"Deux mousses comparent leurs numéros de cabine. Le premier affirme : « Ma cabine 409 a un plus grand numéro que ta cabine 490, puisque 9 est plus grand que 0 ! »",
+ q:"Le mousse a-t-il raison : 409 est-il plus grand que 490 ?",
+ justif:["Oui : 409 finit par 9, et 9 > 0.","Non : on compare d'abord les dizaines — 0 dizaine contre 9 dizaines — donc 409 < 490 !"],justifA:1,
+ indice:"Les centaines sont égales (4). Compare alors les DIZAINES : 0 contre 9.",
+ etapes:["Les deux nombres ont 4 centaines : égalité, on passe aux dizaines.","409 a 0 dizaine ; 490 en a 9.","0 < 9, donc 409 < 490 : le mousse a tort !","On compare position par position, de gauche à droite — jamais par le dernier chiffre."]},
+
+{id:"c2e16",w:2,titre:"Le trésor du quai 831",type:"saisie",num:8,
+ histoire:"La carte au trésor du Port indique : « Le trésor est enterré au pied du poteau qui porte le chiffre des CENTAINES du nombre 831. »",
+ q:"Quel est le chiffre des centaines de 831 ?",
+ indice:"831 = 800 + 30 + 1. Le chiffre des centaines est celui des « cents ».",
+ etapes:["831 = 8 centaines + 3 dizaines + 1 unité.","Le chiffre des centaines est 8.","Creuse au poteau 8, moussaillon !"]},
+
+{id:"c2e17",w:2,titre:"L'embarquement par deux",type:"qcm",
+ histoire:"Quatre navires attendent au Port : le 341, le 523, le 608 et le 195. Seul le navire au numéro PAIR peut accoster au ponton des marchandises.",
+ q:"Quel navire a un numéro pair ?",
+ choices:["Le 341","Le 523","Le 608","Le 195"],a:2,
+ indice:"Un nombre est pair si son DERNIER chiffre est 0, 2, 4, 6 ou 8.",
+ etapes:["On regarde le chiffre des unités : 341→1, 523→3, 608→8, 195→5.","Seul 608 finit par un chiffre pair (8).","C'est toujours le dernier chiffre qui décide si un nombre est pair — peu importe sa taille !"]},
+
+{id:"c2e18",w:2,titre:"Le grand entrepôt",type:"saisie",num:100,
+ histoire:"Le grand entrepôt du Port doit stocker 1 000 caisses d'épices. Le magasinier les range par piles de 10 caisses, bien alignées.",
+ q:"Combien de piles de 10 va-t-il former avec 1 000 caisses ?",
+ indice:"Combien de fois 10 dans 1 000 ? Pense : 10 dizaines = 100, alors 1 000 = ?",
+ etapes:["10 piles de 10 = 100 caisses.","Pour 1 000 caisses, il faut 10 fois plus : 100 piles.","1 000 = 100 × 10 : mille, c'est cent paquets de dix !"]},
+
+{id:"c2e19",w:2,titre:"La cible du port",type:"qcm",
+ histoire:"Au stand de fléchettes du Port, il faut toucher le nombre le plus PROCHE de 300. Quatre fléchettes sont plantées : 289, 350, 210 et 399.",
+ q:"Quel nombre est le plus proche de 300 ?",
+ choices:["289","350","210","399"],a:0,
+ indice:"Calcule l'écart de chaque nombre avec 300 : lequel est le plus petit ?",
+ etapes:["Écarts avec 300 : 289 → 11 ; 350 → 50 ; 210 → 90 ; 399 → 99.","Le plus petit écart est 11.","289 est le plus proche de 300 — même s'il est en dessous ! La proximité se mesure par l'écart, pas par le sens."]},
+
+{id:"c2e20",w:2,titre:"L'énigme de la vigie",type:"saisie",num:540,
+ histoire:"Du haut de son mât, la vigie crie son énigme : « Mon nombre a 3 chiffres ! Son chiffre des centaines est 5. Son chiffre des dizaines est le DOUBLE de 2. Son chiffre des unités est 0. »",
+ q:"Quel est le nombre de la vigie ?",
+ indice:"Centaines : 5. Dizaines : le double de 2, c'est-à-dire… Unités : 0.",
+ etapes:["Centaines : 5.","Dizaines : le double de 2 = 4.","Unités : 0.","Le nombre est 540 ! Assembler des indices chiffre par chiffre : un vrai travail de détective."]},
+
+/* ---- CE2 M3 · Village des Mesures (suite) ---- */
+{id:"c3e11",w:3,titre:"Le porte-monnaie du marché",type:"saisie",num:12,unit:"€",
+ histoire:"Pour le marché du Village, ta maman te confie 2 billets de 5 € et 1 pièce de 2 €. Mission : les légumes de la semaine !",
+ q:"Combien d'argent as-tu en tout ?",
+ indice:"D'abord les billets (5 + 5), puis la pièce.",
+ etapes:["Les billets : 5 + 5 = 10 €.","Avec la pièce : 10 + 2 = 12 €.","Tu pars au marché avec 12 €. Compter par type de billet, c'est plus simple !"]},
+
+{id:"c3e12",w:3,titre:"La leçon de l'horloger",type:"qcm",
+ histoire:"L'horloger du Village t'apprend son métier : « Quand la grande aiguille fait un DEMI-tour du cadran, il s'est passé… »",
+ q:"Une demi-heure, c'est combien de minutes ?",
+ choices:["15 minutes","30 minutes","45 minutes","50 minutes"],a:1,
+ indice:"Une heure entière = 60 minutes. Et la moitié de 60 ?",
+ etapes:["1 heure = 60 minutes.","La moitié de 60 = 30.","Une demi-heure = 30 minutes : la grande aiguille passe du 12 au 6."]},
+
+{id:"c3e13",w:3,titre:"Le sac de farine du boulanger",type:"saisie",num:750,unit:"g",
+ histoire:"Le boulanger du Village ouvre un sac de farine de 1 kg tout neuf. Il en verse 250 g pour sa première fournée de croissants.",
+ q:"Quelle masse de farine reste-t-il dans le sac, en grammes ? (1 kg = 1 000 g.)",
+ indice:"Transforme d'abord le kilo en grammes : 1 kg = 1 000 g.",
+ etapes:["1 kg = 1 000 g.","1 000 − 250 = 750 g.","Il reste 750 g. On convertit d'abord, on calcule ensuite !"]},
+
+{id:"c3e14",w:3,titre:"La gourde du randonneur",type:"qcm",
+ histoire:"À la fontaine du Village, un randonneur remplit sa grande gourde. Il se demande quelle unité utiliser pour décrire la quantité d'eau.",
+ q:"Quelle unité convient pour mesurer l'eau d'une gourde ?",
+ choices:["Le litre (L)","Le mètre (m)","Le gramme (g)","Le kilomètre (km)"],a:0,
+ indice:"Le mètre mesure les longueurs, le gramme pèse… et pour les liquides ?",
+ etapes:["Les liquides se mesurent en litres (et centilitres).","Une gourde contient environ 1 litre.","Longueurs → m, masses → g/kg, liquides → L : à chaque grandeur son unité !"]},
+
+{id:"c3e15",w:3,titre:"Les rubans de la fête",type:"saisie",num:60,unit:"cm",
+ histoire:"Pour décorer le grand mât du Village, la couturière coud bout à bout 3 rubans de 20 cm chacun : un rouge, un jaune et un bleu.",
+ q:"Quelle est la longueur totale de la décoration, en cm ?",
+ indice:"3 rubans de 20 cm : 20 + 20 + 20, ou 3 × 20.",
+ etapes:["3 × 20 = 60.","La décoration mesure 60 cm.","Astuce : 3 × 2 = 6, donc 3 × 20 = 60. Les zéros suivent !"]},
+
+{id:"c3e16",w:3,titre:"L'heure de l'après-midi",type:"vf",vfA:true,
+ histoire:"La pendule de la mairie affiche 15 h. Un touriste s'exclame : « 15 h ? Chez nous, on dit aussi 3 heures de l'après-midi — c'est pareil ! »",
+ q:"Le touriste a-t-il raison ?",
+ justif:["Oui : après midi, on peut continuer à compter — 15 h, c'est 12 h + 3 h, donc 3 h de l'après-midi.","Non : 15 h et 3 h n'ont rien à voir, ce sont des heures différentes."],justifA:0,
+ indice:"Que vaut 15 − 12 ?",
+ etapes:["L'après-midi commence à 12 h (midi).","15 − 12 = 3 : 15 h = 3 h de l'après-midi.","Pour convertir une heure de l'après-midi, on enlève 12. (Et 20 h = 8 h du soir !)"]},
+
+{id:"c3e17",w:3,titre:"La tirelire hebdomadaire",type:"saisie",num:8,unit:"€",
+ histoire:"Chaque dimanche, tu glisses ta pièce de 2 € d'argent de poche dans ta tirelire du Village. Cela fait maintenant 4 semaines que tu économises sans craquer !",
+ q:"Combien as-tu économisé en 4 semaines ?",
+ indice:"4 semaines à 2 € : compte de 2 en 2, ou calcule 4 × 2.",
+ etapes:["4 × 2 = 8.","Tu as économisé 8 €.","Économiser un peu chaque semaine, ça finit par faire beaucoup — c'est la magie de la régularité !"]},
+
+{id:"c3e18",w:3,titre:"Le défi de la balance",type:"qcm",
+ histoire:"Sur la place du Village, le forain lance son défi : « Qu'est-ce qui est le plus lourd : 1 kilo de plumes… ou 1 kilo de pierres ? » La foule rigole, mais toi, tu réfléchis.",
+ q:"Alors, lequel est le plus lourd ?",
+ choices:["Le kilo de pierres","Le kilo de plumes","Ils pèsent exactement pareil","Impossible à savoir"],a:2,
+ indice:"Relis bien : UN KILO de plumes, UN KILO de pierres… Que dit la balance ?",
+ etapes:["1 kilo = 1 kilo, peu importe la matière !","Le tas de plumes sera énorme et le tas de pierres tout petit… mais la balance affichera pareil.","Il ne faut pas confondre le VOLUME (la place que ça prend) et la MASSE (ce que ça pèse).","Un des pièges les plus célèbres du monde — et tu ne t'es pas fait avoir !"]},
+
+{id:"c3e19",w:3,titre:"Le thermomètre du Village",type:"saisie",num:17,unit:"degrés",
+ histoire:"Ce matin, le thermomètre du Village affichait 8 degrés. Avec le beau soleil, la température a grimpé de 9 degrés dans l'après-midi.",
+ q:"Quelle température fait-il maintenant ?",
+ indice:"8 + 9 : passe par 10 (8 + 2, puis + 7).",
+ etapes:["8 + 2 = 10, puis 10 + 7 = 17.","8 + 9 = 17 degrés.","Un bel après-midi pour jouer dehors — les maths aussi savent lire la météo !"]},
+
+{id:"c3e20",w:3,titre:"La calèche de 11 heures",type:"saisie",acc:["11h10","11:10","11 h 10"],
+ histoire:"La calèche du Village part de la place à 10 h 50 pour son tour des fermes, qui dure exactement 20 minutes.",
+ q:"À quelle heure la calèche revient-elle ? (Écris par exemple 11h05.)",
+ indice:"10 h 50 + 10 min = 11 h 00… et il reste encore 10 minutes.",
+ etapes:["De 10 h 50, ajoute 10 min : 11 h 00 pile.","Il reste 10 min à ajouter : 11 h 10.","La calèche revient à 11 h 10. Passer l'heure pile en deux temps : zéro erreur !"]},
+
+/* ---- CE2 M4 · Labyrinthe Logique (suite) ---- */
+{id:"c4e11",w:4,titre:"Le compte à rebours des dalles",type:"saisie",num:12,
+ histoire:"Nouvelle salle du Labyrinthe ! Cette fois, les dalles RECULENT : 20, 18, 16, 14… Il faut annoncer la dalle suivante pour qu'elle apparaisse sous tes pieds.",
+ q:"Quel nombre porte la dalle suivante ?",
+ indice:"Observe : de 20 à 18, de 18 à 16… La suite descend de combien à chaque pas ?",
+ etapes:["La suite recule de 2 en 2.","14 − 2 = 12.","Les suites peuvent monter OU descendre : il faut d'abord trouver leur « pas »."]},
+
+{id:"c4e12",w:4,titre:"La balance aux fruits géants",type:"qcm",
+ histoire:"Dans la salle des balances, tu découvres deux équilibres parfaits : 1 pastèque pèse autant que 2 melons. Et 1 melon pèse autant que 2 pommes.",
+ q:"Une pastèque pèse autant que combien de pommes ?",
+ choices:["2 pommes","3 pommes","4 pommes","6 pommes"],a:2,
+ indice:"Remplace chaque melon par 2 pommes…",
+ etapes:["1 pastèque = 2 melons.","Chaque melon = 2 pommes, donc 2 melons = 4 pommes.","1 pastèque = 4 pommes !","Remplacer une chose par sa valeur : le raisonnement en chaîne des logiciens."]},
+
+{id:"c4e13",w:4,titre:"Le sac de bonbons du gardien",type:"saisie",num:6,unit:"bonbons",
+ histoire:"Le gardien du Labyrinthe a 15 bonbons à la myrtille. Il en mange 3 en cachette, puis partage équitablement le reste entre ses 2 dragons de garde.",
+ q:"Combien de bonbons reçoit chaque dragon ?",
+ indice:"Étape 1 : combien reste-t-il après les 3 mangés ? Étape 2 : partage en 2.",
+ etapes:["Après gourmandise : 15 − 3 = 12 bonbons.","Partage : 12 ÷ 2 = 6.","Chaque dragon reçoit 6 bonbons. Deux étapes, dans le bon ordre !"]},
+
+{id:"c4e14",w:4,titre:"Le calendrier menteur",type:"vf",vfA:false,
+ histoire:"Un parchemin poussiéreux du Labyrinthe proclame : « Tous les mois de l'année ont exactement 30 jours. »",
+ q:"Le parchemin dit-il vrai ?",
+ justif:["Oui : tous les mois se valent, c'est plus simple.","Non : janvier en a 31, février 28 ou 29… Les mois sont différents !"],justifA:1,
+ indice:"Pense à janvier (31 jours) et surtout à février…",
+ etapes:["Janvier, mars, mai, juillet, août, octobre, décembre : 31 jours.","Avril, juin, septembre, novembre : 30 jours.","Février : 28 jours (29 les années bissextiles).","Le parchemin ment ! Le calendrier est plus malin qu'il n'en a l'air."]},
+
+{id:"c4e15",w:4,titre:"La famille de Léa la louve",type:"saisie",num:4,unit:"enfants",
+ histoire:"Léa la louve monte la garde et te lance : « Dans ma famille, j'ai 2 frères et 1 sœur. Combien y a-t-il d'enfants chez nous ? » Elle ajoute avec un clin d'œil : « Attention, ne m'oublie pas ! »",
+ q:"Combien d'enfants compte la famille de Léa ?",
+ indice:"Ses 2 frères + sa sœur… + Léa elle-même !",
+ etapes:["Les frères : 2. La sœur : 1.","Et Léa elle-même, qu'il ne faut pas oublier : + 1.","2 + 1 + 1 = 4 enfants.","Le piège classique : celui qui parle se compte aussi !"]},
+
+{id:"c4e16",w:4,titre:"Le collier du Minotaure",type:"qcm",
+ histoire:"Le gentil Minotaure du Labyrinthe enfile des perles selon un motif rituel : 🔺 🔺 ⚪ 🔺 🔺 ⚪ 🔺 … Il te tend le fil pour continuer.",
+ q:"Quelle perle vient juste après ?",
+ choices:["🔺 un triangle","⚪ un rond","On ne peut pas savoir"],a:0,
+ indice:"Le motif qui se répète est : triangle, triangle, rond. Où en est-on ?",
+ etapes:["Le paquet répété : 🔺 🔺 ⚪ (deux triangles puis un rond).","Le fil se termine par UN seul triangle : le paquet vient de commencer.","Il manque le 2e triangle : la perle suivante est 🔺 !","Repérer le paquet ET savoir où on en est dedans : double vigilance."]},
+
+{id:"c4e17",w:4,titre:"L'anniversaire de maman louve",type:"saisie",num:5,unit:"ans",
+ histoire:"Dans la tanière, maman louve a 30 ans aujourd'hui. Son louveteau demande : « Maman, dans combien d'années auras-tu 35 ans ? On fera une fête GÉANTE ! »",
+ q:"Dans combien d'années maman louve aura-t-elle 35 ans ?",
+ indice:"De 30 pour aller à 35, il faut ajouter combien ?",
+ etapes:["On cherche : 30 + ? = 35.","30 + 5 = 35.","Dans 5 ans, fête géante ! Chercher « combien il manque », c'est déjà résoudre une équation."]},
+
+{id:"c4e18",w:4,titre:"Le salut des trois chevaliers",type:"saisie",num:3,unit:"poignées de main",
+ histoire:"Trois chevaliers se retrouvent à l'entrée du Labyrinthe. Très polis, chacun serre UNE fois la main de chacun des deux autres.",
+ q:"Combien de poignées de main sont échangées en tout ?",
+ indice:"Nomme-les A, B et C, et liste les paires : A-B, A-C… laquelle manque ?",
+ etapes:["Les paires possibles : A-B, A-C, B-C.","Cela fait 3 poignées de main.","Pas 6 ! La poignée de A avec B est la MÊME que celle de B avec A.","Faire la liste complète sans doublon : la méthode qui ne rate jamais."]},
+
+{id:"c4e19",w:4,titre:"Les fraises du goûter",type:"ordre",
+ histoire:"Au cœur du Labyrinthe, 4 enfants perdus (mais gourmands) trouvent un panier de 24 fraises. Ils décident de se les partager équitablement. Remets leur raisonnement dans l'ordre !",
+ q:"Remets les étapes du partage dans l'ordre :",
+ ordre:["Nous avons 24 fraises pour 4 enfants.","Je partage : 24 ÷ 4, c'est-à-dire je cherche 4 × ? = 24.","4 × 6 = 24 : chaque enfant reçoit 6 fraises.","Vérification : 6 + 6 + 6 + 6 = 24, tout est distribué !"],
+ indice:"D'abord ce qu'on a, puis le partage, puis la vérification.",
+ etapes:["Un partage équitable, c'est une division : 24 ÷ 4.","Diviser, c'est chercher la multiplication à trous : 4 × ? = 24.","6 fraises chacun, et zéro dispute : les maths, c'est aussi la paix des goûters !"]},
+
+{id:"c4e20",w:4,titre:"La machine inversée du grand sorcier",type:"saisie",num:5,
+ histoire:"Dernière salle ! Le grand sorcier du Labyrinthe te défie : « Ma machine a pris un nombre, lui a AJOUTÉ 5, puis a DOUBLÉ le tout. Elle affiche 20. Quel nombre y suis-je entré ? »",
+ q:"Quel était le nombre de départ ?",
+ indice:"Remonte à l'envers : avant de doubler, il y avait quoi ? Et avant d'ajouter 5 ?",
+ etapes:["Avant le doublement : 20 ÷ 2 = 10.","Avant l'ajout de 5 : 10 − 5 = 5.","Le nombre de départ était 5 !","Vérification : 5 + 5 = 10, puis 10 × 2 = 20 ✓ Le Labyrinthe s'incline devant toi ! 🌀"]}
+);
+
 /* ================== ÉTAT MULTI-PROFILS & SAUVEGARDE ================== */
 const CLE="atlas6e_v2",CLE_V1="atlas6e_v1";
 const PROFIL_DEFAUT=()=>({nom:"",genre:"f",cheveux:0,acc:"aucun",parcours:"6e",xp:0,
@@ -1351,7 +2087,7 @@ function niveau(xp){return Math.floor(xp/100)+1;}
 function exosDuMonde(w){return pc().exos.filter(e=>e.w===w);}
 function faits(p,w){return pc().exos.filter(e=>e.w===w&&((p.etoiles[e.id]||0)>0||p.vus[e.id])).length;}
 function mondeFini(p,w){return pc().exos.filter(e=>e.w===w).every(e=>(p.etoiles[e.id]||0)>0);}
-function seuilMonde(w){return Math.ceil(exosDuMonde(w).length*2/3);}
+function seuilMonde(w){return Math.min(8,Math.ceil(exosDuMonde(w).length*2/3));}
 function mondeOuvert(w){return w===1||faits(P(),w-1)>=seuilMonde(w-1);}
 function echap(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function dateJour(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}

@@ -1,5 +1,5 @@
 /* Service worker Atlas des 6 Royaumes — cache-first : 100 % offline après la 1re visite. */
-const CACHE = "atlas6e-v2";
+const CACHE = "atlas6e-v3";
 const FICHIERS = ["./", "./index.html", "./icon-180.png", "./icon-512.png", "./manifest.webmanifest"];
 
 self.addEventListener("install", e => {
