@@ -277,12 +277,14 @@ header{
 .badge.gris{opacity:.45;filter:grayscale(1)}
 .rang-accessoires{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .acc-btn{
-  border:3px solid transparent;background:var(--carte);border-radius:16px;padding:8px 12px;
+  border:3px solid transparent;background:var(--carte);border-radius:16px;padding:6px 10px 8px;
   font-size:22px;cursor:pointer;box-shadow:var(--ombre);min-width:52px;min-height:48px;
+  text-align:center;
 }
 .acc-btn.sel{border-color:var(--violet)}
 .acc-btn.verrou{opacity:.4;filter:grayscale(1)}
 .acc-btn small{display:block;font-size:9.5px;color:var(--gris);font-weight:700}
+.acc-btn svg{display:block;margin:0 auto 2px}
 
 /* ===== sélection de profil ===== */
 .grille-profils{display:flex;flex-direction:column;gap:14px;width:min(440px,92vw)}
@@ -2254,7 +2256,7 @@ function normaliseProfils(){
   }
 }
 let avCompteur=0;
-function avatarSVG(taille,profil){
+function avatarSVG(taille,profil,icone){
   const p=profil||P()||{cheveux:0,acc:"aucun",genre:"f",coiffure:"longue",peau:0,tenue:"violet",compagnon:"aucun"};
   const hc=COUL_CHEVEUX[(p.cheveux||0)%COUL_CHEVEUX.length];
   const peau=PEAUX[(p.peau||0)%PEAUX.length];
@@ -2275,16 +2277,19 @@ function avatarSVG(taille,profil){
   const acc=p.acc||"aucun";
   let extra="";
   if(acc==="bandana")extra='<path d="M28 34 Q50 22 72 34 L72 42 Q50 32 28 42 Z" fill="#FF7675"/><circle cx="73" cy="38" r="4" fill="#FF7675"/>';
-  if(acc==="lunettes")extra='<g><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" transform="scale(0.62) translate(22,32)"/><path d="M33 50 l6-4 2 7 7-2-4 6 4 6-7-2-2 7-6-4-6 4-2-7-7 2 4-6-4-6 7 2 2-7 Z" fill="#FDCB6E" transform="scale(0.62) translate(70,32)"/></g>';
+  if(acc==="lunettes"){
+    const etoile=(cx,cy,rO,rI)=>{let d="";for(let i=0;i<10;i++){const r=i%2===0?rO:rI,a=Math.PI*i/5-Math.PI/2;
+      d+=(i===0?"M":"L")+(cx+r*Math.cos(a)).toFixed(1)+" "+(cy+r*Math.sin(a)).toFixed(1)+" ";}return d+"Z";};
+    extra='<g fill="#FDCB6E" stroke="#e6a93c" stroke-width="1"><path d="'+etoile(41,52,10,4.2)+'"/><path d="'+etoile(59,52,10,4.2)+'"/><line x1="48" y1="52" x2="52" y2="52" stroke="#e6a93c" stroke-width="2.5"/></g>';
+  }
   if(acc==="fleur")extra='<g><circle cx="66" cy="26" r="4.5" fill="#FD79A8"/><circle cx="73" cy="29" r="4.5" fill="#FD79A8"/><circle cx="70" cy="36" r="4.5" fill="#FD79A8"/><circle cx="63" cy="33" r="4.5" fill="#FD79A8"/><circle cx="68" cy="31" r="3.5" fill="#FDCB6E"/></g>';
   if(acc==="chapeau")extra='<ellipse cx="50" cy="32" rx="32" ry="8" fill="#b3813f"/><path d="M32 32 Q32 12 50 12 Q68 12 68 32 Q50 26 32 32 Z" fill="#c99552"/><rect x="33" y="24" width="34" height="5" rx="2.5" fill="#8a5a28"/>';
   if(acc==="casque")extra='<path d="M27 40 Q27 13 50 13 Q73 13 73 40 L73 44 L27 44 Z" fill="#e17055"/><rect x="45" y="13" width="10" height="31" fill="#fab1a0"/><rect x="25" y="40" width="50" height="6" rx="3" fill="#d63031"/>';
   if(acc==="couronne")extra='<path d="M34 30 L38 18 L46 27 L50 15 L54 27 L62 18 L66 30 Q50 24 34 30 Z" fill="#FDCB6E" stroke="#e6a93c" stroke-width="1.5"/>';
   if(acc==="aureole")extra='<ellipse cx="50" cy="11" rx="19" ry="5.5" fill="none" stroke="#FDCB6E" stroke-width="4"/><text x="24" y="14" font-size="9">✦</text><text x="70" y="12" font-size="9">✦</text>';
   const comp=COMPAGNONS.find(c=>c.id===(p.compagnon||"aucun"));
-  const compagnon=(comp&&comp.id!=="aucun"&&taille>=48)?'<text x="70" y="107" font-size="27">'+comp.em+'</text>':"";
-  return '<svg viewBox="0 0 100 110" width="'+taille+'" height="'+(taille*1.1)+'">'
-   +torse
+  const compagnon=(comp&&comp.id!=="aucun"&&taille>=48&&!icone)?'<text x="70" y="107" font-size="27">'+comp.em+'</text>':"";
+  const contenu=torse
    +'<path d="M40 82 L50 92 L60 82 Q55 78 50 78 Q45 78 40 82Z" fill="#FFEAA7"/>'
    +'<circle cx="50" cy="52" r="26" fill="'+peau+'"/>'
    +cheveux
@@ -2292,7 +2297,10 @@ function avatarSVG(taille,profil){
    +'<circle cx="42.2" cy="50.8" r="1" fill="#fff"/><circle cx="60.2" cy="50.8" r="1" fill="#fff"/>'
    +'<path d="M43 63 Q50 69 57 63" stroke="#2D3436" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
    +'<circle cx="34" cy="59" r="4" fill="#FD79A8" opacity="0.4"/><circle cx="66" cy="59" r="4" fill="#FD79A8" opacity="0.4"/>'
-   +extra+compagnon+'</svg>';
+   +extra+compagnon;
+  // mode icône : cadre resserré sur la tête (le torse, sous y≈78, sort du cadre et n'est pas affiché)
+  if(icone)return '<svg viewBox="13 -2 74 76" width="'+taille+'" height="'+taille+'">'+contenu+'</svg>';
+  return '<svg viewBox="0 0 100 110" width="'+taille+'" height="'+(taille*1.1)+'">'+contenu+'</svg>';
 }
 const CHOUETTE='<svg class="plume-svg" viewBox="0 0 80 80" width="54" height="54"><ellipse cx="40" cy="48" rx="24" ry="26" fill="#A29BFE"/><ellipse cx="40" cy="54" rx="15" ry="17" fill="#F4F1FB"/><circle cx="31" cy="38" r="10" fill="#fff"/><circle cx="49" cy="38" r="10" fill="#fff"/><circle cx="31" cy="38" r="4.5" fill="#2D3436"/><circle cx="49" cy="38" r="4.5" fill="#2D3436"/><circle cx="32.5" cy="36.5" r="1.5" fill="#fff"/><circle cx="50.5" cy="36.5" r="1.5" fill="#fff"/><path d="M36 46 L40 52 L44 46 Z" fill="#FDCB6E"/><path d="M22 26 L30 32 M58 26 L50 32" stroke="#A29BFE" stroke-width="5" stroke-linecap="round"/><path d="M18 50 Q10 58 16 66 M62 50 Q70 58 64 66" stroke="#8e86f5" stroke-width="6" fill="none" stroke-linecap="round"/></svg>';
 
@@ -2818,7 +2826,9 @@ function rProfil(editionNom){
    +'<div style="margin-top:14px"><small style="font-weight:800;color:var(--gris)">CHAPEAUX &amp; ACCESSOIRES</small>'
    +'<div class="rang-accessoires">'
    +CHAPEAUX.map(a=>{const ok=condOK(p,a.cond);
-     return '<button class="acc-btn'+(p.acc===a.id?" sel":"")+(ok?"":" verrou")+'" data-vest="acc:'+a.id+'" '+(ok?"":"disabled")+'>'+a.em+'<small>'+(ok?a.nom:"🔒 "+condTxt(a.cond))+'</small></button>';}).join("")
+     return '<button class="acc-btn'+(p.acc===a.id?" sel":"")+(ok?"":" verrou")+'" data-vest="acc:'+a.id+'" '+(ok?"":"disabled")+'>'
+      +avatarSVG(40,Object.assign({},p,{acc:a.id}),true)
+      +'<small>'+(ok?a.nom:"🔒 "+condTxt(a.cond))+'</small></button>';}).join("")
    +'</div></div>'
    +'<div style="margin-top:14px"><small style="font-weight:800;color:var(--gris)">MA TENUE</small>'
    +'<div class="rang-accessoires">'
