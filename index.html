@@ -1339,7 +1339,7 @@ EXOS_6E.push(
  etapes:["Pommes : 3 × 2,50 = 7,50 €.","Poires : 1,5 × 4 = 6 €.","Total : 7,50 + 6 = 13,50 €. Monnaie : 20 − 13,50 = 6,50 €.","Multiplications décimales, addition, soustraction : tu viens de TOUT combiner. Le Sommet est à toi ! 🏔️"]}
 );
 
-/* ================== PARCOURS CE2 : LES 4 CONTRÉES ================== */
+/* ================== PARCOURS CE2 : LES 6 CONTRÉES ================== */
 const MONDES_CE2=[
  {id:1,nom:"La Montagne des Calculs",em:"⛰️",coul:"linear-gradient(135deg,#74B9FF,#0984e3)",cnum:"#0984e3",
   desc:"Additions, soustractions et multiplications malignes.",
@@ -1352,7 +1352,13 @@ const MONDES_CE2=[
   intro:"Au Village des Mesures, tout se compte : les euros du marché, les minutes de l'horloge, les mètres de ruban. Les villageois ont besoin d'un assistant de confiance : toi !"},
  {id:4,nom:"Le Labyrinthe Logique",em:"🌀",coul:"linear-gradient(135deg,#A29BFE,#6C5CE7)",cnum:"#6C5CE7",
   desc:"Énigmes, problèmes à étapes et pièges rigolos.",
-  intro:"Le Labyrinthe Logique ne s'ouvre qu'aux esprits malins. Ici, il faut lire lentement, réfléchir… et se méfier des pièges cachés dans les questions !"}
+  intro:"Le Labyrinthe Logique ne s'ouvre qu'aux esprits malins. Ici, il faut lire lentement, réfléchir… et se méfier des pièges cachés dans les questions !"},
+ {id:5,nom:"La Forêt des Fractions",em:"🍁",coul:"linear-gradient(135deg,#FDCB6E,#c0392b)",cnum:"#c0392b",
+  desc:"Fractions simples et premiers nombres décimaux, entre châtaignes et confitures.",
+  intro:"Bienvenue dans la Forêt des Fractions ! Ici, les écureuils partagent leurs provisions en parts égales, et les confitures se mesurent en demis et en quarts. Prépare-toi à découvrir un nouveau langage des nombres : les fractions et les décimaux !"},
+ {id:6,nom:"Le Château de la Géométrie",em:"🏰",coul:"linear-gradient(135deg,#74B9FF,#2d3436)",cnum:"#2d3436",
+  desc:"Périmètres, aires, angles et symétrie : la géométrie comme un vrai architecte.",
+  intro:"Le Château de la Géométrie dresse ses tours bien droites au-dessus des Contrées. Ici, chaque mur, chaque tourelle, chaque vitrail obéit à des règles précises. Sors ta règle et ton équerre, l'architecte royal a besoin de toi !"}
 ];
 
 const EXOS_CE2=[
@@ -1809,9 +1815,9 @@ const PARCOURS={
  "gs":{nom:"Le Jardin des Découvertes",cible:"Vers la Grande Section",em:"🌈",age:"4-5 ans",
    mondes:MONDES_GS,exos:EXOS_GS,
    pitch:"Compter, comparer, reconnaître les formes — tout en images !"},
- "ce2":{nom:"Les 4 Contrées",cible:"Vers le CE2",em:"🗻",age:"7-9 ans",
+ "ce2":{nom:"Les 6 Contrées",cible:"Vers le CE2",em:"🗻",age:"7-10 ans",
    mondes:MONDES_CE2,exos:EXOS_CE2,
-   pitch:"Calcul malin, grands nombres, mesures et énigmes."},
+   pitch:"Calcul malin, grands nombres, mesures, énigmes, fractions et géométrie."},
  "6e":{nom:"L'Atlas des 6 Royaumes",cible:"Vers la 6e",em:"🗺️",age:"10-12 ans",
    mondes:MONDES_6E,exos:EXOS_6E,
    pitch:"Problèmes à étapes, fractions, proportionnalité et grands défis."}
@@ -2518,6 +2524,225 @@ EXOS_CE2.push(
  q:"Quel est le nombre du gardien ?",
  indice:"Remonte à l'envers : avant d'ajouter 4, il y avait quoi ? Et avant de multiplier par 3 ?",
  etapes:["Avant d'ajouter 4 : 19 − 4 = 15.","Avant de multiplier par 3 : 15 ÷ 3 = 5.","Le nombre du gardien est 5.","Vérification : 5 × 3 = 15, puis 15 + 4 = 19 ✓ Le Labyrinthe s'ouvre en grand devant toi ! 🌀"]}
+);
+
+/* ================== CE2 MONDE 5 · La Forêt des Fractions (nouveau) ================== */
+EXOS_CE2.push(
+{id:"c5e1",w:5,titre:"Le partage des châtaignes",type:"qcm",
+ histoire:"L'écureuil de la Forêt a ramassé 8 châtaignes 🌰 🌰 🌰 🌰 🌰 🌰 🌰 🌰 et en donne la moitié à son ami.",
+ q:"Combien de châtaignes reçoit l'ami ? (La moitié de 8.)",
+ choices:["3","4","5"],a:1,
+ indice:"La moitié, c'est partager en 2 parts égales : 8 ÷ 2.",
+ etapes:["8 ÷ 2 = 4.","L'ami reçoit 4 châtaignes.","La moitié de 8, c'est 4 — comme les 2 parts d'un même gâteau."]},
+
+{id:"c5e2",w:5,titre:"Le gâteau aux noisettes",type:"saisie",acc:["1/4"],
+ histoire:"Le gâteau aux noisettes de la Forêt est coupé en 4 parts bien égales. Tu en manges exactement 1 part.",
+ q:"Quelle fraction du gâteau as-tu mangée ? (Réponds sous la forme 1/4.)",
+ indice:"Tu as mangé 1 part sur les 4 parts du gâteau.",
+ etapes:["Le gâteau entier compte 4 parts.","Tu en as mangé 1 : cela s'écrit 1/4.","1/4 se lit « un quart »."]},
+
+{id:"c5e3",w:5,titre:"Le ruban de la couturière",type:"qcm",
+ histoire:"Un ruban doré mesure 1 mètre, soit 100 centimètres. La couturière de la Forêt en coupe le quart pour faire un nœud.",
+ q:"Quelle longueur mesure le nœud ?",
+ choices:["25 cm","50 cm","75 cm"],a:0,
+ indice:"1/4 de 100 cm, c'est 100 ÷ 4.",
+ etapes:["100 ÷ 4 = 25.","Le nœud mesure 25 cm.","1/4, c'est diviser par 4 !"]},
+
+{id:"c5e4",w:5,titre:"Le débat des feuilles",type:"vf",vfA:true,
+ histoire:"Sous le grand chêne, Léo affirme : « 1/2, c'est exactement la même chose que 2/4 ! »",
+ q:"Léo a-t-il raison ?",
+ justif:["Oui : en divisant le haut et le bas de 2/4 par 2, on retrouve 1/2.","Non, 2/4 est deux fois plus grand que 1/2."],justifA:0,
+ indice:"Imagine un gâteau coupé en 4 parts : manger 2 parts, est-ce la même chose que manger la moitié ?",
+ etapes:["2/4 : on divise numérateur et dénominateur par 2 → 1/2.","2 parts sur 4, c'est bien la moitié du gâteau.","1/2 = 2/4 : Léa — pardon, Léo — a raison !"]},
+
+{id:"c5e5",w:5,titre:"Les confitures de Mamie",type:"saisie",num:4,unit:"pots",
+ histoire:"Mamie écureuil a préparé 12 pots de confiture de mûres. Elle en donne le tiers à ses voisins de la Forêt.",
+ q:"Combien de pots donne-t-elle ? (1/3 de 12.)",
+ indice:"1/3, c'est diviser en 3 parts égales : 12 ÷ 3.",
+ etapes:["12 ÷ 3 = 4.","Mamie donne 4 pots de confiture.","Il lui en reste 8 pour elle-même !"]},
+
+{id:"c5e6",w:5,titre:"Le nombre à virgule du garde-forestier",type:"qcm",
+ histoire:"Le garde-forestier mesure un tronc d'arbre tombé : « Il mesure 3,5 mètres », note-t-il dans son carnet.",
+ q:"Que représente le chiffre 5, juste après la virgule ?",
+ choices:["5 dizaines","5 dixièmes","5 unités"],a:1,
+ indice:"Juste après la virgule, le premier rang porte un nom précis : les dixièmes.",
+ etapes:["Dans 3,5 : le 3 est le chiffre des unités.","Le 5, juste après la virgule, est le chiffre des dixièmes.","3,5 = 3 mètres et 5 dixièmes de mètre, soit 3 m et 50 cm."]},
+
+{id:"c5e7",w:5,titre:"La course du renard",type:"saisie",num:3,unit:"m",
+ histoire:"Un sentier de la Forêt mesure exactement 10 mètres. Le renard a parcouru les 3 dixièmes de ce sentier (3/10).",
+ q:"Quelle distance le renard a-t-il parcourue, en mètres ?",
+ indice:"3 dixièmes de 10, c'est 3.",
+ etapes:["10 se partage en 10 dixièmes égaux : chaque dixième vaut 1.","Le renard a parcouru 3 de ces dixièmes : 3 × 1 = 3.","Il a parcouru 3 mètres."]},
+
+{id:"c5e8",w:5,titre:"Comparaison de parts de gâteau",type:"qcm",
+ histoire:"Deux amis partagent des gâteaux identiques dans la Forêt : Emma a 1/3 d'un gâteau, Noah a 1/4 d'un gâteau pareil.",
+ q:"Qui a la plus grosse part ?",
+ choices:["Emma (1/3)","Noah (1/4)","Ils ont exactement pareil"],a:0,
+ indice:"Plus on partage un gâteau en de nombreuses parts, plus chaque part devient petite.",
+ etapes:["Couper en 3 donne des parts plus grosses que couper en 4.","1/3 > 1/4 : Emma a donc la plus grosse part.","Attention : plus le nombre du bas est grand, plus la part est petite !"]},
+
+{id:"c5e9",w:5,titre:"Le sac de billes multicolores",type:"saisie",num:5,unit:"billes",
+ histoire:"Dans un sac de 20 billes multicolores, exactement 1/4 sont rouges comme des groseilles.",
+ q:"Combien de billes rouges y a-t-il ?",
+ indice:"1/4 de 20, c'est 20 ÷ 4.",
+ etapes:["20 ÷ 4 = 5.","Il y a 5 billes rouges dans le sac."]},
+
+{id:"c5e10",w:5,titre:"La méthode de la fée des bois",type:"ordre",
+ histoire:"La fée des bois calcule les 3/4 de 8 noisettes pour son sortilège. Elle t'explique sa méthode, mais le vent d'automne a emporté ses notes !",
+ q:"Remets les étapes du calcul des 3/4 de 8 dans le bon ordre :",
+ ordre:["Je partage 8 en 4 parts égales.","8 ÷ 4 = 2 : chaque part vaut 2.","Je prends 3 de ces parts : 3 × 2 = 6.","Les 3/4 de 8, c'est donc 6."],
+ indice:"Le nombre du bas dit en combien de parts partager ; le nombre du haut dit combien en prendre.",
+ etapes:["Dénominateur 4 : on partage 8 en 4 → 8 ÷ 4 = 2.","Numérateur 3 : on prend 3 parts → 3 × 2 = 6.","Cette méthode marche pour toutes les fractions !"]},
+
+{id:"c5e11",w:5,titre:"Le nombre du lutin farceur",type:"vf",vfA:false,
+ histoire:"Un lutin farceur de la Forêt affirme : « 4,5 est plus PETIT que 4,50, regarde, il a moins de chiffres ! »",
+ q:"Le lutin a-t-il raison ?",
+ justif:["Oui, 4,5 est plus petit car il s'écrit avec moins de chiffres.","Non : 4,5 et 4,50 représentent EXACTEMENT le même nombre."],justifA:1,
+ indice:"4,50, c'est 4,5 avec un zéro inutile ajouté à la fin. Est-ce que ça change sa valeur ?",
+ etapes:["Un zéro ajouté à la toute fin d'un nombre décimal ne change pas sa valeur.","4,5 = 4,50 : ce sont deux écritures du même nombre.","Le lutin s'est bien fait avoir par son propre piège !"]},
+
+{id:"c5e12",w:5,titre:"Le petit pas de la fourmi",type:"saisie",num:0.7,unit:"m",
+ histoire:"Une fourmi de la Forêt avance de 0,1 m (un dixième de mètre) à chaque pas. Elle vient de faire 7 pas d'affilée.",
+ q:"Quelle distance a-t-elle parcourue, en mètres ?",
+ indice:"7 dixièmes de mètre, comment ça s'écrit avec une virgule ?",
+ etapes:["7 pas de 0,1 m : 0,1 + 0,1 + 0,1 + 0,1 + 0,1 + 0,1 + 0,1.","7 dixièmes s'écrit 0,7.","La fourmi a parcouru 0,7 m."]},
+
+{id:"c5e13",w:5,titre:"Le classement des feuilles d'automne",type:"qcm",
+ histoire:"Trois feuilles tombées portent des nombres écrits à la craie : 2,3 — 2,08 — 2,5. Le vent les a mélangées.",
+ q:"Quelle est la PLUS GRANDE de ces trois feuilles ?",
+ choices:["2,3","2,08","2,5"],a:2,
+ indice:"Compare d'abord les dixièmes : 3 dixièmes, 0 dixième, ou 5 dixièmes ?",
+ etapes:["2,3 a 3 dixièmes. 2,08 a 0 dixième (et 8 centièmes). 2,5 a 5 dixièmes.","5 dixièmes est le plus grand chiffre des dixièmes.","2,5 est donc la plus grande des trois feuilles !"]},
+
+{id:"c5e14",w:5,titre:"La moitié de sirop d'érable",type:"saisie",acc:["0,5","1/2"],
+ histoire:"Une bouteille de la Forêt contient 1 litre de sirop d'érable. On en verse la moitié dans un petit verre.",
+ q:"Quelle quantité verse-t-on, en litres ? (Réponds par 0,5 ou par 1/2.)",
+ indice:"La moitié de 1 litre, ça peut s'écrire de deux façons : en fraction, ou avec une virgule.",
+ etapes:["La moitié de 1, c'est 1/2.","1/2, ça s'écrit aussi 0,5 avec une virgule.","On verse 0,5 L, soit un demi-litre."]},
+
+{id:"c5e15",w:5,titre:"Le partage équitable des lutins",type:"saisie",num:3,unit:"champignons",
+ histoire:"Les 3 lutins forestiers ont récolté 9 champignons. Ils décident de se les partager équitablement, pas un de plus pour l'un que pour l'autre.",
+ q:"Combien de champignons pour CHAQUE lutin ?",
+ indice:"Partage les 9 champignons en 3 tas bien égaux.",
+ etapes:["9 ÷ 3 = 3.","Chaque lutin reçoit 3 champignons.","3 + 3 + 3 = 9 ✓"]},
+
+{id:"c5e16",w:5,titre:"⭐ Le grand partage automnal",type:"saisie",num:4,unit:"glands",
+ histoire:"Dernier défi de la Forêt des Fractions ! Le grand chêne a offert 24 glands aux écureuils. Ils en gardent la MOITIÉ pour l'hiver, et partagent équitablement le RESTE entre leurs 3 enfants.",
+ q:"Combien de glands reçoit chaque enfant ?",
+ indice:"Étape 1 : calcule la moitié gardée pour l'hiver. Étape 2 : partage ce qui reste entre les 3 enfants.",
+ etapes:["Moitié de 24 = 12 glands gardés pour l'hiver.","Il reste 24 − 12 = 12 glands à partager.","12 ÷ 3 = 4 glands pour chaque enfant. Bravo, tu as traversé toute la Forêt des Fractions ! 🍁"]}
+);
+
+/* ================== CE2 MONDE 6 · Le Château de la Géométrie (nouveau) ================== */
+EXOS_CE2.push(
+{id:"c6e1",w:6,titre:"Le potager rectangulaire",type:"saisie",num:22,unit:"m",
+ histoire:"Le potager royal du Château est un rectangle de 8 m de long et 3 m de large. Le jardinier doit compter les mètres de clôture nécessaires pour en faire tout le tour.",
+ q:"Quel est le périmètre du potager, en mètres ?",
+ indice:"Périmètre du rectangle = (longueur + largeur) × 2.",
+ etapes:["(8 + 3) × 2 = 11 × 2.","11 × 2 = 22 m.","Le jardinier doit prévoir 22 m de clôture."]},
+
+{id:"c6e2",w:6,titre:"La cour d'honneur carrée",type:"saisie",num:24,unit:"m",
+ histoire:"La cour d'honneur du Château est parfaitement carrée, avec 6 m de côté.",
+ q:"Quel est le périmètre de la cour, en mètres ?",
+ indice:"Un carré a 4 côtés identiques.",
+ etapes:["Périmètre du carré = 4 × côté.","4 × 6 = 24 m."]},
+
+{id:"c6e3",w:6,titre:"L'angle du pont-levis",type:"qcm",
+ svg:'<svg viewBox="0 0 140 140" width="130"><path d="M20 120 L20 20 M20 120 L120 120" stroke="#2d3436" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="20" y="102" width="18" height="18" fill="none" stroke="#2d3436" stroke-width="3"/></svg>',
+ histoire:"Sur le plan du Château, l'architecte a dessiné cet angle, marqué d'un petit carré dans le coin.",
+ q:"Quel type d'angle est-ce ?",
+ choices:["Angle aigu (plus petit)","Angle droit (exactement 90°)","Angle obtus (plus grand)"],a:1,
+ indice:"Le petit carré dessiné dans le coin est le symbole officiel d'un angle bien précis…",
+ etapes:["Le petit carré dans l'angle est LE symbole de l'angle droit.","Un angle droit mesure exactement 90°, comme le coin d'une feuille.","C'est donc un angle droit !"]},
+
+{id:"c6e4",w:6,titre:"Le grand livre ouvert",type:"qcm",
+ histoire:"Zoé, apprentie architecte du Château, trace un angle qui s'ouvre BEAUCOUP, bien plus large qu'un angle droit — comme un livre presque complètement ouvert à plat sur la table.",
+ q:"Quel est le nom de cet angle très ouvert ?",
+ choices:["Angle aigu (petit)","Angle droit (90°)","Angle obtus (plus grand que 90°)"],a:2,
+ indice:"« Obtus » veut dire plus ouvert, plus large qu'un angle droit.",
+ etapes:["Un angle aigu est PLUS PETIT qu'un angle droit.","Un angle obtus est PLUS GRAND qu'un angle droit.","Un livre presque complètement ouvert forme un angle obtus."]},
+
+{id:"c6e5",w:6,titre:"Le débat des petits angles",type:"vf",vfA:true,
+ histoire:"À l'école du Château, le professeur affirme : « Un angle aigu est TOUJOURS plus petit qu'un angle droit. »",
+ q:"Le professeur a-t-il raison ?",
+ justif:["Oui : « aigu » veut dire plus fermé, plus petit que 90°, sans exception.","Non, un angle aigu peut parfois être plus grand qu'un angle droit."],justifA:0,
+ indice:"Aigu = pointu = fermé = petit. C'est une règle sans exception.",
+ etapes:["Par définition, un angle aigu mesure moins de 90°.","Il est donc TOUJOURS plus petit qu'un angle droit (90°).","Le professeur a raison : c'est une règle absolue !"]},
+
+{id:"c6e6",w:6,titre:"Les couloirs perpendiculaires",type:"vf",vfA:true,
+ svg:'<svg viewBox="0 0 140 140" width="130"><path d="M20 120 L20 20 M20 120 L120 120" stroke="#2d3436" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="20" y="102" width="18" height="18" fill="none" stroke="#2d3436" stroke-width="3"/></svg>',
+ histoire:"Sur le plan du Château, deux couloirs se croisent en formant l'angle dessiné ci-dessus.",
+ q:"D'après le petit carré dessiné dans l'angle, ces deux couloirs sont-ils perpendiculaires ?",
+ justif:["Oui : le petit carré indique un angle de 90° pile, donc les couloirs sont perpendiculaires.","Non, il faudrait mesurer avec une équerre pour en être sûr."],justifA:0,
+ indice:"Deux droites perpendiculaires se croisent en formant un angle droit.",
+ etapes:["Le petit carré dans l'angle signifie « angle droit », donc 90°.","Deux droites qui se croisent à 90° sont, par définition, perpendiculaires.","Les deux couloirs sont bien perpendiculaires !"]},
+
+{id:"c6e7",w:6,titre:"Les rails qui ne se touchent jamais",type:"qcm",
+ histoire:"Sur les plans du Château, certaines lignes ne se croisent JAMAIS, même prolongées à l'infini dans les deux sens : on les appelle des droites parallèles.",
+ q:"Lequel de ces exemples représente le mieux des droites parallèles ?",
+ choices:["Les deux rails d'une voie ferrée","Les aiguilles d'une horloge à midi","Les branches d'une croix"],a:0,
+ indice:"Cherche deux lignes qui restent toujours à la même distance, sans jamais se croiser.",
+ etapes:["Les deux rails d'un train restent toujours à égale distance, sans jamais se toucher.","Les aiguilles à midi se touchent ; les branches d'une croix se croisent.","Les rails de train sont donc le meilleur exemple de parallèles !"]},
+
+{id:"c6e8",w:6,titre:"Le tapis de la salle du trône",type:"saisie",num:15,unit:"m²",
+ svg:'<svg viewBox="0 0 200 130" width="190"><rect x="10" y="10" width="180" height="108" fill="#E7FBF4" stroke="#00b894" stroke-width="3"/><g stroke="#00b894" stroke-width="1.5" opacity="0.6"><line x1="46" y1="10" x2="46" y2="118"/><line x1="82" y1="10" x2="82" y2="118"/><line x1="118" y1="10" x2="118" y2="118"/><line x1="154" y1="10" x2="154" y2="118"/><line x1="10" y1="46" x2="190" y2="46"/><line x1="10" y1="82" x2="190" y2="82"/></g></svg>',
+ histoire:"Le tapis de la salle du trône est dessiné sur une grille : 5 carreaux de large sur 3 carreaux de haut, chaque carreau valant exactement 1 m².",
+ q:"Quelle est l'aire du tapis, en m² ?",
+ indice:"Compte les carreaux : combien de rangées, et combien de carreaux par rangée ?",
+ etapes:["5 carreaux de large × 3 carreaux de haut.","5 × 3 = 15.","L'aire du tapis est de 15 m² : c'est le nombre de petits carreaux qu'il contient."]},
+
+{id:"c6e9",w:6,titre:"Le blason symétrique",type:"qcm",
+ histoire:"Le blason du Château a un axe de symétrie vertical : plié en deux à la verticale, ses deux moitiés se superposent exactement.",
+ q:"Laquelle de ces lettres a aussi un axe de symétrie vertical ?",
+ choices:["M","F","R"],a:0,
+ indice:"Imagine chaque lettre pliée en deux le long d'un trait vertical au milieu.",
+ etapes:["Le M, plié en deux verticalement, a ses deux moitiés identiques.","F et R n'ont pas cette symétrie verticale.","M a bien un axe de symétrie vertical !"]},
+
+{id:"c6e10",w:6,titre:"La salle de bal mystère",type:"saisie",num:6,unit:"m",
+ histoire:"La grande salle de bal rectangulaire du Château a un périmètre de 30 m. Sa longueur mesure 9 m.",
+ q:"Quelle est sa largeur, en mètres ?",
+ indice:"Le demi-périmètre (périmètre ÷ 2) est égal à longueur + largeur.",
+ etapes:["Demi-périmètre : 30 ÷ 2 = 15 m.","Largeur = 15 − 9 = 6 m.","Vérification : (9 + 6) × 2 = 30 ✓"]},
+
+{id:"c6e11",w:6,titre:"La figure aux 4 côtés égaux",type:"qcm",
+ histoire:"L'architecte du Château décrit une figure : « Elle a 4 côtés parfaitement égaux ET 4 angles droits. »",
+ q:"Quelle est cette figure ?",
+ choices:["Un carré","Un rectangle (non carré)","Un triangle"],a:0,
+ indice:"4 côtés égaux + 4 angles droits, c'est la définition exacte d'une figure bien précise.",
+ etapes:["Un triangle n'a que 3 côtés : ce n'est pas lui.","Un rectangle non carré a 4 angles droits, mais pas 4 côtés égaux.","Seul le carré a les deux à la fois : 4 côtés égaux ET 4 angles droits."]},
+
+{id:"c6e12",w:6,titre:"Le rectangle a-t-il toujours des angles droits ?",type:"vf",vfA:true,
+ histoire:"Un jeune apprenti du Château hésite : « Un rectangle a-t-il toujours 4 angles droits, même s'il n'est pas carré ? »",
+ q:"Un rectangle a-t-il toujours 4 angles droits ?",
+ justif:["Oui : c'est la définition même d'un rectangle, qu'il soit carré ou allongé.","Non, seul le carré a des angles droits."],justifA:0,
+ indice:"La définition d'un rectangle porte sur ses ANGLES, pas sur la longueur de ses côtés.",
+ etapes:["Un rectangle est une figure à 4 angles droits, par définition.","Que ses côtés soient égaux (carré) ou différents (rectangle allongé) ne change rien à ses angles.","Un rectangle a donc TOUJOURS 4 angles droits !"]},
+
+{id:"c6e13",w:6,titre:"La salle de musique",type:"saisie",num:28,unit:"m²",
+ histoire:"La salle de musique du Château est un rectangle de 7 m de long sur 4 m de large.",
+ q:"Quelle est son aire, en m² ?",
+ indice:"Aire du rectangle = longueur × largeur.",
+ etapes:["7 × 4 = 28.","L'aire de la salle de musique est de 28 m²."]},
+
+{id:"c6e14",w:6,titre:"Le tracé de l'architecte",type:"ordre",
+ histoire:"L'architecte du Château doit tracer un carré ABCD de 5 cm de côté sur son plan. Remets ses étapes dans le bon ordre !",
+ q:"Remets les étapes de la construction du carré dans l'ordre :",
+ ordre:["Je trace un segment AB de 5 cm avec ma règle.","Je trace une perpendiculaire à AB en A, et une autre en B, avec mon équerre.","Je reporte 5 cm sur chaque perpendiculaire pour placer D et C.","Je relie D à C : le carré ABCD est terminé."],
+ indice:"On commence toujours par la base, puis les angles droits, puis les mesures.",
+ etapes:["D'abord le segment de base AB.","Ensuite les perpendiculaires (angles droits) avec l'équerre.","Enfin le report des longueurs et la fermeture de la figure."]},
+
+{id:"c6e15",w:6,titre:"Le vitrail en miroir",type:"qcm",
+ histoire:"Sur le vitrail du Château, seule la moitié gauche est dessinée. Le maître verrier doit dessiner la moitié droite EXACTEMENT à l'identique, comme dans un miroir.",
+ q:"Comment appelle-t-on cette transformation ?",
+ choices:["Une symétrie","Une addition","Une multiplication"],a:0,
+ indice:"Le mot vient de « miroir » : les deux moitiés se répondent parfaitement.",
+ etapes:["Reproduire une figure « comme dans un miroir » s'appelle une symétrie.","La ligne du milieu (le pli du miroir) s'appelle l'axe de symétrie.","Le maître verrier réalise donc une symétrie."]},
+
+{id:"c6e16",w:6,titre:"⭐ Le grand défi de l'architecte royal",type:"saisie",num:160,unit:"€",
+ histoire:"Défi final du Château ! Le roi commande une nouvelle salle rectangulaire de 10 m de long et 6 m de large. Une bordure dorée doit être installée tout autour, au prix de 5 € le mètre.",
+ q:"Combien coûtera la bordure dorée, en euros ?",
+ indice:"Calcule d'abord le périmètre de la salle, puis multiplie par le prix au mètre.",
+ etapes:["Périmètre : (10 + 6) × 2 = 32 m.","Coût de la bordure : 32 × 5 = 160 €.","La bordure dorée coûtera 160 €. Bravo, tu es maintenant l'architecte officiel du Château ! 🏰"]}
 );
 
 /* ================== ÉTAT MULTI-PROFILS & SAUVEGARDE ================== */
